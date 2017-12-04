@@ -1,1 +1,6 @@
-douglasdaly.git
+#### douglasdaly.git
+-----
+
+Django Website for DouglasDaly.com.
+
+
