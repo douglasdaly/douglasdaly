@@ -3,6 +3,10 @@ env/*
 
 # Python Related
 *.pyc
+*__pycache__*
 
 # Temp Files
 *~
+
+# PyCharm
+.idea/*
