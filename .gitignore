@@ -1,0 +1,8 @@
+# Virtual ENV
+env/*
+
+# Python Related
+*.pyc
+
+# Temp Files
+*~
