@@ -4,7 +4,7 @@
 #
 from django.contrib import admin
 
-from douglasdaly.blog.models import Post, Category
+from .models import Post, Category
 
 
 #

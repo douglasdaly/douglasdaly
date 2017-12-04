@@ -4,7 +4,7 @@
 #
 from django.shortcuts import render_to_response, get_object_or_404
 
-from douglasdaly.blog.models import Post, Category
+from .models import Post, Category
 
 
 #
