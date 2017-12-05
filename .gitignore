@@ -13,3 +13,6 @@ env/*
 
 # Sqlite
 *.sqlite3
+
+# Migrations
+migrations/*
