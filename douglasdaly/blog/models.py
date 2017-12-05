@@ -21,9 +21,12 @@ from django.db.models import permalink
 class Post(models.Model):
     title = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=100, unique=True)
+    description = models.TextField(default="", null=True)
     body = models.TextField()
     posted = models.DateTimeField(db_index=True, auto_now_add=True)
     category = models.ForeignKey('blog.Category', on_delete=models.CASCADE)
+
+    tags = models.ManyToManyField('blog.Tag', through='PostToTag', blank=True)
 
     def __str__(self):
         return self.title
@@ -49,3 +52,25 @@ class Category(models.Model):
     @permalink
     def get_absolute_url(self):
         return 'view_blog_category', None, {'slug': self.slug}
+
+
+class Tag(models.Model):
+    name = models.CharField(max_length=50, db_index=True)
+    slug = models.SlugField(max_length=50, db_index=True)
+
+    def __str__(self):
+        return self.name
+
+    def __unicode__(self):
+        return '%s' % self.name
+
+
+class PostToTag(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, db_index=True)
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE, db_index=True)
+
+    def __str__(self):
+        return self.post.slug + " -> " + self.tag.slug
+
+    def __unicode__(self):
+        return '%s -> %s' % (self.post.slug, self.tag.slug)

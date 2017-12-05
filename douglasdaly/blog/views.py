@@ -4,7 +4,7 @@
 #
 from django.shortcuts import render_to_response, get_object_or_404
 
-from .models import Post, Category
+from .models import Post, Category, Tag
 
 
 #
@@ -29,4 +29,12 @@ def view_category(request, slug):
     return render_to_response('blog/view_category.html', {
         'category': category,
         'posts': Post.objects.filter(category=category)[:5],
+    })
+
+
+def view_tag(request, slug):
+    tag = get_object_or_404(Tag, slug=slug)
+    return render_to_response('blog/view_tag.html', {
+        'tag': tag,
+        'posts': Post.objects.filter(tags=tag),
     })

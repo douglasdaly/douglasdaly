@@ -23,4 +23,9 @@ urlpatterns = [
             views.view_category,
             name='view_blog_category'
     ),
+    url(
+            r'^tag/(?P<slug>[^\.]+).html',
+            views.view_tag,
+            name='view_blog_tag'
+    ),
 ]
