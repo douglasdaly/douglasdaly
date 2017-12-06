@@ -64,6 +64,10 @@ class Tag(models.Model):
     def __unicode__(self):
         return '%s' % self.name
 
+    @permalink
+    def get_absolute_url(self):
+        return 'view_blog_tag', None, {'slug': self.slug}
+
 
 class PostToTag(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, db_index=True)

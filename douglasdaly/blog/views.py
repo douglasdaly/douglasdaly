@@ -13,8 +13,9 @@ from .models import Post, Category, Tag
 
 def index(request):
     return render_to_response('blog/index.html', {
-        'categories': Category.objects.all(),
         'posts': Post.objects.all()[:5],
+        'categories': Category.objects.all(),
+        'tags': Tag.objects.all(),
     })
 
 
