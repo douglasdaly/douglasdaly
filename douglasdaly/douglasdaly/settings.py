@@ -31,14 +31,15 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'douglasdaly.apps.BaseConfig',
-    'blog.apps.BlogConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'douglasdaly.apps.BaseConfig',
+    'blog.apps.BlogConfig',
+    'markdown_deux',
 ]
 
 MIDDLEWARE = [
