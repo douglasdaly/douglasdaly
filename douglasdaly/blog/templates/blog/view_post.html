@@ -3,6 +3,8 @@
 {% block title %}{{ post.title }}{% endblock %}
 
 {% block content %}
+<p><i>{{ post.description }}</i></p>
+
 {{ post.body }}
 
 {% if post.tags %}
