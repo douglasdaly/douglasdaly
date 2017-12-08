@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'douglasdaly.apps.BaseConfig',
     'blog.apps.BlogConfig',
-    'markdown_deux',
 ]
 
 MIDDLEWARE = [

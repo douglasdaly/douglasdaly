@@ -1,6 +1,4 @@
-#### douglasdaly.git
+### douglasdaly.git
 -----
 
-Django Website for DouglasDaly.com.
-
-
+Django Web application for www.DouglasDaly.com.  Includes a blog application with a CMS.

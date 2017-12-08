@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% load markdown_deux_tags %}
+{% load markdownify %}
 
 {% block head_title %}{{ post.title }}{% endblock %}
 {% block title %}{{ post.title }}{% endblock %}
@@ -8,7 +8,7 @@
 {% block content %}
 <p><i>{{ post.description }}</i></p>
 
-{{ post.body|markdown }}
+{{ post.body | markdown | safe }}
 
 {% if post.tags %}
 <p><b>Tags:</b></p>
