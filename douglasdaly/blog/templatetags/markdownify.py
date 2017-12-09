@@ -2,8 +2,7 @@
 """
 markdownify.py
 
-    Code for markdown/pygments
-
+    Code for markdown/pygments - based on code from www.IgnoredByDinosaurs.com
 
 """
 #
@@ -15,8 +14,10 @@ from pygments import highlight
 from pygments.lexers import get_lexer_by_name
 from pygments.formatters.html import HtmlFormatter
 
-register = template.Library()
 
+#
+#   Classes
+#
 
 class HighlightRenderer(mistune.Renderer):
 
@@ -29,8 +30,14 @@ class HighlightRenderer(mistune.Renderer):
             return highlight(code, lexer, formatter)
 
 
+#
+#   Filter Setup
+#
+
+register = template.Library()
+
+
 @register.filter
 def markdown(value):
-    renderer = HighlightRenderer()
-    markdown = mistune.Markdown(renderer=renderer)
-    return markdown(value)
+    md = mistune.Markdown(renderer=HighlightRenderer())
+    return md(value)

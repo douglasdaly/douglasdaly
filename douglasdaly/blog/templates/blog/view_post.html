@@ -8,13 +8,15 @@
 {% block content %}
 <p><i>{{ post.description }}</i></p>
 
+<p><b>Category: </b><a href="{{ post.category.get_absolute_url }}">{{ post.category.title }}</a></p>
+
 {{ post.body | markdown | safe }}
 
 {% if post.tags %}
 <p><b>Tags:</b></p>
 <ul>
   {% for tag in post.tags.all %}
-  <li><i>{{ tag.name }}</i></li>
+  <li><i><a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a></i></li>
   {% endfor %}
 </ul>
 {% endif %}
