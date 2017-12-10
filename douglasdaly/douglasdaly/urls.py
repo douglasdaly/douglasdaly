@@ -28,8 +28,8 @@ from .views import index, view_page
 #
 
 urlpatterns = [
-    url(r'^$', index),
-    url(r'^(?P<slug>[^\.]+).html', view_page),
     path('admin/', admin.site.urls),
     path('blog/', include('blog.urls')),
+    url(r'^$', index),
+    url(r'^(?P<slug>[^\.]+).html', view_page),
 ]

@@ -11,6 +11,7 @@ admin.py
 #   Imports
 #
 from django.contrib import admin
+from adminsortable.admin import SortableAdmin
 
 from .models import Page
 
@@ -19,7 +20,7 @@ from .models import Page
 #   Admin Classes
 #
 
-class PageAdmin(admin.ModelAdmin):
+class PageAdmin(SortableAdmin):
     prepopulated_fields = {'slug': ('title',)}
 
 
