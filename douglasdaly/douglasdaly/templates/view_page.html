@@ -1,4 +1,9 @@
 {% extends 'base.html' %}
+{% load page_tags %}
+
+{% if custom_css_file %}
+{% block additional_style %}{% custom_style custom_css_file %}{% endblock %}
+{% endif %}
 
 {% block title %}{{ page.title }}{% endblock %}
 

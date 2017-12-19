@@ -26,6 +26,7 @@ class Page(SortableMixin):
     link_name = models.CharField(max_length=40, unique=True)
     passthrough_page = models.BooleanField(default=False)
     passthrough_link = models.CharField(max_length=40, default=None, null=True)
+    custom_css = models.CharField(max_length=80, default=None, null=True)
     content = models.TextField(default=None, null=True)
 
     class Meta:

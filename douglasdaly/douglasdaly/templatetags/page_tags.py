@@ -23,10 +23,15 @@ register = template.Library()
 
 
 @register.inclusion_tag("tags/page_links.html")
-def page_links(li_class, a_class):
+def page_links():
     all_pages = Page.objects.all()
     ret = list()
     for page in all_pages:
         ret.append({'link_name': page.link_name,
                     'link': page.get_absolute_url()})
-    return {'pages': ret, 'li_class': li_class, 'a_class': a_class}
+    return {'pages': ret}
+
+
+@register.inclusion_tag("tags/custom_style.html")
+def custom_style(filename):
+    return {'custom_style': 'style/' + filename}

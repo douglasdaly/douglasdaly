@@ -24,6 +24,8 @@ def index(request):
 
 
 def view_page(request, slug):
+    page = get_object_or_404(Page, slug=slug)
     return render_to_response("view_page.html", {
-        'page': get_object_or_404(Page, slug=slug)
+        'page': page,
+        'custom_css_file': page.custom_css
     })

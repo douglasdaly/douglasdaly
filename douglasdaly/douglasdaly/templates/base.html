@@ -17,7 +17,7 @@
     <!-- CSS
     ----------------------------------------------------------------------- -->
     <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/custom.style.css' %}">
+    {% block additional_styles %}{% endblock %}
 
     <!-- Scripts
     ----------------------------------------------------------------------- -->
@@ -43,7 +43,7 @@
       
       <div class="collapse navbar-collapse" id="navbarsExampleDefault">
 	<ul class="navbar-nav mr-auto">
-	  {% page_links 'nav-item' 'nav-link' %}
+	  {% page_links %}
 	</ul>
 	<form class="form-inline my-2 my-lg-0">
 	  <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
