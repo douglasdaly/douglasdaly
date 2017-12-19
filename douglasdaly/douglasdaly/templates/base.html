@@ -1,4 +1,5 @@
 {% load static %}
+{% load page_tags %}
 
 <html>
   <head>
@@ -37,11 +38,7 @@
       <div class="three columns">
         <h2>Douglas Daly</h2>
         <p><b>Navigation:</b></p>
-        <ul>
-          <li><a href="">Link 1</a></li>
-          <li><a href="">Link 2</a></li>
-          <li><a href="">Link 3</a></li>
-        </ul>
+        {% page_links %}
       </div>
       <div class="nine columns">
         <h2>{% block title %}Welcome to my block{% endblock %}</h2>

@@ -11,7 +11,7 @@ blog/models.py
 #   Imports
 #
 from django.db import models
-from django.db.models import permalink
+from django.urls import reverse
 
 
 #
@@ -34,9 +34,8 @@ class Post(models.Model):
     def __unicode__(self):
         return '%s' % self.title
 
-    @permalink
     def get_absolute_url(self):
-        return 'view_blog_post', None, {'slug': self.slug}
+        return reverse('view_blog_post', kwargs={'slug': self.slug})
 
 
 class Category(models.Model):
@@ -49,9 +48,8 @@ class Category(models.Model):
     def __unicode__(self):
         return '%s' % self.title
 
-    @permalink
     def get_absolute_url(self):
-        return 'view_blog_category', None, {'slug': self.slug}
+        return reverse('view_blog_category', kwargs={'slug': self.slug})
 
 
 class Tag(models.Model):
@@ -64,9 +62,8 @@ class Tag(models.Model):
     def __unicode__(self):
         return '%s' % self.name
 
-    @permalink
     def get_absolute_url(self):
-        return 'view_blog_tag', None, {'slug': self.slug}
+        return reverse('view_blog_tag', kwargs={'slug': self.slug})
 
 
 class PostToTag(models.Model):

@@ -11,7 +11,6 @@ models.py
 #   Imports
 #
 from django.db import models
-from django.db.models import permalink
 from django.urls import reverse
 
 from adminsortable.models import SortableMixin
@@ -40,9 +39,8 @@ class Page(SortableMixin):
     def __unicode__(self):
         return "%s" % self.title
 
-    @permalink
     def get_absolute_url(self):
         if not self.passthrough_page:
-            return 'view_page', None, {'slug': self.slug}
+            return reverse('view_page', kwargs={'slug': self.slug})
         else:
             return self.passthrough_link
