@@ -53,12 +53,16 @@
     </nav>
 
     <main role="main" class="container">
-      <div class="starter-template">
-        <h2>{% block title %}Welcome to my block{% endblock %}</h2>
-        {% block content %}
-        {% endblock %}
-      </div>
+      {% if title %}
+      <h2>{% block title %}{% endblock %}</h2>
+      {% endif %}
+      {% block content %}
+      {% endblock %}
     </main><!-- /.container -->
+
+    <!-- Footer Navbar
+      ------------------------------------------------------------------------ -->
+    
 
     <!-- Bootstrap core JavaScript code
       ---------------------------------------------------------------------- -->
