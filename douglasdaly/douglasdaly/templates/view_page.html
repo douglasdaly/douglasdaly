@@ -1,12 +1,20 @@
 {% extends 'base.html' %}
 {% load page_tags %}
+{% load static %}
 
-{% if custom_css_file %}
-{% block additional_style %}{% custom_style custom_css_file %}{% endblock %}
+{% block additional_style %}
+<link rel="stylesheet" type="text/css" href="{% static 'style/page.css' %}">
+{% if custom_css_file %}      
+  {% custom_style custom_css_file %}
 {% endif %}
+{% endblock %}
 
 {% block title %}{{ page.title }}{% endblock %}
 
 {% block content %}
-{{ page.content }}
+<div class="page-template">
+  <div class="container">
+    {{ page.content|safe }}
+  </div>
+</div>
 {% endblock %}
