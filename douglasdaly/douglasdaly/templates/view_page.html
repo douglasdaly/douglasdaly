@@ -1,20 +1,20 @@
 {% extends 'base.html' %}
 {% load page_tags %}
 {% load static %}
+{% load markdownify %}
 
-{% block additional_style %}
-<link rel="stylesheet" type="text/css" href="{% static 'style/page.css' %}">
+{% block additional_styles %}
+{% custom_style 'page.css' %}
 {% if custom_css_file %}      
   {% custom_style custom_css_file %}
 {% endif %}
 {% endblock %}
 
-{% block title %}{{ page.title }}{% endblock %}
-
 {% block content %}
 <div class="page-template">
   <div class="container">
-    {{ page.content|safe }}
+    <h1>{{ page.title }}</h1>
+    {{ page.content|markdown|safe }}
   </div>
 </div>
 {% endblock %}
