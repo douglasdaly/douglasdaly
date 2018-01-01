@@ -12,6 +12,7 @@ models.py
 #
 from django.db import models
 from django.urls import reverse
+from django.core.exceptions import ValidationError
 
 from adminsortable.models import SortableMixin
 
@@ -19,6 +20,27 @@ from adminsortable.models import SortableMixin
 #
 #   Model Definitions
 #
+
+class SiteSettings(models.Model):
+    title = models.CharField(max_length=20, unique=True)
+    meta_description = models.CharField(max_length=120, unique=True)
+    google_analytics_key = models.CharField(max_length=120, unique=True)
+
+    def __str__(self):
+        return 'Site Settings'
+
+    def __unicode__(self):
+        return "Site Settings"
+
+    def save(self, *args, **kwargs):
+        """ Override to ensure only one instance exists
+        """
+        if SiteSettings.objects.exists() and not self.pk:
+            raise ValidationError('There can only be one instance of the Site '
+                                  'Settings')
+        else:
+            return super(SiteSettings, self).save(*args, **kwargs)
+
 
 class Page(SortableMixin):
     title = models.CharField(max_length=80, unique=True)
