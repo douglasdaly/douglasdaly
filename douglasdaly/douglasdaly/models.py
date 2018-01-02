@@ -25,6 +25,9 @@ class SiteSettings(models.Model):
     title = models.CharField(max_length=20, unique=True)
     meta_description = models.CharField(max_length=120, unique=True)
     google_analytics_key = models.CharField(max_length=120, unique=True)
+    github_link = models.URLField(null=True)
+    linkedin_link = models.URLField(null=True)
+    twitter_link = models.URLField(null=True)
 
     def __str__(self):
         return 'Site Settings'
