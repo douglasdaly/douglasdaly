@@ -1,0 +1,17 @@
+{% if settings %}
+  {% if settings.github_link %}
+  <li class="nav-item">
+    <a href="{{ settings.github_link }}" target="_blank" class="nav-link p-2"><div style="font-size:1.5em;"><span class="fab fa-github-square"></span></div></a>
+  </li>
+  {% endif %}
+  {% if settings.linkedin_link %}
+  <li class="nav-item">
+    <a href="{{ settings.linkedin_link }}" target="_blank" class="nav-link p-2"><div style="font-size:1.5em;"><span class="fab fa-linkedin"></span></div></a>
+  </li>
+  {% endif %}
+  {% if settings.twitter_link %}
+  <li class="nav-item">
+    <a href="{{ settings.twitter_link }}" target="_blank" class="nav-link p-2"><div style="font-size:1.5em;"><span class="fab fa-twitter-square"></span></div></a>
+  </li>
+  {% endif %}
+{% endif %}

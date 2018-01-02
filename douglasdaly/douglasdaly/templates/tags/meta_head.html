@@ -1,0 +1,11 @@
+{% if settings %}
+<title>{{ settings.title }}</title>
+  {% if settings.meta_description %}
+  <meta name="description" content="{{ settings.meta_description }}">
+  {% endif %}
+  {% if settings.meta_author %}
+  <meta name="author" content="{{ settings.meta_author }}">
+  {% endif %}
+{% else %}
+<title>{% block head_title %}{% endblock %}</title>
+{% endif %}

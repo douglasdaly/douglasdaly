@@ -12,7 +12,7 @@ page_tags.py
 #
 from django import template
 
-from ..models import Page
+from ..models import Page, SiteSettings
 
 
 #
@@ -35,3 +35,15 @@ def page_links():
 @register.inclusion_tag("tags/custom_style.html")
 def custom_style(filename):
     return {'custom_style': 'style/' + filename}
+
+
+@register.inclusion_tag("tags/social_links.html")
+def social_links():
+    settings = SiteSettings.load()
+    return {'settings': settings}
+
+
+@register.inclusion_tag("tags/meta_head.html")
+def meta_head():
+    settings = SiteSettings.load()
+    return {'settings': settings}

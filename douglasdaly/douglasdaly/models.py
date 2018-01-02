@@ -23,7 +23,8 @@ from adminsortable.models import SortableMixin
 
 class SiteSettings(models.Model):
     title = models.CharField(max_length=20, unique=True)
-    meta_description = models.CharField(max_length=120, unique=True)
+    meta_description = models.CharField(max_length=120, null=True)
+    meta_author = models.CharField(max_length=100, null=True)
     google_analytics_key = models.CharField(max_length=120, null=True,
                                             blank=True)
     github_link = models.URLField(null=True, blank=True)
@@ -47,7 +48,12 @@ class SiteSettings(models.Model):
 
     @classmethod
     def load(cls):
-        obj, created = cls.objects.get_or_create(pk=1)
+        """ Loads the Singleton Instance or returns None
+        """
+        try:
+            obj = cls.objects.get(pk=1)
+        except cls.DoesNotExist:
+            obj = None
         return obj
 
 
