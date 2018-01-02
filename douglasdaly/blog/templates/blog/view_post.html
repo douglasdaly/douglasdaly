@@ -13,10 +13,10 @@
 {{ post.body | markdown | safe }}
 
 {% if post.tags %}
-<p><b>Tags:</b></p>
-<ul>
+<b>Tags: </b>
+<ul class="list-inline">
   {% for tag in post.tags.all %}
-  <li><i><a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a></i></li>
+  <li class="list-inline-item"><i><a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a></i></li>
   {% endfor %}
 </ul>
 {% endif %}
