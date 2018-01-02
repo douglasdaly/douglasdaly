@@ -1,6 +1,8 @@
-{% extends 'base.html' %}
+{% extends 'blog/base.html' %}
 
-{% block title %}Welcome to my blog{% endblock %}
+{% load page_tags %}
+
+{% block meta_extra %}{% meta_head 'Blog' %}{% endblock %}
 
 {% block content %}
 

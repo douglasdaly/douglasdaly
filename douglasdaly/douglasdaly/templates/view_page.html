@@ -3,6 +3,8 @@
 {% load static %}
 {% load markdownify %}
 
+{% block meta_extra %}{% meta_head page.title %}{% endblock %}
+
 {% block additional_styles %}
 {% custom_style 'page.css' %}
 {% if custom_css_file %}      

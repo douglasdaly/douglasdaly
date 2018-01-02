@@ -1,5 +1,10 @@
 {% if settings %}
-<title>{{ settings.title }}</title>
+  {% if page_subtitle %}
+  <title>{{ page_subtitle }} &middot; {{ settings.title }}</title>
+  {% else %}
+  <title>{{ settings.title }}</title>
+  {% endif %}
+  
   {% if settings.meta_description %}
   <meta name="description" content="{{ settings.meta_description }}">
   {% endif %}

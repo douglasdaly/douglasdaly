@@ -54,6 +54,7 @@ def footer_social_links():
 
 
 @register.inclusion_tag("tags/meta_head.html")
-def meta_head():
+def meta_head(page_subtitle=None):
     settings = SiteSettings.load()
-    return {'settings': settings}
+    return {'settings': settings,
+            'page_subtitle': page_subtitle}
