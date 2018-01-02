@@ -32,6 +32,11 @@ def page_links():
     return {'pages': ret}
 
 
+@register.inclusion_tag("tags/footer_page_links.html")
+def footer_page_links():
+    return page_links()
+
+
 @register.inclusion_tag("tags/custom_style.html")
 def custom_style(filename):
     return {'custom_style': 'style/' + filename}
@@ -41,6 +46,11 @@ def custom_style(filename):
 def social_links():
     settings = SiteSettings.load()
     return {'settings': settings}
+
+
+@register.inclusion_tag("tags/footer_social_links.html")
+def footer_social_links():
+    return social_links()
 
 
 @register.inclusion_tag("tags/meta_head.html")

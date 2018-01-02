@@ -58,9 +58,22 @@
 
     <!-- Footer Navbar
       ------------------------------------------------------------------------ -->
-    <footer class="footer">
-      <div class="container">
-	<span class="text-muted">&copy; 2017 Douglas Daly.  All rights reserved.</span>
+    <footer class="bd-footer">
+      <div class="container-fluid">
+	<div class="row">
+	  <div class="col-md-9">
+	    <ul class="list-inline">
+	      <li class="list-inline-item"><a href="/index.html" class="small text-muted">Home</a></li>
+	      {% footer_page_links %}
+	    </ul>
+	    <p class="small text-muted">&copy; 2017 Douglas Daly.  All rights reserved.</p>
+	  </div>
+	  <div class="col-md-3 text-right">
+	    <ul class="list-inline">
+	      {% footer_social_links %}
+	    </ul>
+	  </div>
+	</div>
       </div>
     </footer>
     

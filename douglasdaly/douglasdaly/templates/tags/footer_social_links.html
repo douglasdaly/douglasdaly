@@ -1,0 +1,17 @@
+{% if settings %}
+  {% if settings.github_link %}
+  <li class="list-inline-item">
+    <a href="{{ settings.github_link }}" target="_blank" class="small text-muted">GitHub</a>
+  </li>
+  {% endif %}
+  {% if settings.linkedin_link %}
+  <li class="list-inline-item">
+    <a href="{{ settings.linkedin_link }}" target="_blank" class="small text-muted">LinkedIn</a>
+  </li>
+  {% endif %}
+  {% if settings.twitter_link %}
+  <li class="list-inline-item">
+    <a href="{{ settings.twitter_link }}" target="_blank" class="small text-muted">Twitter</a>
+  </li>
+  {% endif %}
+{% endif %}
