@@ -13,7 +13,7 @@ admin.py
 from django.contrib import admin
 from adminsortable.admin import SortableAdmin
 
-from .models import Page
+from .models import Page, SiteSettings
 
 
 #
@@ -29,3 +29,4 @@ class PageAdmin(SortableAdmin):
 #
 
 admin.site.register(Page, PageAdmin)
+admin.site.register(SiteSettings)

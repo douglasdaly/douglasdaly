@@ -6,8 +6,8 @@
     <!-- Basics
     ----------------------------------------------------------------------- -->
     <meta charset="utf-8">
-    <title>{% block head_title %}Douglas Daly{% endblock %}</title>
-    <meta name="description" content="{% block meta_description %}{% endblock %}">
+    <title>{% block head_title %}{{ settings.title }}{% endblock %}</title>
+    <meta name="description" content="{{ settings.meta_description }}">
     <meta name="author" content="Doug Daly">
 
     <!-- Mobile Specific
@@ -48,15 +48,21 @@
 	  {% page_links %}
 	</ul>
 	<ul class="navbar-nav ml-md-auto d-none d-md-flex">
+	  {% if settings.github_link %}
 	  <li class="nav-item">
-	    <a href="#" class="nav-link p-2"><div style="font-size:1.5em;"><span class="fab fa-github-square"></span></div></a>
+	    <a href="{{ settings.github_link }}" target="_blank" class="nav-link p-2"><div style="font-size:1.5em;"><span class="fab fa-github-square"></span></div></a>
 	  </li>
+	  {% endif %}
+	  {% if settings.linkedin_link %}
 	  <li class="nav-item">
-            <a href="#" class="nav-link p-2"><div style="font-size:1.5em;"><span class="fab fa-linkedin"></span></div></a>
+            <a href="{{ settings.linkedin_link }}" target="_blank" class="nav-link p-2"><div style="font-size:1.5em;"><span class="fab fa-linkedin"></span></div></a>
 	  </li>
+	  {% endif %}
+	  {% if settings.twitter_link %}
 	  <li class="nav-item">
-	    <a href="#" class="nav-link p-2"><div style="font-size:1.5em;"><span class="fab fa-twitter-square"></span></div></a>
+	    <a href="{{ settings.twitter_link }}" target="_blank" class="nav-link p-2"><div style="font-size:1.5em;"><span class="fab fa-twitter-square"></span></div></a>
 	  </li>
+	  {% endif %}
 	</ul>
       </div>
     </nav>

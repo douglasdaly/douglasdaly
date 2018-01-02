@@ -12,7 +12,7 @@ view.py
 #
 from django.shortcuts import render_to_response, get_object_or_404
 
-from .models import Page
+from .models import Page, SiteSettings
 
 
 #
@@ -20,12 +20,17 @@ from .models import Page
 #
 
 def index(request):
-    return render_to_response("index.html")
+    settings = SiteSettings.load()
+    return render_to_response("index.html", {
+        'settings': settings,
+    })
 
 
 def view_page(request, slug):
+    settings = SiteSettings.load()
     page = get_object_or_404(Page, slug=slug)
     return render_to_response("view_page.html", {
+        'settings': settings,
         'page': page,
-        'custom_css_file': page.custom_css
+        'custom_css_file': page.custom_css,
     })
