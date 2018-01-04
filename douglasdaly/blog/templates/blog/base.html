@@ -2,4 +2,66 @@
 
 {% load static %}
 
-{% block additional_header %}<link rel="stylesheet" type="text/css" href="{% static 'blog/code_style.css' %}" />{% endblock %}
+{% block additional_header %}
+<link rel="stylesheet" type="text/css" href="{% static 'blog/css/code_style.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'blog/css/blog_base.css' %}" />
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+  <div class="row">
+
+    <!-- Blog Nav Area -->
+    <div class="col-sm-2">
+      
+      <!-- Sort Nav By -->
+      <ul class="nav nav-pills justify-content-center sidebar-pills mb-2" id="pills-tab" role="tab-list">
+	<li class="nav-item">
+	  <a href="#sort-date" class="nav-link active" id="blog-sort-date" data-toggle="pill" role="tab" aria-controls="sort-date" aria-selected="true">Date</a>
+	</li>
+	<li class="nav-item">
+	  <a href="#sort-category" class="nav-link" id="blog-sort-category" data-toggle="pill" role="tab" aria-controls="sort-category" aria-selected="false">Category</a>
+	</li>
+	<li class="nav-item">
+	  <a href="#sort-tag" class="nav-link" id="blog-menu-tag" data-toggle="pill" role="tab" aria-controls="sort-tag" aria-selected="false">Tag</a>
+	</li>
+      </ul>
+
+      <!-- Nav Menu -->
+      <div class="tab-content" id="pills-tabContent">
+	<div class="tab-pane fade show active" id="sort-date" role="tabpanel" aria-labelledby="sort-date">
+          <ul class="nav flex-column">
+            <li class="nav-item">
+	      <a href="#">Test 1</a>
+	    </li>
+            <li class="nav-item">
+	      <a href="#">Test 2</a>
+	    </li>
+            <li class="nav-item">
+	      <a href="#">Test 3</a>
+	    </li>
+          </ul>
+	</div>
+
+	<div class="tab-pane fade" id="sort-category" role="tabpanel" aria-labelledby="sort-category">
+	  <p>Categories</p>
+	</div>
+
+	<div class="tab-pane fade" id="sort-tag" role="tabpanel" aria-labelledby="sort-tag">
+	  <p>Tags</p>
+	</div>
+	
+      </div>
+      
+    </div>
+
+    <!-- Content -->
+    <div class="col-sm-10">
+      {% block blog_content %}{% endblock %}
+    </div>
+    
+  </div>
+</div>
+
+{% endblock %}

@@ -1,10 +1,10 @@
-{% extends 'base.html' %}
+{% extends 'blog/base.html' %}
 
 {% load page_tags %}
 
 {% block meta_extra %}{% meta_head category.title %}{% endblock %}
 
-{% block content %}
+{% block blog_content %}
 <h4><b>Category:</b> {{ category.title }}</h4>
 {% if posts %}
 <ul>

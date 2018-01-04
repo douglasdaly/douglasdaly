@@ -1,0 +1,24 @@
+.sidemenu {
+    position: absolute;
+    overflow-y: scroll;
+}
+
+.blog-content {
+    position: absolute;
+    overflow-y: scroll;
+}
+
+.sidebar-pills {
+    width: 100%;
+}
+
+.sidebar-pills>li {
+    margin: auto;
+}
+
+.sidebar-pills>li>a {
+    padding: 4px;
+    font-size: 14px;
+}
+
+
