@@ -1,5 +1,25 @@
+.highlight  {
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-bottom: 12px;
+}
+
+.highlight > pre {
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 0.1em;
+    box-shadow: .05em .05em .25em rgba(0, 0, 0, 0.45);
+    margin: 0px;
+    padding: 5px;
+}
+
+.highlight .lineno {
+    color: #aaaaaa;
+    padding: 0;
+    margin-right: .5em;
+}
+
 .highlight .hll { background-color: #ffffcc }
-.highlight  { background: #ffffff; }
 .highlight .c { color: #888888 } /* Comment */
 .highlight .err { color: #FF0000; background-color: #FFAAAA } /* Error */
 .highlight .k { color: #008800; font-weight: bold } /* Keyword */
