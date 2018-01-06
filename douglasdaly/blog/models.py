@@ -55,7 +55,10 @@ class Tag(models.Model):
 class Post(models.Model):
     title = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=100, unique=True)
+
+    icon_image = models.CharField(max_length=120, null=True, default=None)
     description = models.TextField(default="", null=True)
+
     body = models.TextField()
     posted = models.DateTimeField(db_index=True, auto_now_add=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)

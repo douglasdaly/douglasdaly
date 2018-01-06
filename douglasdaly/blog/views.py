@@ -14,7 +14,6 @@ from .models import Post, Category, Tag
 def index(request):
     return render_to_response('blog/index.html', {
         'posts': Post.objects.all()[:5],
-        'categories': Category.objects.all(),
         'tags': Tag.objects.all(),
     })
 
@@ -25,11 +24,25 @@ def view_post(request, slug):
     })
 
 
+def view_categories(request):
+    categories = Category.objects.all()
+    return render_to_response('blog/categories.html', {
+        'categories': categories,
+    })
+
+
 def view_category(request, slug):
     category = get_object_or_404(Category, slug=slug)
     return render_to_response('blog/view_category.html', {
         'category': category,
         'posts': Post.objects.filter(category=category)[:5],
+    })
+
+
+def view_tags(request):
+    tags = Tag.objects.all()
+    return render_to_response('blog/tags.html', {
+        'tags': tags,
     })
 
 

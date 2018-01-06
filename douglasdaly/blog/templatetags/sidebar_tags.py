@@ -23,6 +23,8 @@ register = template.Library()
 
 @register.inclusion_tag("blog/tags/sidebar_menu.html")
 def sidebar_menu(sort_by="date"):
+    """ Tag for side menu links
+    """
     if sort_by == "date":
         ret = __sidebar_menu_helper_date()
 

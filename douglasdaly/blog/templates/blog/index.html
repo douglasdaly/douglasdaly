@@ -1,6 +1,7 @@
 {% extends 'blog/base.html' %}
 
 {% load page_tags %}
+{% load post_tags %}
 
 {% block meta_extra %}{% meta_head 'Blog' %}{% endblock %}
 
@@ -10,33 +11,11 @@
 {% if posts %}
 <ul>
   {% for post in posts %}
-  <li><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></li>
+  {% post_display post %}
   {% endfor %}
 </ul>
 {% else %}
 <p>There are no posts.</p>
-{% endif %}
-
-<h3>Categories</h3>
-{% if categories %}
-<ul>
-  {% for category in categories %}
-  <li><a href="{{ category.get_absolute_url }}">{{ category.name }}</a></li>
-  {% endfor %}
-</ul>
-{% else %}
-<p>There are no posts.</p>
-{% endif %}
-
-<h3>Tags</h3>
-{% if tags %}
-<ul>
-  {% for tag in tags %}
-  <li><a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a></li>
-  {% endfor %}
-</ul>
-{% else %}
-<p>There are no tags.</p>
 {% endif %}
 
 {% endblock %}

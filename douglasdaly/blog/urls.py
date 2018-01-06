@@ -19,12 +19,22 @@ urlpatterns = [
             name='view_blog_post'
     ),
     url(
-            r'^category/(?P<slug>[^\.]+).html',
+            r'^categories.html',
+            views.view_categories,
+            name="view_blog_categories"
+    ),
+    url(
+            r'^categories/(?P<slug>[^\.]+).html',
             views.view_category,
             name='view_blog_category'
     ),
     url(
-            r'^tag/(?P<slug>[^\.]+).html',
+            r'^tags.html',
+            views.view_tags,
+            name="view_blog_tags"
+    ),
+    url(
+            r'^tags/(?P<slug>[^\.]+).html',
             views.view_tag,
             name='view_blog_tag'
     ),

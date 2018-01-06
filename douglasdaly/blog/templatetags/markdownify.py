@@ -40,5 +40,7 @@ register = template.Library()
 
 @register.filter
 def markdown(value):
+    """ Convert markdown content to HTML
+    """
     md = mistune.Markdown(renderer=HighlightRenderer())
     return md(value)

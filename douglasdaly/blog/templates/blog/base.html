@@ -14,44 +14,63 @@
   <div class="row">
 
     <!-- Blog Nav Area -->
-    <div class="col-lg-2">
+    <div class="col-md-3">
 
-      <!-- Search Bar -->
-      <input type="search" class="form-control ds-input mb-2" id="search-input" placeholder="Search..." autocomplete="off" spellcheck="false" style="position: relative; vertical-align: top;">
+      <!-- Larger Screen Nav Content -->
+      <div class="d-none d-md-block">
+	
+        <!-- Search Bar -->
+        <input type="search" class="form-control ds-input mb-2" id="search-input" placeholder="Search..." autocomplete="off" spellcheck="false" style="position: relative; vertical-align: top;">
       
-      <!-- Sort Nav By -->
-      <ul class="nav nav-pills justify-content-center sidebar-pills mb-2" id="pills-tab" role="tab-list">
-	<li class="nav-item">
-	  <a href="#sort-date" class="nav-link active" id="blog-sort-date" data-toggle="pill" role="tab" aria-controls="sort-date" aria-selected="true">Date</a>
-	</li>
-	<li class="nav-item">
-	  <a href="#sort-category" class="nav-link" id="blog-sort-category" data-toggle="pill" role="tab" aria-controls="sort-category" aria-selected="false">Category</a>
-	</li>
-	<li class="nav-item">
-	  <a href="#sort-tag" class="nav-link" id="blog-menu-tag" data-toggle="pill" role="tab" aria-controls="sort-tag" aria-selected="false">Tag</a>
-	</li>
-      </ul>
+        <!-- Sort Nav By -->
+        <ul class="nav nav-pills nav-fill justify-content-center sidebar-pills mb-2" id="pills-tab" role="tab-list">
+	  <li class="nav-item">
+	    <a href="#sort-date" class="nav-link active" id="blog-sort-date" data-toggle="pill" role="tab" aria-controls="sort-date" aria-selected="true">Date</a>
+	  </li>
+	  <li class="nav-item">
+	    <a href="#sort-category" class="nav-link" id="blog-sort-category" data-toggle="pill" role="tab" aria-controls="sort-category" aria-selected="false">Category</a>
+	  </li>
+	  <li class="nav-item">
+	    <a href="#sort-tag" class="nav-link" id="blog-menu-tag" data-toggle="pill" role="tab" aria-controls="sort-tag" aria-selected="false">Tag</a>
+	  </li>
+        </ul>
 
-      <!-- Nav Menu -->
-      <div class="tab-content" id="pills-tabContent">
-	<div class="tab-pane fade show active" id="sort-date" role="tabpanel" aria-labelledby="sort-date">
-	  {% sidebar_menu 'date' %}
-	</div>
+        <!-- Nav Menu -->
+        <div class="tab-content mb-2" id="pills-tabContent">
+	  <div class="tab-pane fade show active" id="sort-date" role="tabpanel" aria-labelledby="sort-date">
+	    {% sidebar_menu 'date' %}
+	  </div>
 
-	<div class="tab-pane fade" id="sort-category" role="tabpanel" aria-labelledby="sort-category">
-	  {% sidebar_menu 'category' %}
-	</div>
+	  <div class="tab-pane fade" id="sort-category" role="tabpanel" aria-labelledby="sort-category">
+	    {% sidebar_menu 'category' %}
+	  </div>
 
-	<div class="tab-pane fade" id="sort-tag" role="tabpanel" aria-labelledby="sort-tag">
-	  {% sidebar_menu 'tag' %}
+	  <div class="tab-pane fade" id="sort-tag" role="tabpanel" aria-labelledby="sort-tag">
+	    {% sidebar_menu 'tag' %}
+	  </div>
+
 	</div>
 	
       </div>
+
+      <!-- Small Screen Nav Content -->
+      <div class="d-block d-md-none">
+	
+        <ul class="nav nav-pills nav-fill mb-2">
+	  <li class="nav-item mr-1 mb-2">
+	    <a class="nav-link btn btn-primary" href="/blog/categories.html">View Categories</a>
+	  </li>
+	  <li class="nav-item ml-1 mb-2">
+	    <a class="nav-link btn btn-primary" href="/blog/tags.html">View Tags</a>
+	  </li>
+        </ul>
+
+      </div>
       
     </div>
-
+    
     <!-- Content -->
-    <div class="col-sm-10">
+    <div class="col-sm-9">
       {% block blog_content %}{% endblock %}
     </div>
     
