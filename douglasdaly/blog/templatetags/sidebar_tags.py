@@ -27,28 +27,30 @@ def sidebar_menu(sort_by="date"):
         ret = __sidebar_menu_helper_date()
 
     elif sort_by == "category":
-        categories = Category.objects.all()
-        ret = dict()
+        categories = Category.objects.all().order_by('name')
+        ret = list()
         for category in categories:
             posts = Post.objects.filter(category=category).order_by('title')
             if len(posts) <= 0:
                 continue
             
-            ret[category] = list()
+            temp = list()
             for post in posts:
-                ret[category].append((post.title, post.get_absolute_url()))
+                temp.append((post.title, post.get_absolute_url()))
+            ret.append((category, temp))
 
     elif sort_by == "tag":
-        tags = Tag.objects.all()
-        ret = dict()
+        tags = Tag.objects.all().order_by('name')
+        ret = list()
         for tag in tags:
             posts = Post.objects.filter(tags=tag).order_by('title')
             if len(posts) <= 0:
                 continue
 
-            ret[tag] = list()
+            temp = list()
             for post in posts:
-                ret[tag].append((post.title, post.get_absolute_url()))
+                temp.append((post.title, post.get_absolute_url()))
+            ret.append((tag, temp))
 
     else:
         ret = None
@@ -68,7 +70,7 @@ class YearHelper(object):
 
 
 def __sidebar_menu_helper_date():
-    ret = dict()
+    ret = list()
 
     date_years = Post.objects.all().dates('posted', 'year').distinct()
     for year in date_years:
@@ -77,8 +79,9 @@ def __sidebar_menu_helper_date():
             continue
 
         t_year = YearHelper(year.year)
-        ret[t_year] = list()
+        temp = list()
         for post in posts:
-            ret[t_year].append((post.title, post.get_absolute_url()))
+            temp.append((post.title, post.get_absolute_url()))
+        ret.append((t_year, temp))
 
     return ret
