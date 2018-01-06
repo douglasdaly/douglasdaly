@@ -1,8 +1,8 @@
 <div id="accordion" role="tablist">
   {% for heading, posts in sidemenu_dict.items %}
-  <div class="card">
+  <div class="card border-primary mb-1">
     <div class="card-header" role="tab" id="header-{{ heading.slug }}">
-      <div class="mb-0">
+      <div class="mb-0" style="font-size: 14px;">
 	<a data-toggle="collapse" href="#{{ heading.slug }}" role="button" aria-expanded="false" aria-controls="{{ heading.slug }}">
 	  {{ heading.name }}
 	</a>
@@ -11,10 +11,12 @@
 
     <div id="{{ heading.slug }}" class="collapse" role="tabpanel" aria-labelledby="header-{{ heading.slug }}" data-parent="#accordion">
       <div class="card-body">
-	<ul class="nav flex-column">
+	<ul class="nav flex-column sidebar-submenu-links">
 	  {% for post_title, post_link in posts.items %}
-	  <li class="nav-item">
-	    <a href="{{ post_link }}">{{ post_title }}</a>
+	  <li class="nav-item mb-2">
+	    <div style="font-size: 12px; margin: 0px;">
+	      <a href="{{ post_link }}">{{ post_title }}</a>
+	    </div>
 	  </li>
 	  {% endfor %}
 	</ul>

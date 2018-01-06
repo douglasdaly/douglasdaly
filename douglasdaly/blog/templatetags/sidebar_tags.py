@@ -31,6 +31,9 @@ def sidebar_menu(sort_by="date"):
         ret = dict()
         for category in categories:
             posts = Post.objects.filter(category=category)
+            if len(posts) <= 0:
+                continue
+            
             ret[category] = dict()
             for post in posts:
                 ret[category][post.title] = post.get_absolute_url()
@@ -40,6 +43,9 @@ def sidebar_menu(sort_by="date"):
         ret = dict()
         for tag in tags:
             posts = Post.objects.filter(tags=tag)
+            if len(posts) <= 0:
+                continue
+
             ret[tag] = dict()
             for post in posts:
                 ret[tag][post.title] = post.get_absolute_url()
@@ -66,10 +72,12 @@ def __sidebar_menu_helper_date():
 
     date_years = Post.objects.all().dates('posted', 'year').distinct()
     for year in date_years:
+        posts = Post.objects.filter(posted__year=year.year)
+        if len(posts) <= 0:
+            continue
+
         t_year = YearHelper(year.year)
         ret[t_year] = dict()
-
-        posts = Post.objects.filter(posted__year=year.year)
         for post in posts:
             ret[t_year][post.title] = post.get_absolute_url()
 
