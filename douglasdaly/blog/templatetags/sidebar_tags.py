@@ -30,25 +30,25 @@ def sidebar_menu(sort_by="date"):
         categories = Category.objects.all()
         ret = dict()
         for category in categories:
-            posts = Post.objects.filter(category=category)
+            posts = Post.objects.filter(category=category).order_by('title')
             if len(posts) <= 0:
                 continue
             
-            ret[category] = dict()
+            ret[category] = list()
             for post in posts:
-                ret[category][post.title] = post.get_absolute_url()
+                ret[category].append((post.title, post.get_absolute_url()))
 
     elif sort_by == "tag":
         tags = Tag.objects.all()
         ret = dict()
         for tag in tags:
-            posts = Post.objects.filter(tags=tag)
+            posts = Post.objects.filter(tags=tag).order_by('title')
             if len(posts) <= 0:
                 continue
 
-            ret[tag] = dict()
+            ret[tag] = list()
             for post in posts:
-                ret[tag][post.title] = post.get_absolute_url()
+                ret[tag].append((post.title, post.get_absolute_url()))
 
     else:
         ret = None
@@ -72,13 +72,13 @@ def __sidebar_menu_helper_date():
 
     date_years = Post.objects.all().dates('posted', 'year').distinct()
     for year in date_years:
-        posts = Post.objects.filter(posted__year=year.year)
+        posts = Post.objects.filter(posted__year=year.year).order_by("-posted")
         if len(posts) <= 0:
             continue
 
         t_year = YearHelper(year.year)
-        ret[t_year] = dict()
+        ret[t_year] = list()
         for post in posts:
-            ret[t_year][post.title] = post.get_absolute_url()
+            ret[t_year].append((post.title, post.get_absolute_url()))
 
     return ret

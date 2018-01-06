@@ -12,7 +12,7 @@
     <div id="{{ heading.slug }}" class="collapse" role="tabpanel" aria-labelledby="header-{{ heading.slug }}" data-parent="#accordion">
       <div class="card-body">
 	<ul class="nav flex-column sidebar-submenu-links">
-	  {% for post_title, post_link in posts.items %}
+	  {% for post_title, post_link in posts %}
 	  <li class="nav-item mb-2">
 	    <div style="font-size: 12px; margin: 0px;">
 	      <a href="{{ post_link }}">{{ post_title }}</a>
