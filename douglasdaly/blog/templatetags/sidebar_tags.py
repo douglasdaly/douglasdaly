@@ -54,7 +54,23 @@ def sidebar_menu(sort_by="date"):
 #   Helper Functions
 #
 
+class YearHelper(object):
+
+    def __init__(self, year):
+        self.name = str(year)
+        self.slug = "Y" + str(year)
+
+
 def __sidebar_menu_helper_date():
     ret = dict()
+
+    date_years = Post.objects.all().dates('posted', 'year').distinct()
+    for year in date_years:
+        t_year = YearHelper(year.year)
+        ret[t_year] = dict()
+
+        posts = Post.objects.filter(posted__year=year.year)
+        for post in posts:
+            ret[t_year][post.title] = post.get_absolute_url()
 
     return ret
