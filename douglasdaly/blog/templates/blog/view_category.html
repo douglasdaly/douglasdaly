@@ -2,10 +2,10 @@
 
 {% load page_tags %}
 
-{% block meta_extra %}{% meta_head category.title %}{% endblock %}
+{% block meta_extra %}{% meta_head category.name %}{% endblock %}
 
 {% block blog_content %}
-<h4><b>Category:</b> {{ category.title }}</h4>
+<h4><b>Category:</b> {{ category.name }}</h4>
 {% if posts %}
 <ul>
   {% for post in posts %}
