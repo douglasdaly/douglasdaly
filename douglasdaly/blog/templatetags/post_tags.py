@@ -10,6 +10,7 @@ post_tags.py
 #   Imports
 #
 from django import template
+from django.core.paginator import Paginator
 
 from ..models import Post
 
@@ -32,3 +33,10 @@ def post_display(post):
 
     return {"post": post,
             "icon_image_url": img_url}
+
+
+@register.inclusion_tag("blog/tags/post_paginator.html")
+def post_pagination(post_paginator):
+    """ Tag to display page links for posts
+    """
+    return {'paginator': post_paginator}

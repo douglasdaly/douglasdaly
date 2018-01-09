@@ -1,10 +1,10 @@
-
 #
 #   Imports
 #
 from django.shortcuts import render_to_response, get_object_or_404
+from django.core.paginator import Paginator
 
-from .models import Post, Category, Tag
+from .models import Post, Category, Tag, BlogSettings
 
 
 #
@@ -12,9 +12,15 @@ from .models import Post, Category, Tag
 #
 
 def index(request):
+    blog_settings = BlogSettings.load()
+
+    post_list = Post.objects.all()
+    page = request.GET.get("page")
+
     return render_to_response('blog/index.html', {
-        'posts': Post.objects.all()[:5],
-        'tags': Tag.objects.all(),
+        'blog_settings': blog_settings,
+        'posts': __get_post_page(post_list, page=page,
+                                 blog_settings=blog_settings),
     })
 
 
@@ -33,9 +39,14 @@ def view_categories(request):
 
 def view_category(request, slug):
     category = get_object_or_404(Category, slug=slug)
+
+    blog_settings = BlogSettings.load()
+    page = request.GET.get("page")
+
     return render_to_response('blog/view_category.html', {
         'category': category,
-        'posts': Post.objects.filter(category=category)[:5],
+        'posts': __get_post_page(Post.objects.filter(category=category), page,
+                                 blog_settings),
     })
 
 
@@ -48,7 +59,30 @@ def view_tags(request):
 
 def view_tag(request, slug):
     tag = get_object_or_404(Tag, slug=slug)
+
+    blog_settings = BlogSettings.load()
+    page = request.GET.get("page")
+
     return render_to_response('blog/view_tag.html', {
         'tag': tag,
-        'posts': Post.objects.filter(tags=tag),
+        'posts': __get_post_page(Post.objects.filter(tags=tag), page,
+                                 blog_settings),
     })
+
+
+#
+#   Helper Functions
+#
+
+def __get_post_page(post_list, page=1, blog_settings=None):
+    if blog_settings is None:
+        per_page = 10
+    else:
+        per_page = blog_settings.posts_per_page
+
+    if page is None:
+        page = 1
+
+    post_paginator = Paginator(post_list, per_page)
+
+    return post_paginator.get_page(page)

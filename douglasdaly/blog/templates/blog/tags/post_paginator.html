@@ -1,0 +1,21 @@
+{% if paginator.has_other_pages %}
+<nav>
+  <ul class="pagination justify-content-center">
+
+    <!-- Previous page -->
+    <li class="page-item{% if not paginator.has_previous %} disabled{% endif %}">
+      <a class="page-link" href="{% if not paginator.has_previous %}#{% else %}?page={{ paginator.previous_page_number }}{% endif %}">
+	Previous
+      </a>
+    </li>
+
+    <!-- Next page -->
+    <li class="page-item{% if not paginator.has_next %} disabled{% endif %}">
+      <a class="page-link" href="{% if not paginator.has_next %}#{% else %}?page={{ paginator.next_page_number }}{% endif %}">
+	Next
+      </a>
+    </li>
+    
+  </ul>
+</nav>
+{% endif %}
