@@ -12,11 +12,43 @@ blog/models.py
 #
 from django.db import models
 from django.urls import reverse
+from django.core.exceptions import ValidationError
 
 
 #
 #   Model Definitions
 #
+
+class BlogSettings(models.Model):
+    title = models.CharField(max_length=100, db_index=True)
+
+    posts_per_page = models.PositiveIntegerField(blank=False, default=10)
+
+    def __str__(self):
+        return 'Blog Settings'
+
+    def __unicode__(self):
+        return 'Blog Settings'
+
+    def save(self, *args, **kwargs):
+        """ Override to ensure only one instance exists
+        """
+        if BlogSettings.objects.exists() and not self.pk:
+            raise ValidationError('There can only be one instance of the Site '
+                                  'Settings')
+        else:
+            return super(BlogSettings, self).save(*args, **kwargs)
+
+    @classmethod
+    def load(cls):
+        """ Loads the Singleton Instance or returns None
+        """
+        try:
+            obj = cls.objects.get(pk=1)
+        except cls.DoesNotExist:
+            obj = None
+        return obj
+
 
 class Category(models.Model):
     name = models.CharField(max_length=100, db_index=True)
@@ -56,7 +88,8 @@ class Post(models.Model):
     title = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=100, unique=True)
 
-    icon_image = models.CharField(max_length=120, null=True, default=None)
+    icon_image = models.CharField(max_length=120, null=True, default=None,
+                                  blank=True)
     description = models.TextField(default="", null=True)
 
     body = models.TextField()

@@ -4,7 +4,7 @@
 #
 from django.contrib import admin
 
-from .models import Post, Category, Tag
+from .models import Post, Category, Tag, BlogSettings
 
 
 #
@@ -28,6 +28,7 @@ class TagAdmin(admin.ModelAdmin):
 #   Register Classes
 #
 
+admin.site.register(BlogSettings)
 admin.site.register(Post, PostAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Tag, TagAdmin)
