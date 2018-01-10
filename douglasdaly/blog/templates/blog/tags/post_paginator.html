@@ -9,6 +9,13 @@
       </a>
     </li>
 
+    <!-- Page Numbers -->
+    {% for page_no in page_numbers %}
+    <li class="page-item{% if paginator.number == page_no %} disabled{% endif %}">
+      <a class="page-link" href="{% if paginator.number == page_no %}#{% else %}?page={{ page_no }}{% endif %}">{{ page_no }}</a>
+    </li>
+    {% endfor %}
+
     <!-- Next page -->
     <li class="page-item{% if not paginator.has_next %} disabled{% endif %}">
       <a class="page-link" href="{% if not paginator.has_next %}#{% else %}?page={{ paginator.next_page_number }}{% endif %}">
