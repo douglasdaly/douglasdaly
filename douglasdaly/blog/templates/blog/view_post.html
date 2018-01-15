@@ -6,7 +6,7 @@
 
 {% block meta_extra %}{% meta_head post.title %}{% endblock %}
 
-{% block additional_scripts %}{% post_additional_javascript post.custom_javascript %}{% endblock %}
+{% block additional_scripts %}{% if post.custom_javascript %}<script src="{{ post.custom_javascript.url }}"></script>{% endif %}{% endblock %}
 
 {% block blog_content %}
 <h4><b>{{ post.title }}</b></h4>

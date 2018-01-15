@@ -26,13 +26,7 @@ register = template.Library()
 def post_display(post):
     """ Tag to display Post Link for main Page
     """
-    if post.icon_image is not None:
-        img_url = "blog/media/posts/icons/" + post.icon_image
-    else:
-        img_url = None
-
-    return {"post": post,
-            "icon_image_url": img_url}
+    return {"post": post}
 
 
 @register.inclusion_tag("blog/tags/post_paginator.html")
@@ -52,15 +46,3 @@ def post_pagination(post_paginator):
 
     return {'paginator': post_paginator,
             'page_numbers': page_nos}
-
-
-@register.inclusion_tag("blog/tags/post_additional_javascript.html")
-def post_additional_javascript(post_custom_script):
-    """ Tag to add custom javascript to page top
-    """
-    if post_custom_script is not None:
-        script_link = 'blog/media/posts/scripts/' + post_custom_script
-    else:
-        script_link = None
-
-    return {'additional_script_link': script_link}

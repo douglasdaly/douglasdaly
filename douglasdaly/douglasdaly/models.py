@@ -64,7 +64,7 @@ class Page(SortableMixin):
     passthrough_page = models.BooleanField(default=False)
     passthrough_link = models.CharField(max_length=40, default=None, null=True,
                                         blank=True)
-    custom_css = models.CharField(max_length=80, default=None, null=True,
+    custom_css = models.FileField(upload_to="style/", default=None, null=True,
                                   blank=True)
     content = models.TextField(default=None, null=True)
 

@@ -90,13 +90,14 @@ class Post(models.Model):
 
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
-    icon_image = models.CharField(max_length=120, null=True, default=None,
-                                  blank=True)
-    description = models.TextField(default="", null=True)
+    icon_image = models.ImageField(upload_to="posts/icons/", default=None,
+                                   blank=True, null=True)
 
+    description = models.TextField(default="", null=True)
     body = models.TextField()
-    custom_javascript = models.CharField(max_length=120, null=True,
-                                         default=None, blank=True)
+    custom_javascript = models.FileField(upload_to="posts/scripts/",
+                                         blank=True, default=None, null=True)
+
     posted = models.DateTimeField(db_index=True, auto_now_add=True)
     tags = models.ManyToManyField(Tag)
 

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+
 {% load page_tags %}
 {% load static %}
 {% load markdownify %}
@@ -8,7 +9,7 @@
 {% block additional_styles %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/page.css' %}">
 {% if custom_css_file %}      
-  {% custom_style custom_css_file %}
+<link rel="stylesheet" type="text/css" href="{{ custom_css_file.url }}">
 {% endif %}
 {% endblock %}
 

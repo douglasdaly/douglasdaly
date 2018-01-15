@@ -1,8 +1,6 @@
-{% load static %}
-
 <div class="media mb-3">
-  {% if icon_image_url %}
-  <img class="mr-3" src="{% static icon_image_url" alt="">
+  {% if post.icon_image %}
+  <img class="mr-3" height="{{ post.icon_image.height_field }}" width="{{ post.icon_image.width_field }}" src="{{ post.icon_image.url }}" alt="">
   {% endif %}
   <div class="media-body">
     <h5 class="mt-0"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h5>
