@@ -14,6 +14,8 @@ from django.db import models
 from django.urls import reverse
 from django.core.exceptions import ValidationError
 
+from sorl.thumbnail import ImageField
+
 
 #
 #   Model Definitions
@@ -90,8 +92,8 @@ class Post(models.Model):
 
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
-    icon_image = models.ImageField(upload_to="posts/icons/", default=None,
-                                   blank=True, null=True)
+    icon_image = ImageField(upload_to="posts/icons/", default=None,
+                            blank=True, null=True)
 
     description = models.TextField(default="", null=True)
     body = models.TextField()

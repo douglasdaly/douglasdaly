@@ -1,6 +1,10 @@
+{% load thumbnail %}
+
 <div class="media mb-3">
   {% if post.icon_image %}
-  <img class="mr-3" height="{{ post.icon_image.height_field }}" width="{{ post.icon_image.width_field }}" src="{{ post.icon_image.url }}" alt="">
+  {% thumbnail post.icon_image "100" as im %}
+  <img class="mr-3" height="{{ im.height }}" width="{{ im.width }}" src="{{ im.url }}" alt="">
+  {% endthumbnail %}
   {% endif %}
   <div class="media-body">
     <h5 class="mt-0"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h5>

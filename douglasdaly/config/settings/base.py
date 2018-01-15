@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'adminsortable',
     'douglasdaly.apps.BaseConfig',
     'blog.apps.BlogConfig',
+    'sorl.thumbnail',
 ]
 
 MIDDLEWARE = [
