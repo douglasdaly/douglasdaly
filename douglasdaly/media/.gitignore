@@ -1,0 +1,4 @@
+# Ignore Media Files
+*.*
+!.gitignore
+!*.gitkeep
