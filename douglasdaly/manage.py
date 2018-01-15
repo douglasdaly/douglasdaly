@@ -2,7 +2,12 @@
 import os
 import sys
 
+import dotenv
+
+
 if __name__ == "__main__":
+    dotenv.load_dotenv(os.path.abspath(os.path.join(os.pardir, ".env")))
+
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "douglasdaly.settings")
     try:
         from django.core.management import execute_from_command_line

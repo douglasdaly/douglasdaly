@@ -42,7 +42,7 @@ $ python manage.py runserver
 
 -----
 
-This website relies on [Bootstrap](www.getbootstrap.com), [Font Awesome](www.fontawesome.com), [popper.js](www.popper.js.org) and [jQuery](www.jquery.com) for web components.
+This website relies on [Bootstrap](https://www.getbootstrap.com/), [Font Awesome](https://www.fontawesome.com/), [popper.js](https://www.popper.js.org/) and [jQuery](https://www.jquery.com/) for web components.
 
 The markdown for the code presented on the blog is based on the blog post at [Ignored By Dinosaurs](https://www.ignoredbydinosaurs.com/posts/275-easy-markdown-and-syntax-highlighting-django).
 
