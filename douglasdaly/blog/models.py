@@ -88,14 +88,16 @@ class Post(models.Model):
     title = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=100, unique=True)
 
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+
     icon_image = models.CharField(max_length=120, null=True, default=None,
                                   blank=True)
     description = models.TextField(default="", null=True)
 
     body = models.TextField()
+    custom_javascript = models.CharField(max_length=120, null=True,
+                                         default=None, blank=True)
     posted = models.DateTimeField(db_index=True, auto_now_add=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-
     tags = models.ManyToManyField(Tag)
 
     class Meta:

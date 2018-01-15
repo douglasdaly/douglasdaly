@@ -2,8 +2,11 @@
 
 {% load markdownify %}
 {% load page_tags %}
+{% load post_tags %}
 
 {% block meta_extra %}{% meta_head post.title %}{% endblock %}
+
+{% block additional_scripts %}{% post_additional_javascript post.custom_javascript %}{% endblock %}
 
 {% block blog_content %}
 <h4><b>{{ post.title }}</b></h4>
