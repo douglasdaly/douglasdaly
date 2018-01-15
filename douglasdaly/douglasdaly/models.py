@@ -13,6 +13,7 @@ models.py
 from django.db import models
 from django.urls import reverse
 from django.core.exceptions import ValidationError
+from django.core.validators import MaxValueValidator
 
 from adminsortable.models import SortableMixin
 
@@ -25,8 +26,15 @@ class SiteSettings(models.Model):
     title = models.CharField(max_length=20, unique=True)
     meta_description = models.CharField(max_length=120, null=True)
     meta_author = models.CharField(max_length=100, null=True)
+
+    number_recent_posts = models.PositiveSmallIntegerField(default=3,
+                            blank=True, null=True,
+                            verbose_name="Number of recent posts to show",
+                            validators=[MaxValueValidator(3),])
+
     google_analytics_key = models.CharField(max_length=120, null=True,
                                             blank=True)
+
     github_link = models.URLField(null=True, blank=True)
     linkedin_link = models.URLField(null=True, blank=True)
     twitter_link = models.URLField(null=True, blank=True)

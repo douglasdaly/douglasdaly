@@ -13,6 +13,7 @@ view.py
 from django.shortcuts import render_to_response, get_object_or_404
 
 from .models import Page, SiteSettings
+from blog.models import Post
 
 
 #
@@ -21,8 +22,17 @@ from .models import Page, SiteSettings
 
 def index(request):
     settings = SiteSettings.load()
+    recent_posts = Post.objects.all()[:settings.number_recent_posts]
+
+    if settings.number_recent_posts > 0:
+        post_col_width = int(12 / settings.number_recent_posts)
+    else:
+        post_col_width = 0
+
     return render_to_response("index.html", {
         'settings': settings,
+        'recent_posts': recent_posts,
+        'post_col_width': post_col_width,
     })
 
 
