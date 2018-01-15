@@ -12,8 +12,9 @@ import os
 from django.core.wsgi import get_wsgi_application
 import dotenv
 
-dotenv.load_dotenv(os.path.abspath(os.path.join(os.pardir, os.pardir, '.env')))
+dotenv.load_dotenv(os.path.abspath(os.path.join(os.pardir, os.pardir,
+                                                os.pardir, '.env')))
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "douglasdaly.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.production")
 
 application = get_wsgi_application()
