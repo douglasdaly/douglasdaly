@@ -39,7 +39,7 @@ def footer_page_links():
 
 @register.inclusion_tag("tags/custom_style.html")
 def custom_style(filename):
-    return {'custom_style': 'style/' + filename}
+    return {'custom_style': filename}
 
 
 @register.inclusion_tag("tags/social_links.html")

@@ -6,7 +6,7 @@
 {% block meta_extra %}{% meta_head page.title %}{% endblock %}
 
 {% block additional_styles %}
-{% custom_style 'page.css' %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/page.css' %}">
 {% if custom_css_file %}      
   {% custom_style custom_css_file %}
 {% endif %}
