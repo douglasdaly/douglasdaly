@@ -25,13 +25,13 @@
         <!-- Sort Nav By -->
         <ul class="nav nav-pills nav-fill justify-content-center sidebar-pills mb-2" id="pills-tab" role="tab-list">
 	  <li class="nav-item">
-	    <a href="#sort-date" class="nav-link active" id="blog-sort-date" data-toggle="pill" role="tab" aria-controls="sort-date" aria-selected="true">Date</a>
+	    <a href="#sort-date" class="nav-link{% if sort_tab == 'date' %} active{% endif %}" id="blog-sort-date" data-toggle="pill" role="tab" aria-controls="sort-date" aria-selected="true">Date</a>
 	  </li>
 	  <li class="nav-item">
-	    <a href="#sort-category" class="nav-link" id="blog-sort-category" data-toggle="pill" role="tab" aria-controls="sort-category" aria-selected="false">Category</a>
+	    <a href="#sort-category" class="nav-link{% if sort_tab == 'category' %} active{% endif %}" id="blog-sort-category" data-toggle="pill" role="tab" aria-controls="sort-category" aria-selected="false">Category</a>
 	  </li>
 	  <li class="nav-item">
-	    <a href="#sort-tag" class="nav-link" id="blog-menu-tag" data-toggle="pill" role="tab" aria-controls="sort-tag" aria-selected="false">Tag</a>
+	    <a href="#sort-tag" class="nav-link{% if sort_tab == 'tag' %} active{% endif %}" id="blog-menu-tag" data-toggle="pill" role="tab" aria-controls="sort-tag" aria-selected="false">Tag</a>
 	  </li>
         </ul>
 
