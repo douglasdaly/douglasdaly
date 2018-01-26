@@ -16,7 +16,8 @@ Including another URLconf
 #
 #   Imports
 #
-from django.conf.urls import url
+from django.conf import settings
+from django.conf.urls import url, include
 
 from .views import index, view_page
 
@@ -30,3 +31,9 @@ urlpatterns = [
     url('index.html', index, name='index'),
     url(r'^(?P<slug>[^\.]+).html', view_page, name='view_page'),
 ]
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns = [
+        url(r'^__debug__', include(debug_toolbar.urls)),
+    ] + urlpatterns
