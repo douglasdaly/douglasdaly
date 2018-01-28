@@ -3,6 +3,8 @@
 {% load static %}
 {% load sidebar_tags %}
 
+{% csrf_token %}
+
 {% block additional_header %}
 <link rel="stylesheet" type="text/css" href="{% static 'blog/css/code_style.css' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'blog/css/blog_base.css' %}" />
@@ -25,13 +27,13 @@
         <!-- Sort Nav By -->
         <ul class="nav nav-pills nav-fill justify-content-center sidebar-pills mb-2" id="pills-tab" role="tab-list">
 	  <li class="nav-item">
-	    <a href="#sort-date" class="nav-link{% if sort_tab == 'date' %} active{% endif %}" id="blog-sort-date" data-toggle="pill" role="tab" aria-controls="sort-date" aria-selected="true">Date</a>
+	    <a href="#sort-date" onclick="update_sort_tab('date')" class="nav-link{% if sort_tab == 'date' %} active{% endif %}" id="blog-sort-date" data-toggle="pill" role="tab" aria-controls="sort-date" aria-selected="true">Date</a>
 	  </li>
 	  <li class="nav-item">
-	    <a href="#sort-category" class="nav-link{% if sort_tab == 'category' %} active{% endif %}" id="blog-sort-category" data-toggle="pill" role="tab" aria-controls="sort-category" aria-selected="false">Category</a>
+	    <a href="#sort-category" onclick="update_sort_tab('category')" class="nav-link{% if sort_tab == 'category' %} active{% endif %}" id="blog-sort-category" data-toggle="pill" role="tab" aria-controls="sort-category" aria-selected="false">Category</a>
 	  </li>
 	  <li class="nav-item">
-	    <a href="#sort-tag" class="nav-link{% if sort_tab == 'tag' %} active{% endif %}" id="blog-menu-tag" data-toggle="pill" role="tab" aria-controls="sort-tag" aria-selected="false">Tag</a>
+	    <a href="#sort-tag" onclick="update_sort_tab('tag')" class="nav-link{% if sort_tab == 'tag' %} active{% endif %}" id="blog-menu-tag" data-toggle="pill" role="tab" aria-controls="sort-tag" aria-selected="false">Tag</a>
 	  </li>
         </ul>
 
@@ -81,3 +83,7 @@
 </div>
 
 {% endblock %}
+
+{% block additional_tail_js %}<script src="{% static 'js/js.cookie.js' %}"></script>
+<script src="{% static 'blog/js/blog_base.js' %}"></script>{% endblock %}
+

@@ -38,4 +38,9 @@ urlpatterns = [
             views.view_tag,
             name='view_blog_tag'
     ),
+    url(
+            r'^update_sort_tab/(?P<sort_tab>[^\.]+)',
+            views.update_side_menu_sort,
+            name="update_side_menu_sort"
+    ),
 ]

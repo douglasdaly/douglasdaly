@@ -2,6 +2,7 @@
 #   Imports
 #
 from django.shortcuts import render_to_response, get_object_or_404
+from django.http import HttpResponse, HttpResponseNotAllowed
 from django.core.paginator import Paginator
 
 from .models import Post, Category, Tag, BlogSettings
@@ -90,6 +91,20 @@ def view_tag(request, slug):
     ret_dict = __append_common_vars(request, ret_dict)
 
     return render_to_response('blog/view_tag.html', ret_dict)
+
+
+#
+#   Session Helper Views
+#
+
+def update_side_menu_sort(request, sort_tab):
+    """ Helper Function to update the Sort on the side menu for persistance
+    """
+    if not request.is_ajax() or not request.method == 'POST':
+        return HttpResponseNotAllowed(['POST', ])
+
+    request.session['sort_tab'] = sort_tab
+    return HttpResponse('OK')
 
 
 #
