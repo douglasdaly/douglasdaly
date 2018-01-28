@@ -43,4 +43,9 @@ urlpatterns = [
             views.update_side_menu_sort,
             name="update_side_menu_sort"
     ),
+    url(
+            r'^search.html',
+            views.search,
+            name="search"
+    ),
 ]

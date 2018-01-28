@@ -1,9 +1,13 @@
 #
 #   Imports
 #
-from django.shortcuts import render_to_response, get_object_or_404
+import re
+
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseNotAllowed
 from django.core.paginator import Paginator
+from django.db.models import Q
+from django.template import RequestContext
 
 from .models import Post, Category, Tag, BlogSettings
 
@@ -25,7 +29,36 @@ def index(request):
     }
     ret_dict = __append_common_vars(request, ret_dict)
 
-    return render_to_response('blog/index.html', ret_dict)
+    return render(request, 'blog/index.html', ret_dict)
+
+
+def search(request):
+    blog_settings = BlogSettings.load()
+    page = request.GET.get("page")
+
+    query_string = ''
+    found_entries = None
+
+    if ('q' in request.GET) and request.GET['q'].strip():
+        query_string = request.GET['q']
+        entry_query = __get_query(query_string, ['title', 'description',
+                                                 'category__name',
+                                                 'tags__name', ])
+        found_entries = Post.objects.filter(entry_query).distinct()
+
+    if found_entries is not None:
+        posts = __get_post_page(found_entries, page=page,
+                                blog_settings=blog_settings)
+    else:
+        posts = None
+
+    ret_dict = {
+        'query_string': query_string,
+        'posts': posts,
+    }
+    ret_dict = __append_common_vars(request, ret_dict)
+
+    return render(request, 'blog/search.html', ret_dict)
 
 
 def view_post(request, slug):
@@ -36,7 +69,7 @@ def view_post(request, slug):
     }
     ret_dict = __append_common_vars(request, ret_dict)
 
-    return render_to_response('blog/view_post.html', ret_dict)
+    return render(request, 'blog/view_post.html', ret_dict)
 
 
 def view_categories(request):
@@ -47,7 +80,7 @@ def view_categories(request):
     }
     ret_dict = __append_common_vars(request, ret_dict)
 
-    return render_to_response('blog/categories.html', ret_dict)
+    return render(request, 'blog/categories.html', ret_dict)
 
 
 def view_category(request, slug):
@@ -63,7 +96,7 @@ def view_category(request, slug):
     }
     ret_dict = __append_common_vars(request, ret_dict)
 
-    return render_to_response('blog/view_category.html', ret_dict)
+    return render(request, 'blog/view_category.html', ret_dict)
 
 
 def view_tags(request):
@@ -74,7 +107,7 @@ def view_tags(request):
     }
     ret_dict = __append_common_vars(request, ret_dict)
 
-    return render_to_response('blog/tags.html', ret_dict)
+    return render(request, 'blog/tags.html', ret_dict)
 
 
 def view_tag(request, slug):
@@ -90,7 +123,7 @@ def view_tag(request, slug):
     }
     ret_dict = __append_common_vars(request, ret_dict)
 
-    return render_to_response('blog/view_tag.html', ret_dict)
+    return render(request, 'blog/view_tag.html', ret_dict)
 
 
 #
@@ -98,7 +131,7 @@ def view_tag(request, slug):
 #
 
 def update_side_menu_sort(request, sort_tab):
-    """ Helper Function to update the Sort on the side menu for persistance
+    """ Helper Function to update the Sort on the side menu for persistence
     """
     if not request.is_ajax() or not request.method == 'POST':
         return HttpResponseNotAllowed(['POST', ])
@@ -131,3 +164,34 @@ def __append_common_vars(request, curr_dict):
     common_dict = {'sort_tab': sort_tab}
 
     return {**curr_dict, **common_dict}
+
+
+def __normalize_query(query_string,
+                      findterms=re.compile(r'"([^"]+)"|(\S+)').findall,
+                      normspace=re.compile(r'\s{2,}').sub):
+    """ Normalized query string into individual words for searching
+    """
+    return [normspace(' ', (t[0] or t[1]).strip()) for t
+            in findterms(query_string)]
+
+
+def __get_query(query_string, search_fields):
+    """ Gets a Query for searching models with
+    """
+    query = None
+
+    terms = __normalize_query(query_string)
+    for term in terms:
+        or_query = None
+        for field_name in search_fields:
+            q = Q(**{"%s__icontains" % field_name: term})
+            if or_query is None:
+                or_query = q
+            else:
+                or_query = or_query | q
+        if query is None:
+            query = or_query
+        else:
+            query = query & or_query
+
+    return query
