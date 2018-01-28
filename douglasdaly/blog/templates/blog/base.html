@@ -39,15 +39,15 @@
 
         <!-- Nav Menu -->
         <div class="tab-content mb-2" id="pills-tabContent">
-	  <div class="tab-pane fade show active" id="sort-date" role="tabpanel" aria-labelledby="sort-date">
+	  <div class="tab-pane fade{% if sort_tab == 'date' %} show active{% endif %}" id="sort-date" role="tabpanel" aria-labelledby="sort-date">
 	    {% sidebar_menu 'date' %}
 	  </div>
 
-	  <div class="tab-pane fade" id="sort-category" role="tabpanel" aria-labelledby="sort-category">
+	  <div class="tab-pane fade{% if sort_tab == 'category' %} show active{% endif %}" id="sort-category" role="tabpanel" aria-labelledby="sort-category">
 	    {% sidebar_menu 'category' %}
 	  </div>
 
-	  <div class="tab-pane fade" id="sort-tag" role="tabpanel" aria-labelledby="sort-tag">
+	  <div class="tab-pane fade{% if sort_tab == 'tag' %} show active{% endif %}" id="sort-tag" role="tabpanel" aria-labelledby="sort-tag">
 	    {% sidebar_menu 'tag' %}
 	  </div>
 
