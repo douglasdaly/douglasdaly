@@ -1,0 +1,7 @@
+{% if page_keywords %}
+<meta name="keywords" content="{{ page_keywords }}">
+{% else %}
+  {% if settings.meta_keywords %}
+  <meta name="keywords" content="{{ settings.meta_keywords }}">
+  {% endif %}
+{% endif %}

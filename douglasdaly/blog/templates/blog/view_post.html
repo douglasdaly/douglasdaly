@@ -4,7 +4,8 @@
 {% load page_tags %}
 {% load post_tags %}
 
-{% block meta_extra %}{% meta_head post.title %}{% endblock %}
+{% block meta_extra %}{% meta_head post.title post.description %}{% endblock %}
+{% block keywords %}{% meta_keywords post|tag_strjoin %}{% endblock %}
 
 {% block additional_scripts %}{% if post.custom_javascript %}<script src="{{ post.custom_javascript.url }}"></script>{% endif %}{% endblock %}
 

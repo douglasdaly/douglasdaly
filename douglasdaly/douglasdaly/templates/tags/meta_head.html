@@ -4,10 +4,15 @@
   {% else %}
   <title>{{ settings.title }}</title>
   {% endif %}
-  
-  {% if settings.meta_description %}
-  <meta name="description" content="{{ settings.meta_description }}">
+
+  {% if not page_description %}
+    {% if settings.meta_description %}
+    <meta name="description" content="{{ settings.meta_description }}">
+    {% endif %}
+  {% else %}
+  <meta name="description" content="{{ page_description }}">
   {% endif %}
+
   {% if settings.meta_author %}
   <meta name="author" content="{{ settings.meta_author }}">
   {% endif %}

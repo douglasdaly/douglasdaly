@@ -46,3 +46,15 @@ def post_pagination(post_paginator):
 
     return {'paginator': post_paginator,
             'page_numbers': page_nos}
+
+
+@register.filter(name="tag_strjoin")
+def tag_strjoin(post):
+    ret = None
+    for tag in post.tags.all():
+        tn = tag.name.lower()
+        if ret is None:
+            ret = tn
+        else:
+            ret += "," + tn
+    return ret
