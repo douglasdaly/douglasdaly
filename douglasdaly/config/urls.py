@@ -21,6 +21,18 @@ from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
 from django.conf.urls import url
+from django.contrib.sitemaps.views import sitemap
+
+#
+#   Sitemaps Setup
+#
+from blog.sitemap import BlogPostsSitemap
+from douglasdaly.sitemap import PagesSitemap
+
+sitemaps = {
+    'pages': PagesSitemap(),
+    'blog': BlogPostsSitemap(),
+}
 
 
 #
@@ -28,6 +40,8 @@ from django.conf.urls import url
 #
 
 urlpatterns = [
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps},
+         name='django.contrib.sitemaps.views.sitemap'),
     path('admin/', admin.site.urls, name='admin'),
     path('blog/', include('blog.urls'), name='blog'),
     path('', include('douglasdaly.urls'), name='douglasdaly')
