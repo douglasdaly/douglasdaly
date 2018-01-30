@@ -86,22 +86,38 @@ class Tag(models.Model):
         return reverse('view_blog_tag', kwargs={'slug': self.slug})
 
 
+class CustomJS(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    file = models.FileField(upload_to="blog/posts/custom_js/")
+
+    def __str__(self):
+        return self.name
+
+    def __unicode__(self):
+        return '%s' % self.name
+
+    class Meta:
+        ordering = ('name',)
+
+
 class Post(models.Model):
     title = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=100, unique=True)
 
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    tags = models.ManyToManyField(Tag)
 
-    icon_image = ImageField(upload_to="posts/icons/", default=None,
+    icon_image = ImageField(upload_to="blog/posts/icons/", default=None,
                             blank=True, null=True)
 
     description = models.TextField(default="", null=True)
     body = models.TextField()
-    custom_javascript = models.FileField(upload_to="posts/scripts/",
+    custom_javascript = models.FileField(upload_to="blog/posts/scripts/",
                                          blank=True, default=None, null=True)
+    javascript_includes = models.ManyToManyField(CustomJS, blank=True)
 
     posted = models.DateTimeField(db_index=True, auto_now_add=True)
-    tags = models.ManyToManyField(Tag)
+    published = models.BooleanField(default=False)
 
     class Meta:
         ordering = ('-posted',)

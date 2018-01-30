@@ -7,7 +7,14 @@
 {% block meta_extra %}{% meta_head post.title post.description %}{% endblock %}
 {% block keywords %}{% meta_keywords post|tag_strjoin %}{% endblock %}
 
-{% block additional_scripts %}{% if post.custom_javascript %}<script src="{{ post.custom_javascript.url }}"></script>{% endif %}{% endblock %}
+{% block additional_scripts %}
+{% if post.javascript_includes %}
+  {% for js_inc in post.javascript_includes.all %}
+  <script type="text/javascript" src="{{ js_inc.file.url }}"></script>
+  {% endfor %}
+{% endif %}
+{% if post.custom_javascript %}<script type="text/javascript" src="{{ post.custom_javascript.url }}"></script>{% endif %}
+{% endblock %}
 
 {% block blog_content %}
 <h4><b>{{ post.title }}</b></h4>

@@ -7,7 +7,6 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseNotAllowed
 from django.core.paginator import Paginator
 from django.db.models import Q
-from django.template import RequestContext
 
 from .models import Post, Category, Tag, BlogSettings
 
@@ -145,6 +144,7 @@ def update_side_menu_sort(request, sort_tab):
 #
 
 def __get_post_page(post_list, page=1, blog_settings=None):
+    post_list = post_list.filter(published=True)
     if blog_settings is None:
         per_page = 10
     else:

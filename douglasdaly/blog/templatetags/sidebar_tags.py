@@ -32,7 +32,8 @@ def sidebar_menu(sort_by="date"):
         categories = Category.objects.all().order_by('name')
         ret = list()
         for category in categories:
-            posts = Post.objects.filter(category=category).order_by('title')
+            posts = Post.objects.filter(published=True, category=category) \
+                        .order_by('title')
             if len(posts) <= 0:
                 continue
             
@@ -45,7 +46,8 @@ def sidebar_menu(sort_by="date"):
         tags = Tag.objects.all().order_by('name')
         ret = list()
         for tag in tags:
-            posts = Post.objects.filter(tags=tag).order_by('title')
+            posts = Post.objects.filter(published=True, tags=tag) \
+                        .order_by('title')
             if len(posts) <= 0:
                 continue
 
@@ -74,9 +76,11 @@ class YearHelper(object):
 def __sidebar_menu_helper_date():
     ret = list()
 
-    date_years = Post.objects.all().dates('posted', 'year').distinct()
+    date_years = Post.objects.filter(published=True).dates('posted', 'year') \
+                             .distinct()
     for year in date_years:
-        posts = Post.objects.filter(posted__year=year.year).order_by("-posted")
+        posts = Post.objects.filter(published=True, posted__year=year.year) \
+                            .order_by("-posted")
         if len(posts) <= 0:
             continue
 

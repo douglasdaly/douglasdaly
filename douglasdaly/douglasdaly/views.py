@@ -22,10 +22,11 @@ from blog.models import Post
 
 def index(request):
     settings = SiteSettings.load()
-    recent_posts = Post.objects.all()[:settings.number_recent_posts]
+    recent_posts = Post.objects.all() \
+                       .filter(published=True)[:settings.number_recent_posts]
 
     if settings.number_recent_posts > 0:
-        post_col_width = int(12 / settings.number_recent_posts)
+        post_col_width = int(12 / len(recent_posts))
     else:
         post_col_width = 0
 
