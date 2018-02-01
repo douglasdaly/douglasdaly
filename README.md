@@ -32,6 +32,12 @@ $ python manage.py makemigrations
 $ python manage.py migrate
 ```
 
+And then create a super user:
+
+```bash
+$ python manage.py createsuperuser
+```
+
 And to run the development server:
 
 ```bash

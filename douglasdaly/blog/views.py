@@ -4,7 +4,7 @@
 import re
 
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse, HttpResponseNotAllowed
+from django.http import HttpResponse, HttpResponseNotAllowed, Http404
 from django.core.paginator import Paginator
 from django.db.models import Q
 
@@ -62,6 +62,9 @@ def search(request):
 
 def view_post(request, slug):
     post = get_object_or_404(Post, slug=slug)
+
+    if not post.published:
+        raise Http404
 
     ret_dict = {
         'post': post,

@@ -70,13 +70,14 @@ class Page(SortableMixin):
     title = models.CharField(max_length=80, unique=True)
     slug = models.SlugField(max_length=80, unique=True)
     link_name = models.CharField(max_length=40, unique=True)
-    keywords = models.CharField(max_length=120, null=True, default=None)
+    keywords = models.CharField(max_length=120, null=True, default=None,
+                                blank=True)
     passthrough_page = models.BooleanField(default=False)
     passthrough_link = models.CharField(max_length=40, default=None, null=True,
                                         blank=True)
     custom_css = models.FileField(upload_to="style/", default=None, null=True,
                                   blank=True)
-    content = models.TextField(default=None, null=True)
+    content = models.TextField(default=None, null=True, blank=True)
 
     class Meta:
         ordering = ['the_order']
