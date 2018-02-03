@@ -59,7 +59,10 @@ def sidebar_menu(sort_by="date"):
     else:
         ret = None
 
-    return {"sidemenu_dict": ret}
+    return {
+        "sidemenu_sort": sort_by,
+        "sidemenu_dict": ret
+    }
 
 
 #

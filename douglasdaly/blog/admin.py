@@ -14,6 +14,8 @@ from .models import Post, Category, Tag, BlogSettings, CustomJS
 class PostAdmin(admin.ModelAdmin):
     exclude = ['posted']
     prepopulated_fields = {'slug': ('title',)}
+    list_display = ('title', 'category', 'posted', 'published')
+    list_filter = ('published', 'category')
 
 
 class CategoryAdmin(admin.ModelAdmin):
