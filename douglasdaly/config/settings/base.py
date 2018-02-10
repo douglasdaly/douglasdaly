@@ -11,6 +11,12 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 import os
 
+import dotenv
+
+
+# Load dotenv File
+dotenv.load_dotenv(dotenv.find_dotenv())
+
 # Sites Setup
 SITE_ID = 1
 
