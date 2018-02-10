@@ -4,7 +4,6 @@
 }
 
 .blog-content {
-    position: absolute;
     overflow-y: scroll;
 }
 
@@ -19,5 +18,20 @@
 .sidebar-pills>li>a {
     padding: 4px;
     font-size: 14px;
+}
+
+.blog-content>h2 {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.blog-content>h3 {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.blog-content>h4 {
+    font-size: 16px;
+    font-weight: bold;
 }
 
