@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'douglasdaly.apps.BaseConfig',
     'blog.apps.BlogConfig',
     'sorl.thumbnail',
+    'storages',
 ]
 
 MIDDLEWARE = [

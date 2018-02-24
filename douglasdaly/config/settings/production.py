@@ -5,6 +5,7 @@ Production Django Settings
 #   Imports
 #
 from .base import *
+from .aws.conf import *
 
 
 #
