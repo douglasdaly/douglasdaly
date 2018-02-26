@@ -29,8 +29,3 @@ DATABASES = {
         'PORT': os.environ.get("DB_PORT"),
     }
 }
-
-# Media
-
-STATIC_ROOT = os.environ.get("STATIC_ROOT")
-MEDIA_ROOT = os.environ.get("MEDIA_ROOT")
