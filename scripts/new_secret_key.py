@@ -18,7 +18,7 @@ def generate_random_secret_key():
     """ Generates a random Django SECRET_KEY """
     return ''.join(random.SystemRandom().
                    choice('abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)')
-                   for i in range(50))
+                   for _ in range(50))
 
 
 def save_key(key):

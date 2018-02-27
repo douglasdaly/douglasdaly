@@ -2,7 +2,7 @@
 #	MAKEFILE
 #
 
-.phony: requirements initialize
+.PHONY: requirements initialize setup
 
 # Variables
 PYTHON=python
@@ -16,4 +16,9 @@ requirements:
 
 initialize:
 	touch .env
+	$(PYTHON) scripts/new_secret_key.py
 
+setup:
+	$(PYTHON) scripts/database_variables.py
+	$(PYTHON) scripts/aws_variables.py
+	
