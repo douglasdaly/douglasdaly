@@ -28,7 +28,7 @@ configure: requirements
 
 setup:
 	cd $(PROJECT_DIR) && \
-	$(PYTHON) manage.py makemigrations --settings=config.settings.production && \
+	$(PYTHON) manage.py makemigrations douglasdaly blog --settings=config.settings.production && \
 	$(PYTHON) manage.py migrate --settings=config.settings.production && \
 	$(PYTHON) manage.py createsuperuser --settings=config.settings.production && \
 	$(PYTHON) manage.py collectstatic --settings=config.settings.production
@@ -38,7 +38,7 @@ start:
 
 debug_setup:
 	cd $(PROJECT_DIR) && \
-	$(PYTHON) manage.py makemigrations --settings=config.settings.local && \
+	$(PYTHON) manage.py makemigrations douglasdaly blog --settings=config.settings.local && \
 	$(PYTHON) manage.py migrate --settings=config.settings.local && \
 	$(PYTHON) manage.py createsuperuser --settings=config.settings.local
 
