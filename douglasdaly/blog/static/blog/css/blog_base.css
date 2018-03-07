@@ -1,10 +1,10 @@
 .sidemenu {
     position: absolute;
-    overflow-y: scroll;
+    overflow-y: hidden;
 }
 
 .blog-content {
-    overflow-y: scroll;
+    overflow-y: hidden;
 }
 
 .sidebar-pills {

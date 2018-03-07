@@ -26,7 +26,7 @@ def index(request):
         'posts': __get_post_page(post_list, page=page,
                                  blog_settings=blog_settings),
     }
-    ret_dict = __append_common_vars(request, ret_dict)
+    ret_dict = __append_common_vars(request, ret_dict, include_settings=False)
 
     return render(request, 'blog/index.html', ret_dict)
 
@@ -54,8 +54,9 @@ def search(request):
     ret_dict = {
         'query_string': query_string,
         'posts': posts,
+        'blog_settings': blog_settings
     }
-    ret_dict = __append_common_vars(request, ret_dict)
+    ret_dict = __append_common_vars(request, ret_dict, include_settings=False)
 
     return render(request, 'blog/search.html', ret_dict)
 
@@ -95,8 +96,9 @@ def view_category(request, slug):
         'category': category,
         'posts': __get_post_page(Post.objects.filter(category=category), page,
                                  blog_settings),
+        'blog_settings': blog_settings
     }
-    ret_dict = __append_common_vars(request, ret_dict)
+    ret_dict = __append_common_vars(request, ret_dict, include_settings=False)
 
     return render(request, 'blog/view_category.html', ret_dict)
 
@@ -122,8 +124,9 @@ def view_tag(request, slug):
         'tag': tag,
         'posts': __get_post_page(Post.objects.filter(tags=tag), page,
                                  blog_settings),
+        'blog_settings': blog_settings
     }
-    ret_dict = __append_common_vars(request, ret_dict)
+    ret_dict = __append_common_vars(request, ret_dict, include_settings=False)
 
     return render(request, 'blog/view_tag.html', ret_dict)
 
@@ -161,10 +164,16 @@ def __get_post_page(post_list, page=1, blog_settings=None):
     return post_paginator.get_page(page)
 
 
-def __append_common_vars(request, curr_dict):
+def __append_common_vars(request, curr_dict, include_settings=True):
     sort_tab = request.session.get('sort_tab', 'date')
 
-    common_dict = {'sort_tab': sort_tab}
+    common_dict = {
+        'sort_tab': sort_tab
+    }
+
+    if include_settings:
+        blog_settings = BlogSettings.load()
+        common_dict["blog_settings"] = blog_settings
 
     return {**curr_dict, **common_dict}
 

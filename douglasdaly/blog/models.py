@@ -26,6 +26,12 @@ class BlogSettings(models.Model):
 
     posts_per_page = models.PositiveIntegerField(blank=False, default=10)
 
+    code_style_sheet = models.CharField(max_length=40, blank=False, default='code_default',
+                                        choices=[
+                                            ('code_default', 'Default'),
+                                            ('code_monokai', 'Monokai')
+                                        ])
+
     def __str__(self):
         return 'Blog Settings'
 

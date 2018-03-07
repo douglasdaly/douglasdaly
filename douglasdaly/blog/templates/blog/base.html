@@ -4,7 +4,9 @@
 {% load sidebar_tags %}
 
 {% block additional_header %}
-<link rel="stylesheet" type="text/css" href="{% static 'blog/css/code_style.css' %}" />
+{% with code_style='blog/css/'|add:blog_settings.code_style_sheet|add:'.css' %}
+  <link rel="stylesheet" type="text/css" href="{% static code_style %}" />
+{% endwith %}
 <link rel="stylesheet" type="text/css" href="{% static 'blog/css/blog_base.css' %}" />
 {% endblock %}
 
