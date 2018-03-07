@@ -1,0 +1,10 @@
+[
+    {
+        "model": "blog.BlogSettings",
+        "pk": 1,
+        "fields":
+        {
+            "title": "Douglas Daly's Blog"
+        }
+    }
+]

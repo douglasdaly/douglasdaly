@@ -1,0 +1,10 @@
+[
+    {
+        "model": "douglasdaly.SiteSettings",
+        "pk": 1,
+        "fields":
+        {
+            "title": "Douglas Daly"
+        }
+    }
+]
