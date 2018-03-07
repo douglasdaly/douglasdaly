@@ -19,29 +19,44 @@ To clone the repository code:
 $ git clone https://github.com/douglasdaly/douglasdaly
 ```
 
-Then setup the python requirements - inside a virtualenv:
+Then setup the python requirements and environment variables needed - inside a virtualenv:
 
 ```bash
-$ pip install -r requirements.txt
+$ make configure
 ``` 
 
-Navigate to the `douglasdaly` directory and then to initialize the database:
+#### Debug
+
+To setup the development environment:
 
 ```bash
-$ python manage.py makemigrations
-$ python manage.py migrate
-```
-
-And then create a super user:
-
-```bash
-$ python manage.py createsuperuser
+$ make debug_setup
 ```
 
 And to run the development server:
 
 ```bash
-$ python manage.py runserver
+$ make debug
+```
+
+#### Production
+
+To setup the production environment:
+
+```bash
+$ make setup
+```
+
+And to run the production server:
+
+```bash
+$ make start
+```
+
+or to run the whole install & run process for production just call:
+
+```bash
+$ make all
 ```
 
 ### About
