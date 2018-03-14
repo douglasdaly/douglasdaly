@@ -16,6 +16,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator
 
 from adminsortable.models import SortableMixin
+from sorl.thumbnail import ImageField
 
 
 #
@@ -77,6 +78,8 @@ class Page(SortableMixin):
                                         blank=True)
     custom_css = models.FileField(upload_to="style/", default=None, null=True,
                                   blank=True)
+    custom_javascript = models.FileField(upload_to="scripts/", default=None,
+                                         null=True, blank=True)
     content = models.TextField(default=None, null=True, blank=True)
 
     class Meta:
@@ -96,3 +99,26 @@ class Page(SortableMixin):
             return reverse('view_page', kwargs={'slug': self.slug})
         else:
             return self.passthrough_link
+
+
+class Asset(models.Model):
+    title = models.CharField(max_length=80, unique=True)
+    slug = models.SlugField(max_length=80, unique=True)
+    description = models.TextField(blank=True, null=True, default=None)
+
+    class Meta:
+        ordering = ['title']
+
+    def __str__(self):
+        return self.title
+
+    def __unicode__(self):
+        return "%s" % self.title
+
+
+class ImageAsset(Asset):
+    asset = ImageField(upload_to="assets/image/")
+
+
+class FileAsset(Asset):
+    asset = models.FileField(upload_to="assets/file/")

@@ -22,3 +22,7 @@
   </div>
 </div>
 {% endblock %}
+
+{% block additional_tail_js %}
+{% if page.custom_javascript %}<script type="text/javascript" src="{{ page.custom_javascript.url }}"></script>{% endif %}
+{% endblock %}

@@ -19,7 +19,7 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls import url, include
 
-from .views import index, view_page
+from .views import index, view_page, get_asset
 
 
 #
@@ -29,5 +29,6 @@ from .views import index, view_page
 urlpatterns = [
     url(r'^$', index, name='index'),
     url('index.html', index, name='index'),
+    url(r'^ajax/get_asset/$', get_asset, name="get_asset"),
     url(r'^(?P<slug>[^\.]+).html', view_page, name='view_page'),
 ]

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-view.py
+views.py
 
     Views for the main site pages
 
@@ -11,8 +11,11 @@ view.py
 #   Imports
 #
 from django.shortcuts import render_to_response, get_object_or_404
+from django.http import JsonResponse, Http404
 
-from .models import Page, SiteSettings
+from sorl.thumbnail import get_thumbnail
+
+from .models import Page, SiteSettings, FileAsset, ImageAsset
 from blog.models import Post
 
 
@@ -45,3 +48,40 @@ def view_page(request, slug):
         'page': page,
         'custom_css_file': page.custom_css,
     })
+
+
+def get_asset(request):
+    slug = request.GET.get("slug", None)
+    asset_type = request.GET.get("type", None)
+
+    if asset_type == "file":
+        asset = get_object_or_404(FileAsset, slug=slug)
+
+        data = {
+            'title': asset.title,
+            'description': asset.description,
+            'url': asset.asset.url
+        }
+
+    elif asset_type == "image":
+        asset = get_object_or_404(ImageAsset, slug=slug)
+
+        size = request.GET.get("size", None)
+        crop = request.GET.get("crop", None)
+        quality = request.GET.get("quality", None)
+
+        if size is not None:
+            new_im = get_thumbnail(asset.asset, size, crop=crop, quality=quality)
+        else:
+            new_im = asset.asset
+
+        data = {
+            'title': asset.title,
+            'description': asset.description,
+            'url': new_im.url
+        }
+
+    else:
+        return Http404("Invalid asset type")
+
+    return JsonResponse(data)

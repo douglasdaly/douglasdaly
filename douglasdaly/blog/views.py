@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+blog/views.py
+
+    Views setup for the blog application
+
+"""
 #
 #   Imports
 #

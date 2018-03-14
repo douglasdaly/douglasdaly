@@ -13,7 +13,6 @@
   <script type="text/javascript" src="{{ js_inc.file.url }}"></script>
   {% endfor %}
 {% endif %}
-{% if post.custom_javascript %}<script type="text/javascript" src="{{ post.custom_javascript.url }}"></script>{% endif %}
 {% endblock %}
 
 {% block blog_content %}
@@ -33,4 +32,8 @@
   </ul>
   {% endif %}
 </div>
+{% endblock %}
+
+{% block additional_tail_js %}
+{% if post.custom_javascript %}<script type="text/javascript" src="{{ post.custom_javascript.url }}"></script>{% endif %}
 {% endblock %}
