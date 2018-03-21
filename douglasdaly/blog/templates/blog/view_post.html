@@ -35,5 +35,6 @@
 {% endblock %}
 
 {% block additional_tail_js %}
+{{ block.super }}
 {% if post.custom_javascript %}<script type="text/javascript" src="{{ post.custom_javascript.url }}"></script>{% endif %}
 {% endblock %}
