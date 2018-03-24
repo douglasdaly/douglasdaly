@@ -14,7 +14,7 @@ from script_helpers import process_input_dictionary
 
 aws_vars = {
     'AWS_ACCESS_KEY_ID': (None, False),
-    'AWS_SECRET_ACCESS_KEY': (None, True),
+    'AWS_SECRET_ACCESS_KEY': (None, False),
     'AWS_STORAGE_BUCKET_NAME': (None, False),
     'S3DIRECT_REGION': ('us-east-2', False)
 }

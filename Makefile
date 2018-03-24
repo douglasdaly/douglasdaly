@@ -15,12 +15,12 @@ PROJECT_DIR=douglasdaly
 
 # Recipes
 
-all: configure setup start
+all: requirements start
 
 requirements:
 	$(PIP) install -r requirements.txt
 
-configure: requirements
+configure:
 	touch .env
 	$(PYTHON) scripts/new_secret_key.py
 	$(PYTHON) scripts/database_variables.py

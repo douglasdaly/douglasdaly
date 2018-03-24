@@ -6,5 +6,17 @@
         {
             "title": "Douglas Daly"
         }
+    },
+    {
+        "model": "douglasdaly.Page",
+        "pk": 1,
+        "fields":
+        {
+            "title": "Blog",
+            "slug": "blog",
+            "link_name": "Blog",
+            "passthrough_page": "True",
+            "passthrough_link": "/blog/"
+        }
     }
 ]

@@ -13,7 +13,7 @@ from .aws.conf import *
 #
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['.douglasdaly.com']
 
 
 # Database
