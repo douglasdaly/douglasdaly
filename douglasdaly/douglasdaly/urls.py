@@ -16,8 +16,7 @@ Including another URLconf
 #
 #   Imports
 #
-from django.conf import settings
-from django.conf.urls import url, include
+from django.conf.urls import url
 
 from .views import index, view_page, get_asset
 
