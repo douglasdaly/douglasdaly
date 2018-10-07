@@ -2,13 +2,14 @@
 #	MAKEFILE
 #
 
-.PHONY: requirements configure setup start debug_setup debug
+.PHONY: requirements configure setup start debug_setup debug update_requirements
 
 
 # Variables
 
 PYTHON=python
 PIP=pip
+PUR=pur
 
 PROJECT_DIR=douglasdaly
 
@@ -16,6 +17,10 @@ PROJECT_DIR=douglasdaly
 # Recipes
 
 all: requirements start
+
+update_requirements:
+	$(PUR) -r requirements.txt
+	$(MAKE) requirements
 
 requirements:
 	$(PIP) install -r requirements.txt
