@@ -20,6 +20,7 @@ DEFAULT_FILE_STORAGE = "config.settings.aws.utils.MediaRootS3BotoStorage"
 STATICFILES_STORAGE = "config.settings.aws.utils.StaticRootS3BotoStorage"
 AWS_STORAGE_BUCKET_NAME = os.environ["AWS_STORAGE_BUCKET_NAME"]
 S3DIRECT_REGION = os.environ["S3DIRECT_REGION"]
+AWS_S3_SIGNATURE_VERSION = 's3v4'
 S3_URL = 'https://s3.{}.amazonaws.com/{}/'.format(S3DIRECT_REGION, AWS_STORAGE_BUCKET_NAME)
 MEDIA_URL = S3_URL + 'media/'
 STATIC_URL = S3_URL + 'static/'
