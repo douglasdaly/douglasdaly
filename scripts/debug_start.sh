@@ -10,10 +10,9 @@ touch logs/access.log
 tail -n 0 -f logs/*.log &
 
 # - Start Gunicorn Server
+echo "[INFO] Starting gunicorn on debug application..."
 exec gunicorn config.debug_wsgi:application \
     --chdir douglasdaly/ \
     --bind 0.0.0.0:8000 \
     --workers $WORKERS \
-    --log-level=info \
-    --log-file=logs/gunicorn.log \
-    --access-logfile=logs/access.log
+    --log-level=info
