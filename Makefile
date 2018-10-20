@@ -44,7 +44,7 @@ setup:
 	$(PYTHON) manage.py makemigrations douglasdaly blog --settings=config.settings.production && \
 	$(PYTHON) manage.py migrate --settings=config.settings.production && \
 	$(PYTHON) manage.py loaddata --settings=config.settings.production initial_sitesettings.json initial_blogsettings.json && \
-	$(PYTHON) manage.py collectstatic --settings=config.settings.production
+	$(PYTHON) manage.py collectstatic --no-input --settings=config.settings.production
 
 start:
 	./scripts/start.sh
@@ -60,7 +60,7 @@ debug_setup:
 	$(PYTHON) manage.py makemigrations douglasdaly blog --settings=config.settings.local && \
 	$(PYTHON) manage.py migrate --settings=config.settings.local && \
 	$(PYTHON) manage.py loaddata --settings=config.settings.local initial_sitesettings.json initial_blogsettings.json && \
-	$(PYTHON) manage.py collectstatic --settings=config.settings.local
+	$(PYTHON) manage.py collectstatic --no-input --settings=config.settings.local
 
 debug_simple:
 	cd $(PROJECT_DIR) && $(PYTHON) manage.py runserver
