@@ -2,7 +2,7 @@
 #	MAKEFILE
 #
 
-.PHONY: requirements configure setup start debug_setup debug update_requirements debug_deploy	
+.PHONY: requirements configure setup start debug_setup debug update_requirements deploy_debug
 
 
 # Variables
