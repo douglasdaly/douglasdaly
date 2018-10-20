@@ -46,8 +46,9 @@ debug_setup:
 	cd $(PROJECT_DIR) && \
 	$(PYTHON) manage.py makemigrations douglasdaly blog --settings=config.settings.local && \
 	$(PYTHON) manage.py migrate --settings=config.settings.local && \
-	$(PYTHON) manage.py createsuperuser --settings=config.settings.local && \
-	$(PYTHON) manage.py loaddata --settings=config.settings.local initial_sitesettings.json initial_blogsettings.json
+	$(PYTHON) manage.py createsuperuser --username='admin' --email='admin@example.com' --settings=config.settings.local && \
+	$(PYTHON) manage.py loaddata --settings=config.settings.local initial_sitesettings.json initial_blogsettings.json && \
+	$(PYTHON) manage.py collectstatic --settings=config.settings.local
 
 debug:
 	cd $(PROJECT_DIR) && $(PYTHON) manage.py runserver
