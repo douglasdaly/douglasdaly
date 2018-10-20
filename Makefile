@@ -26,6 +26,7 @@ update_requirements:
 
 requirements:
 	$(PIP) install -r requirements.txt
+	rm -rf ./src
 
 configure:
 	touch .env
