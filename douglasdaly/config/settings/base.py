@@ -33,15 +33,13 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
     'django.contrib.sites',
     'django.contrib.sitemaps',
     'robots',
     'adminsortable',
     'douglasdaly.apps.BaseConfig',
     'blog.apps.BlogConfig',
-    'sorl.thumbnail',
-    'storages',
+    'sorl.thumbnail'
 ]
 
 MIDDLEWARE = [

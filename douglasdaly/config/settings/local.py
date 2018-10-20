@@ -18,7 +18,7 @@ ALLOWED_HOSTS = []
 
 # Debug Toolbar
 
-INSTALLED_APPS += ['debug_toolbar']
+INSTALLED_APPS += ['django.contrib.staticfiles', 'debug_toolbar']
 
 MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
 

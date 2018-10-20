@@ -29,3 +29,5 @@ DATABASES = {
         'PORT': os.environ.get("DB_PORT"),
     }
 }
+
+INSTALLED_APPS += ['storages']
