@@ -2,7 +2,7 @@
 #	MAKEFILE
 #
 
-.PHONY: requirements configure setup start debug_setup debug update_requirements
+.PHONY: requirements configure setup start debug_setup debug update_requirements debug_deploy	
 
 
 # Variables
@@ -51,3 +51,6 @@ debug_setup:
 
 debug:
 	cd $(PROJECT_DIR) && $(PYTHON) manage.py runserver
+
+deploy_debug:
+	./scripts/debug_start.sh
