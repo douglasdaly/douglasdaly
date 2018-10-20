@@ -2,7 +2,7 @@
 #	MAKEFILE
 #
 
-.PHONY: requirements configure setup start debug_setup debug update_requirements deploy_debug
+.PHONY: requirements configure setup start debug_setup debug update_requirements debug_simple createsuperuser debug_createsuperuser
 
 
 # Variables
@@ -18,6 +18,8 @@ PROJECT_DIR=douglasdaly
 
 all: requirements start
 
+# - Install Related
+
 update_requirements:
 	$(PUR) -r requirements.txt
 	$(MAKE) requirements
@@ -31,27 +33,37 @@ configure:
 	$(PYTHON) scripts/database_variables.py
 	$(PYTHON) scripts/aws_variables.py
 
+# - Production Related
+
+createsuperuser:
+	cd $(PROJECT_DIR) && \
+	$(PYTHON) manage.py createsuperuser --settings=config.settings.production
+
 setup:
 	cd $(PROJECT_DIR) && \
 	$(PYTHON) manage.py makemigrations douglasdaly blog --settings=config.settings.production && \
 	$(PYTHON) manage.py migrate --settings=config.settings.production && \
-	$(PYTHON) manage.py createsuperuser --settings=config.settings.production && \
 	$(PYTHON) manage.py loaddata --settings=config.settings.production initial_sitesettings.json initial_blogsettings.json && \
 	$(PYTHON) manage.py collectstatic --settings=config.settings.production
 
 start:
 	./scripts/start.sh
 
+# - Debug Related
+
+debug_createsuperuser:
+	cd $(PROJECT_DIR) && \
+	$(PYTHON) manage.py createsuperuser --settings=config.settings.local
+
 debug_setup:
 	cd $(PROJECT_DIR) && \
 	$(PYTHON) manage.py makemigrations douglasdaly blog --settings=config.settings.local && \
 	$(PYTHON) manage.py migrate --settings=config.settings.local && \
-	$(PYTHON) manage.py createsuperuser --username='admin' --email='admin@example.com' --settings=config.settings.local && \
 	$(PYTHON) manage.py loaddata --settings=config.settings.local initial_sitesettings.json initial_blogsettings.json && \
 	$(PYTHON) manage.py collectstatic --settings=config.settings.local
 
-debug:
+debug_simple:
 	cd $(PROJECT_DIR) && $(PYTHON) manage.py runserver
 
-deploy_debug:
+debug:
 	./scripts/debug_start.sh
