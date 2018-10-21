@@ -19,3 +19,7 @@ migrations/
 
 # dotenv Files
 .env
+
+# Static/Media
+douglasdaly/static/
+douglasdaly/media/
