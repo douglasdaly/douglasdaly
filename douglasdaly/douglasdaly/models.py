@@ -45,7 +45,7 @@ class SiteSettings(models.Model):
         return 'Site Settings'
 
     def __unicode__(self):
-        return "Site Settings"
+        return self.__str__()
 
     def save(self, *args, **kwargs):
         """ Override to ensure only one instance exists
@@ -55,6 +55,41 @@ class SiteSettings(models.Model):
                                   'Settings')
         else:
             return super(SiteSettings, self).save(*args, **kwargs)
+
+    @classmethod
+    def load(cls):
+        """ Loads the Singleton Instance or returns None
+        """
+        try:
+            obj = cls.objects.get(pk=1)
+        except cls.DoesNotExist:
+            obj = None
+        return obj
+
+
+class SiteAdminSettings(models.Model):
+    err_404_title = models.CharField(max_length=60, null=False,
+                                     default="Page not Found (404)")
+    err_404_content = models.TextField(null=True, blank=True, default=None)
+
+    err_500_title = models.CharField(max_length=60, null=False,
+                                     default="Server Error (500)")
+    err_500_content = models.TextField(null=True, blank=True, default=None)
+
+    def __str__(self):
+        return 'Site Administration Settings'
+
+    def __unicode__(self):
+        return self.__str__()
+
+    def save(self, *args, **kwargs):
+        """ Override to ensure only one instance exists
+        """
+        if SiteAdminSettings.objects.exists() and not self.pk:
+            raise ValidationError('There can only be one instance of the Site '
+                                  'Administration Settings')
+        else:
+            return super(SiteAdminSettings, self).save(*args, **kwargs)
 
     @classmethod
     def load(cls):

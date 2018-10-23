@@ -1,5 +1,5 @@
 """
-Local Debug Django Settings
+Local Non-Debug Django Settings
 """
 #
 #   Imports
@@ -11,16 +11,11 @@ from .base import *
 #   Additional Settings
 #
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Debug Toolbar
 
-INSTALLED_APPS += ['django.contrib.staticfiles', 'debug_toolbar']
-
-MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
+INSTALLED_APPS += ['django.contrib.staticfiles']
 
 INTERNAL_IPS = ['127.0.0.1']
 

@@ -2,7 +2,10 @@
 #	MAKEFILE
 #
 
-.PHONY: requirements configure setup start debug_setup debug update_requirements debug_simple createsuperuser debug_createsuperuser
+.PHONY: requirements update_requirements configure \
+		createsuperuser setup start \
+		debug_setup debug debug_createsuperuser \
+		debug_start local_start
 
 
 # Variables
@@ -62,8 +65,25 @@ debug_setup:
 	$(PYTHON) manage.py loaddata --settings=config.settings.local initial_sitesettings.json initial_blogsettings.json && \
 	$(PYTHON) manage.py collectstatic --no-input --settings=config.settings.local
 
-debug_simple:
+debug:
 	cd $(PROJECT_DIR) && $(PYTHON) manage.py runserver
 
-debug:
+debug_start:
 	./scripts/debug_start.sh
+
+local:
+	cd $(PROJECT_DIR) && $(PYTHON) manage.py runserver --settings=config.settings.local
+
+local_start:
+	./scripts/local_start.sh
+
+# - Misc
+
+clean:
+	rm $(PROJECT_DIR)/db.sqlite3
+	rm -rf $(PROJECT_DIR)/static/*
+	touch $(PROJECT_DIR)/static/.gitkeep
+	rm $(PROJECT_DIR)/douglasdaly/migrations/*.py
+	touch $(PROJECT_DIR)/douglasdaly/migrations/__init__.py
+	rm $(PROJECT_DIR)/blog/migrations/*.py
+	touch $(PROJECT_DIR)/blog/migrations/__init__.py

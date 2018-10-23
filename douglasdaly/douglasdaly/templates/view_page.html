@@ -9,7 +9,7 @@
 
 {% block additional_styles %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/page.css' %}">
-{% if custom_css_file %}      
+{% if custom_css_file %}
 <link rel="stylesheet" type="text/css" href="{{ custom_css_file.url }}">
 {% endif %}
 {% endblock %}
@@ -18,7 +18,7 @@
 <div class="page-template">
   <div class="container">
     <h1>{{ page.title }}</h1>
-    {{ page.content|markdown|safe }}
+    {% if page.content %}{{ page.content|markdown|safe }}{% endif %}
   </div>
 </div>
 {% endblock %}

@@ -20,19 +20,29 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
-from django.conf.urls import url
+from django.conf.urls import url, handler404, handler500
 from django.contrib.sitemaps.views import sitemap
+
+from blog.sitemap import BlogPostsSitemap
+from douglasdaly.sitemap import PagesSitemap
+
+from douglasdaly.views import custom_404_view, custom_500_view
 
 #
 #   Sitemaps Setup
 #
-from blog.sitemap import BlogPostsSitemap
-from douglasdaly.sitemap import PagesSitemap
 
 sitemaps = {
     'pages': PagesSitemap(),
     'blog': BlogPostsSitemap(),
 }
+
+#
+#   Special Handlers
+#
+
+handler404 = 'douglasdaly.views.custom_404_view'
+handler500 = 'douglasdaly.views.custom_500_view'
 
 
 #
@@ -40,6 +50,8 @@ sitemaps = {
 #
 
 urlpatterns = [
+    path('404/', custom_404_view),
+    path('500/', custom_500_view),
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps},
          name='django.contrib.sitemaps.views.sitemap'),
     path('robots.txt', include('robots.urls')),

@@ -13,7 +13,8 @@ admin.py
 from django.contrib import admin
 from adminsortable.admin import SortableAdmin
 
-from .models import Page, SiteSettings, ImageAsset, FileAsset
+from .models import (Page, SiteSettings, SiteAdminSettings, ImageAsset,
+                     FileAsset)
 
 
 #
@@ -34,5 +35,6 @@ class AssetAdmin(admin.ModelAdmin):
 
 admin.site.register(Page, PageAdmin)
 admin.site.register(SiteSettings)
+admin.site.register(SiteAdminSettings)
 admin.site.register(ImageAsset, AssetAdmin)
 admin.site.register(FileAsset, AssetAdmin)

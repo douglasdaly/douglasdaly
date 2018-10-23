@@ -4,12 +4,30 @@
         "pk": 1,
         "fields":
         {
-            "title": "Douglas Daly"
+            "title": "Douglas Daly",
+            "meta_description": "Personal website of Douglas Daly",
+            "meta_author": "Douglas Daly",
+            "meta_keywords": "douglas daly,"
         }
+    },
+    {
+        "model": "douglasdaly.SiteAdminSettings",
+        "pk": 1,
+        "fields": {}
     },
     {
         "model": "douglasdaly.Page",
         "pk": 1,
+        "fields":
+        {
+            "title": "About",
+            "slug": "about",
+            "link_name": "About"
+        }
+    },
+    {
+        "model": "douglasdaly.Page",
+        "pk": 2,
         "fields":
         {
             "title": "Blog",
