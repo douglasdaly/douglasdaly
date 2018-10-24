@@ -18,8 +18,13 @@
 {% block blog_content %}
 <div class="blog-content">  
   <h1><b>{{ post.title }}</b></h1>
-  <p><i>{{ post.description }}</i></p>
-  <p><b>Category: </b><a href="{{ post.category.get_absolute_url }}">{{ post.category.name }}</a></p>
+  <p>
+    <i class="text-muted">{{ post.posted|date:"l, F d, Y" }}</i><br/>
+    <i>{{ post.description }}</i>
+  </p>
+  <p>
+    <b>Category: </b><a href="{{ post.category.get_absolute_url }}">{{ post.category.name }}</a>
+  </p>
 
   {{ post.body | markdown | safe }}
 
