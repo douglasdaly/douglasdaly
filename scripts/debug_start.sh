@@ -3,11 +3,6 @@
 # - Variables
 let WORKERS=1
 
-# - Setup Logs
-touch logs/gunicorn.log
-touch logs/access.log
-tail -n 0 -f logs/*.log &
-
 # - Start Gunicorn Server
 echo "[INFO] Starting gunicorn on debug application..."
 exec gunicorn config.debug_wsgi:application \
