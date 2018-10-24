@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.sites',
     'django.contrib.sitemaps',
+    'django.contrib.staticfiles',
     'robots',
     'adminsortable',
     'douglasdaly.apps.BaseConfig',
