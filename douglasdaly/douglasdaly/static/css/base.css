@@ -20,3 +20,8 @@ body {
 .bd-footer.container-fluid {
     padding: 0px;
 }
+
+.container p img {
+    display: block;
+    margin: auto auto;
+}
