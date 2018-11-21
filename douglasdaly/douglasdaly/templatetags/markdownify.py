@@ -11,6 +11,7 @@ markdownify.py
 from django import template
 import mistune
 from pygments import highlight
+from pygments.util import ClassNotFound
 from pygments.lexers import get_lexer_by_name
 from pygments.formatters.html import HtmlFormatter
 from sorl.thumbnail import get_thumbnail
@@ -23,15 +24,21 @@ from douglasdaly.models import ImageAsset, FileAsset
 #
 
 class HighlightRenderer(mistune.Renderer):
+    """
+    Renderer class for Markup
+    """
 
     def block_code(self, code, lang=None):
         if not lang:
             return '\n<div class="highlight"><pre><code>' + \
                    '%s</code></pre></div>\n' % mistune.escape(code)
         else:
-            lexer = get_lexer_by_name(lang, stripall=True)
-            formatter = HtmlFormatter(linenos="inline")
-            return highlight(code, lexer, formatter)
+            try:
+                lexer = get_lexer_by_name(lang, stripall=True)
+                formatter = HtmlFormatter(linenos="inline")
+                return highlight(code, lexer, formatter)
+            except ClassNotFound:
+                return self.block_code(code)
 
     def image(self, src, title, text):
         args = self._asset_url_helper(src)
@@ -90,8 +97,10 @@ class HighlightRenderer(mistune.Renderer):
 
 register = template.Library()
 
+renderer = HighlightRenderer()
+md = mistune.Markdown(renderer=renderer)
+
 
 @register.filter
 def markdown(value):
-    md = mistune.Markdown(renderer=HighlightRenderer())
     return md(value)
