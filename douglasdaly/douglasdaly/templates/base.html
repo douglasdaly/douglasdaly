@@ -24,6 +24,9 @@
     <!-- Scripts
     ----------------------------------------------------------------------- -->
     <script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
+    <script type="text/javascript" async
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async>
+    </script>
     <script defer src="{% static 'js/assets.js' %}"></script>
     {% block additional_scripts %}{% endblock %}
 
@@ -62,6 +65,12 @@
 
     <!-- Footer Navbar
       ------------------------------------------------------------------------ -->
+    <div class="d-sm-none">
+        <div class="row">
+            <div class="col-12"><br/><br/></div>
+        </div>
+    </div>
+
     <footer class="bd-footer" style="margin: 0px; padding: 0px;">
       <div class="container-fluid">
 	<div class="row">
