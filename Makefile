@@ -42,6 +42,12 @@ createsuperuser:
 	cd $(PROJECT_DIR) && \
 	$(PYTHON) manage.py createsuperuser --settings=config.settings.production
 
+update:
+	cd $(PROJECT_DIR) && \
+	$(PYTHON) manage.py makemigrations douglasdaly blog --settings=config.settings.production && \
+	$(PYTHON) manage.py migrate --settings=config.settings.production && \
+	$(PYTHON) manage.py collectstatic --no-input --settings=config.settings.production
+
 setup:
 	cd $(PROJECT_DIR) && \
 	$(PYTHON) manage.py makemigrations douglasdaly blog --settings=config.settings.production && \
