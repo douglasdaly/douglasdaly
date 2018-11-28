@@ -4,7 +4,7 @@
 #
 from django.contrib import admin
 
-from .models import Post, Category, Tag, BlogSettings, CustomJS
+from .models import Post, Category, Tag, BlogSettings, CustomJS, CustomCSS
 
 
 #
@@ -35,3 +35,4 @@ admin.site.register(Post, PostAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(CustomJS)
+admin.site.register(CustomCSS)

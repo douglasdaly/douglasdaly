@@ -106,6 +106,20 @@ class CustomJS(models.Model):
         ordering = ('name',)
 
 
+class CustomCSS(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    file = models.FileField(upload_to="blog/posts/custom_css/")
+
+    def __str__(self):
+        return self.name
+
+    def __unicode__(self):
+        return '%s' % self.name
+
+    class Meta:
+        ordering = ('name',)
+
+
 class Post(models.Model):
     title = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=100, unique=True)
@@ -120,6 +134,7 @@ class Post(models.Model):
     body = models.TextField()
     custom_javascript = models.FileField(upload_to="blog/posts/scripts/",
                                          blank=True, default=None, null=True)
+    css_includes = models.ManyToManyField(CustomCSS, blank=True)
     javascript_includes = models.ManyToManyField(CustomJS, blank=True)
 
     posted = models.DateTimeField(db_index=True, auto_now_add=True)
