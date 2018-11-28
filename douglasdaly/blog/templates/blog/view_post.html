@@ -7,6 +7,14 @@
 {% block meta_extra %}{% meta_head post.title post.description %}{% endblock %}
 {% block keywords %}{% meta_keywords post|tag_strjoin %}{% endblock %}
 
+{% block additional_styles %}
+{% if post.css_includes %}
+  {% for css_inc in post.css_includes.all %}
+  <link rel="stylesheet" type="text/css" href="{{ css_inc.file.url }}">
+  {% endfor %}
+{% endif %}
+{% endblock %}
+
 {% block additional_scripts %}
 {% if post.javascript_includes %}
   {% for js_inc in post.javascript_includes.all %}
