@@ -76,6 +76,11 @@ class SiteAdminSettings(models.Model):
                                      default="Server Error (500)")
     err_500_content = models.TextField(null=True, blank=True, default=None)
 
+    default_video_width = models.SmallIntegerField(default=480)
+    default_video_height = models.SmallIntegerField(default=360)
+    default_video_autoplay = models.BooleanField(default=False)
+    default_video_controls = models.BooleanField(default=True)
+
     def __str__(self):
         return 'Site Administration Settings'
 
@@ -137,9 +142,11 @@ class Page(SortableMixin):
 
 
 class Asset(models.Model):
-    title = models.CharField(max_length=80, unique=True)
-    slug = models.SlugField(max_length=80, unique=True)
+    title = models.CharField(max_length=100, unique=True)
+    slug = models.SlugField(max_length=120, unique=True)
     description = models.TextField(blank=True, null=True, default=None)
+    type = models.CharField(max_length=30, unique=False, null=False,
+                            editable=False)
 
     class Meta:
         ordering = ['title']
@@ -154,6 +161,27 @@ class Asset(models.Model):
 class ImageAsset(Asset):
     asset = ImageField(upload_to="assets/image/")
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.type = "image"
+
 
 class FileAsset(Asset):
     asset = models.FileField(upload_to="assets/file/")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.type = "file"
+
+
+class VideoAsset(Asset):
+    asset = models.FileField(upload_to="assets/video/")
+    video_width = models.SmallIntegerField(null=True, default=None)
+    video_height = models.SmallIntegerField(null=True, default=None)
+    autoplay = models.BooleanField(default=False)
+    controls = models.BooleanField(default=True)
+    loop = models.BooleanField(default=False)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.type = "video"

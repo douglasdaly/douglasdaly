@@ -14,7 +14,7 @@ from django.contrib import admin
 from adminsortable.admin import SortableAdmin
 
 from .models import (Page, SiteSettings, SiteAdminSettings, ImageAsset,
-                     FileAsset)
+                     FileAsset, VideoAsset)
 
 
 #
@@ -38,3 +38,4 @@ admin.site.register(SiteSettings)
 admin.site.register(SiteAdminSettings)
 admin.site.register(ImageAsset, AssetAdmin)
 admin.site.register(FileAsset, AssetAdmin)
+admin.site.register(VideoAsset, AssetAdmin)

@@ -26,6 +26,11 @@ body {
     margin: auto auto;
 }
 
+.container p video {
+    display: block;
+    margin: auto;
+}
+
 .container blockquote {
   font-size: 18px;
   width: 90%;
