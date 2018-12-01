@@ -9,9 +9,8 @@ markdownify.py
 #   Imports
 #
 from django import template
-import mistune
 
-from douglasdaly.templatetags.markdownify import HighlightRenderer
+from douglasdaly.templatetags.markdownify import md
 
 
 #
@@ -19,8 +18,6 @@ from douglasdaly.templatetags.markdownify import HighlightRenderer
 #
 
 register = template.Library()
-
-md = mistune.Markdown(renderer=HighlightRenderer())
 
 
 @register.filter

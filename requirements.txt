@@ -21,6 +21,7 @@ html5lib==1.0.1
 idna==2.7
 jmespath==0.9.3
 mistune==0.8.3
+mistune-contrib==0.1
 Pillow==5.3.0
 psycopg2==2.7.5
 pur==5.0.0

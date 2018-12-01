@@ -8,8 +8,11 @@ markdownify.py
 #
 #   Imports
 #
+import re
 from django import template
+
 import mistune
+from mistune_contrib import math
 from pygments import highlight
 from pygments.util import ClassNotFound
 from pygments.lexers import get_lexer_by_name
@@ -24,30 +27,34 @@ from douglasdaly.models import (Asset, ImageAsset, FileAsset, VideoAsset,
 #   Classes
 #
 
-class HighlightRenderer(mistune.Renderer):
+class HighlightRenderer(mistune.Renderer, math.MathRendererMixin):
     """
     Renderer class for Markup
     """
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
         site_settings = SiteAdminSettings.load()
         self.DEFAULT_VIDEO_WIDTH = site_settings.default_video_width
         self.DEFAULT_VIDEO_HEIGHT = site_settings.default_video_height
         self.DEFAULT_VIDEO_AUTOPLAY = site_settings.default_video_autoplay
         self.DEFAULT_VIDEO_CONTROLS = site_settings.default_video_controls
 
+    def math(self, text):
+        return '\\(%s\\)' % text
+
     def block_code(self, code, lang=None):
         if not lang:
             return '\n<div class="highlight"><pre><code>' + \
                    '%s</code></pre></div>\n' % mistune.escape(code)
-        else:
-            try:
-                lexer = get_lexer_by_name(lang, stripall=True)
-                formatter = HtmlFormatter(linenos="inline")
-                return highlight(code, lexer, formatter)
-            except ClassNotFound:
-                return self.block_code(code)
+
+        try:
+            lexer = get_lexer_by_name(lang, stripall=True)
+            formatter = HtmlFormatter(linenos="inline")
+            return highlight(code, lexer, formatter)
+        except ClassNotFound:
+            return self.block_code(code)
 
     def image(self, src, title, text):
         asset_slug, args = self._asset_url_helper(src)
@@ -216,6 +223,42 @@ class HighlightRenderer(mistune.Renderer):
         return slug, args
 
 
+class MathBlockLexer(math.MathBlockMixin, mistune.BlockLexer):
+    """Block Lexer for MathJax support"""
+
+    def __init__(self, *args, **kwargs):
+        super(MathBlockLexer, self).__init__(*args, **kwargs)
+        self.enable_math()
+
+
+class CustomInlineLexer(mistune.InlineLexer, math.MathInlineMixin):
+    """Inline Lexer for MathJax support and disabled underscores"""
+
+    def __init__(self, *args, **kwargs):
+        super(CustomInlineLexer, self).__init__(*args, **kwargs)
+        self.enable_math()
+
+        # - Customize rules
+        self.rules.math = re.compile(r'^\\\((.+?)\\\)')
+
+        self.rules.emphasis = re.compile(
+            r'^\*((?:\*\*|[^\*])+?)\*(?!\*)'  # *word*
+        )
+        self.rules.double_emphasis = re.compile(
+            r'^\*{2}([\s\S]+?)\*{2}(?!\*)'  # **word**
+        )
+
+    def output_emphasis(self, m):
+        text = m.group(1)
+        text = self.output(text)
+        return self.renderer.emphasis(text)
+
+    def output_double_emphasis(self, m):
+        text = m.group(1)
+        text = self.output(text)
+        return self.renderer.double_emphasis(text)
+
+
 #
 #   Filter Setup
 #
@@ -223,7 +266,8 @@ class HighlightRenderer(mistune.Renderer):
 register = template.Library()
 
 renderer = HighlightRenderer()
-md = mistune.Markdown(renderer=renderer)
+md = mistune.Markdown(renderer=renderer, inline=CustomInlineLexer,
+                      block=MathBlockLexer)
 
 
 @register.filter
