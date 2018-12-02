@@ -16,6 +16,7 @@ PUR=pur
 
 PROJECT_DIR=douglasdaly
 
+DJANGO_APPS=douglasdaly blog
 
 # Recipes
 
@@ -44,13 +45,13 @@ createsuperuser:
 
 update:
 	cd $(PROJECT_DIR) && \
-	$(PYTHON) manage.py makemigrations douglasdaly blog --settings=config.settings.production && \
+	$(PYTHON) manage.py makemigrations $(DJANGO_APPS) --settings=config.settings.production && \
 	$(PYTHON) manage.py migrate --settings=config.settings.production && \
 	$(PYTHON) manage.py collectstatic --no-input --settings=config.settings.production
 
 setup:
 	cd $(PROJECT_DIR) && \
-	$(PYTHON) manage.py makemigrations douglasdaly blog --settings=config.settings.production && \
+	$(PYTHON) manage.py makemigrations $(DJANGO_APPS) --settings=config.settings.production && \
 	$(PYTHON) manage.py migrate --settings=config.settings.production && \
 	$(PYTHON) manage.py loaddata --settings=config.settings.production initial_sitesettings.json initial_blogsettings.json && \
 	$(PYTHON) manage.py collectstatic --no-input --settings=config.settings.production
@@ -66,13 +67,13 @@ debug_createsuperuser:
 
 debug_update:
 	cd $(PROJECT_DIR) && \
-	$(PYTHON) manage.py makemigrations douglasdaly blog --settings=config.settings.local && \
+	$(PYTHON) manage.py makemigrations $(DJANGO_APPS) --settings=config.settings.local && \
 	$(PYTHON) manage.py migrate --settings=config.settings.local && \
 	$(PYTHON) manage.py collectstatic --no-input --settings=config.settings.local
 
 debug_setup:
 	cd $(PROJECT_DIR) && \
-	$(PYTHON) manage.py makemigrations douglasdaly blog --settings=config.settings.local && \
+	$(PYTHON) manage.py makemigrations $(DJANGO_APPS) --settings=config.settings.local && \
 	$(PYTHON) manage.py migrate --settings=config.settings.local && \
 	$(PYTHON) manage.py loaddata --settings=config.settings.local initial_sitesettings.json initial_blogsettings.json && \
 	$(PYTHON) manage.py collectstatic --no-input --settings=config.settings.local
@@ -92,10 +93,6 @@ local_start:
 # - Misc
 
 clean:
-	rm $(PROJECT_DIR)/db.sqlite3
-	rm -rf $(PROJECT_DIR)/static/*
-	touch $(PROJECT_DIR)/static/.gitkeep
-	rm $(PROJECT_DIR)/douglasdaly/migrations/*.py
-	touch $(PROJECT_DIR)/douglasdaly/migrations/__init__.py
-	rm $(PROJECT_DIR)/blog/migrations/*.py
-	touch $(PROJECT_DIR)/blog/migrations/__init__.py
+	rm $(PROJECT_DIR)/db.sqlite3  || true
+	rm -rf $(PROJECT_DIR)/static/* || true
+	touch $(PROJECT_DIR)/static/.gitkeep  || true

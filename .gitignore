@@ -14,9 +14,6 @@ env/*
 # Sqlite
 *.sqlite3
 
-# Migrations
-migrations/
-
 # dotenv Files
 .env
 
