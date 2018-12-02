@@ -41,6 +41,9 @@ class SiteSettings(models.Model):
     linkedin_link = models.URLField(null=True, blank=True)
     twitter_link = models.URLField(null=True, blank=True)
 
+    class Meta:
+        verbose_name_plural = 'Site Settings'
+
     def __str__(self):
         return 'Site Settings'
 
@@ -80,6 +83,9 @@ class SiteAdminSettings(models.Model):
     default_video_height = models.SmallIntegerField(default=360)
     default_video_autoplay = models.BooleanField(default=False)
     default_video_controls = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name_plural = "Site Admin Settings"
 
     def __str__(self):
         return 'Site Administration Settings'
