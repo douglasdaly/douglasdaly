@@ -28,7 +28,7 @@ def sidebar_menu(sort_by="date"):
     if sort_by == "date":
         ret = __sidebar_menu_helper_date()
 
-    elif sort_by == "category":
+    elif sort_by == "categories":
         categories = Category.objects.all().order_by('name')
         ret = list()
         for category in categories:
@@ -42,7 +42,7 @@ def sidebar_menu(sort_by="date"):
                 temp.append((post.title, post.get_absolute_url()))
             ret.append((category, temp))
 
-    elif sort_by == "tag":
+    elif sort_by == "tags":
         tags = Tag.objects.all().order_by('name')
         ret = list()
         for tag in tags:

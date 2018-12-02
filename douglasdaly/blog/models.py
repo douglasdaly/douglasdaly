@@ -32,6 +32,9 @@ class BlogSettings(models.Model):
                                             ('code_monokai', 'Monokai')
                                         ])
 
+    class Meta:
+        verbose_name_plural = "Blog Settings"
+
     def __str__(self):
         return 'Blog Settings'
 
@@ -64,6 +67,7 @@ class Category(models.Model):
 
     class Meta:
         ordering = ('name',)
+        verbose_name_plural = "Categories"
 
     def __str__(self):
         return self.name
@@ -104,6 +108,7 @@ class CustomJS(models.Model):
 
     class Meta:
         ordering = ('name',)
+        verbose_name_plural = "Custom JS Files"
 
 
 class CustomCSS(models.Model):
@@ -118,6 +123,7 @@ class CustomCSS(models.Model):
 
     class Meta:
         ordering = ('name',)
+        verbose_name_plural = "Custom CSS Files"
 
 
 class Post(models.Model):

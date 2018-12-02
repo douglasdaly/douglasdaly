@@ -1,5 +1,16 @@
 function update_sort_tab(sort_tab) {
     $.post('/blog/update_sort_tab/'.concat(sort_tab));
+
+    var currSelected = document.getElementById('blog-sort-'.concat(sort_tab));
+    if (currSelected == null) { return; }
+    if (currSelected.getAttribute('aria-selected') == "true") {
+        if (sort_tab == "date") {
+            window.location = "/blog/";
+        }
+        else {
+            window.location = "/blog/".concat(sort_tab.concat('.html'));
+        }
+    }
 }
 
 function blog_search() {

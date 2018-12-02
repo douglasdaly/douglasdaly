@@ -10,18 +10,29 @@ admin.py
 #
 #   Imports
 #
+from django import forms
 from django.contrib import admin
+
 from adminsortable.admin import SortableAdmin
 
 from .models import (Page, SiteSettings, SiteAdminSettings, ImageAsset,
-                     FileAsset)
+                     FileAsset, VideoAsset)
 
 
 #
 #   Admin Classes
 #
 
+class PageAdminForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['content'].widget.attrs['rows'] = 25
+
+
 class PageAdmin(SortableAdmin):
+    form = PageAdminForm
+
     prepopulated_fields = {'slug': ('title',)}
 
 
@@ -38,3 +49,4 @@ admin.site.register(SiteSettings)
 admin.site.register(SiteAdminSettings)
 admin.site.register(ImageAsset, AssetAdmin)
 admin.site.register(FileAsset, AssetAdmin)
+admin.site.register(VideoAsset, AssetAdmin)

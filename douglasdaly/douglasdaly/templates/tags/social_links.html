@@ -1,17 +1,37 @@
 {% if settings %}
+  {% if settings.github_link or settings.linkedin_link or settings.twitter_link %}
+  <li class="nav-item d-md-flex d-lg-none">
+    <br/><small class="text-muted">Social Links:</small>
+  </li>
+  {% endif %}
   {% if settings.github_link %}
   <li class="nav-item">
-    <a href="{{ settings.github_link }}" target="_blank" class="nav-link p-2"><div style="font-size:1.5em;"><span class="fab fa-github-square"></span></div></a>
+    <a href="{{ settings.github_link }}" target="_blank" class="nav-link p-2">
+      <span class="fab fa-github-square d-none d-lg-flex" style="font-size:1.75em;"></span>
+      <span class="d-md-flex d-lg-none align-middle">
+        <span class="fab fa-github" style="font-size:1.0em;"></span>&nbsp;&nbsp;<small>Github</small>
+      </span>
+    </a>
   </li>
   {% endif %}
   {% if settings.linkedin_link %}
   <li class="nav-item">
-    <a href="{{ settings.linkedin_link }}" target="_blank" class="nav-link p-2"><div style="font-size:1.5em;"><span class="fab fa-linkedin"></span></div></a>
+    <a href="{{ settings.linkedin_link }}" target="_blank" class="nav-link p-2">
+      <span class="fab fa-linkedin d-none d-lg-flex" style="font-size:1.75em;"></span>
+      <span class="d-md-flex d-lg-none align-middle">
+        <span class="fab fa-linkedin-in" style="font-size:1.0em;"></span>&nbsp;&nbsp;<small>LinkedIn</small>
+      </span>
+    </a>
   </li>
   {% endif %}
   {% if settings.twitter_link %}
   <li class="nav-item">
-    <a href="{{ settings.twitter_link }}" target="_blank" class="nav-link p-2"><div style="font-size:1.5em;"><span class="fab fa-twitter-square"></span></div></a>
+    <a href="{{ settings.twitter_link }}" target="_blank" class="nav-link p-2">
+      <span class="fab fa-twitter-square d-none d-lg-flex" style="font-size:1.75em;"></span>
+      <span class="d-md-flex d-lg-none align-middle">
+        <span class="fab fa-twitter" style="font-size:1.0em;"></span>&nbsp;&nbsp;<small>Twitter</small>
+      </span>
+    </a>
   </li>
   {% endif %}
 {% endif %}
