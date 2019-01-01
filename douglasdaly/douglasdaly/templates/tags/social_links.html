@@ -1,14 +1,14 @@
 {% if settings %}
   {% if settings.github_link or settings.linkedin_link or settings.twitter_link %}
-  <li class="nav-item d-md-flex d-lg-none">
-    <br/><small class="text-muted">Social Links:</small>
+  <li class="nav-item d-sm-flex d-md-none">
+    <small class="text-muted">Social Links:</small>
   </li>
   {% endif %}
   {% if settings.github_link %}
   <li class="nav-item">
     <a href="{{ settings.github_link }}" target="_blank" class="nav-link p-2">
-      <span class="fab fa-github-square d-none d-lg-flex" style="font-size:1.75em;"></span>
-      <span class="d-md-flex d-lg-none align-middle">
+      <span class="fab fa-github-square d-none d-md-flex" style="font-size:1.75em;"></span>
+      <span class="d-sm-flex d-md-none align-middle">
         <span class="fab fa-github" style="font-size:1.0em;"></span>&nbsp;&nbsp;<small>Github</small>
       </span>
     </a>
@@ -17,8 +17,8 @@
   {% if settings.linkedin_link %}
   <li class="nav-item">
     <a href="{{ settings.linkedin_link }}" target="_blank" class="nav-link p-2">
-      <span class="fab fa-linkedin d-none d-lg-flex" style="font-size:1.75em;"></span>
-      <span class="d-md-flex d-lg-none align-middle">
+      <span class="fab fa-linkedin d-none d-md-flex" style="font-size:1.75em;"></span>
+      <span class="d-sm-flex d-md-none align-middle">
         <span class="fab fa-linkedin-in" style="font-size:1.0em;"></span>&nbsp;&nbsp;<small>LinkedIn</small>
       </span>
     </a>
@@ -27,8 +27,8 @@
   {% if settings.twitter_link %}
   <li class="nav-item">
     <a href="{{ settings.twitter_link }}" target="_blank" class="nav-link p-2">
-      <span class="fab fa-twitter-square d-none d-lg-flex" style="font-size:1.75em;"></span>
-      <span class="d-md-flex d-lg-none align-middle">
+      <span class="fab fa-twitter-square d-none d-md-flex" style="font-size:1.75em;"></span>
+      <span class="d-sm-flex d-md-none align-middle">
         <span class="fab fa-twitter" style="font-size:1.0em;"></span>&nbsp;&nbsp;<small>Twitter</small>
       </span>
     </a>
