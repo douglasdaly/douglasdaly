@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 import os
 
 
+#
+#   Common Settings
+#
+
 # Sites Setup
 SITE_ID = 1
 
@@ -28,6 +32,10 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 # Application definition
 
 INSTALLED_APPS = [
+    # Admin Jet Panel
+    'jet.dashboard',
+    'jet',
+    # Standard apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -116,3 +124,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
+
+
+# Admin Site Settings
+
+from ..admin.settings import *

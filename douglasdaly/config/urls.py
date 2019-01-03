@@ -20,13 +20,15 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
-from django.conf.urls import url, handler404, handler500
+from django.conf.urls import url
 from django.contrib.sitemaps.views import sitemap
+
+from jet.dashboard.dashboard_modules import google_analytics_views
 
 from blog.sitemap import BlogPostsSitemap
 from douglasdaly.sitemap import PagesSitemap
-
 from douglasdaly.views import custom_404_view, custom_500_view
+
 
 #
 #   Sitemaps Setup
@@ -55,6 +57,8 @@ urlpatterns = [
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps},
          name='django.contrib.sitemaps.views.sitemap'),
     path('robots.txt', include('robots.urls')),
+    path('jet/', include('jet.urls', 'jet')),
+    path('jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),
     path('admin/', admin.site.urls, name='admin'),
     path('blog/', include('blog.urls'), name='blog'),
     path('', include('douglasdaly.urls'), name='douglasdaly')

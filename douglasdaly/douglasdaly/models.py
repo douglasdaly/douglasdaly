@@ -74,10 +74,12 @@ class SiteAdminSettings(models.Model):
     err_404_title = models.CharField(max_length=60, null=False,
                                      default="Page not Found (404)")
     err_404_content = models.TextField(null=True, blank=True, default=None)
+    err_404_sentry = models.BooleanField(default=False)
 
     err_500_title = models.CharField(max_length=60, null=False,
                                      default="Server Error (500)")
     err_500_content = models.TextField(null=True, blank=True, default=None)
+    err_500_sentry = models.BooleanField(default=False)
 
     default_video_width = models.SmallIntegerField(default=480)
     default_video_height = models.SmallIntegerField(default=360)

@@ -10,10 +10,14 @@ views.py
 #
 #   Imports
 #
+import os
+
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse, Http404
+from django.conf import settings
 
 from sorl.thumbnail import get_thumbnail
+from sentry_sdk import last_event_id, capture_message
 
 from .models import (Page, SiteSettings, SiteAdminSettings, FileAsset,
                      ImageAsset)
@@ -25,27 +29,27 @@ from blog.models import Post
 #
 
 def index(request):
-    settings = SiteSettings.load()
+    site_settings = SiteSettings.load()
     recent_posts = Post.objects.all() \
-                       .filter(published=True)[:settings.number_recent_posts]
+                   .filter(published=True)[:site_settings.number_recent_posts]
 
-    if settings.number_recent_posts > 0 and len(recent_posts) > 0:
+    if site_settings.number_recent_posts > 0 and len(recent_posts) > 0:
         post_col_width = int(12 / len(recent_posts))
     else:
         post_col_width = 0
 
     return render(request, "index.html", {
-        'settings': settings,
+        'settings': site_settings,
         'recent_posts': recent_posts,
         'post_col_width': post_col_width,
     })
 
 
 def view_page(request, slug):
-    settings = SiteSettings.load()
+    site_settings = SiteSettings.load()
     page = get_object_or_404(Page, slug=slug)
     return render(request, "view_page.html", {
-        'settings': settings,
+        'settings': site_settings,
         'page': page,
         'custom_css_file': page.custom_css,
     })
@@ -64,18 +68,29 @@ def inactive_view(request):
 
 def custom_404_view(request, exception):
     admin_settings = SiteAdminSettings.load()
-    return render(request, "generic.html", {
+
+    ret_data = {
         "generic_title": admin_settings.err_404_title,
         "generic_content": admin_settings.err_404_content
-    }, status=404)
+    }
+    if not settings.DEBUG and admin_settings.err_404_sentry:
+        capture_message("Page not found", level="warning")
+
+    return render(request, "generic.html", ret_data, status=404)
 
 
 def custom_500_view(request):
     admin_settings = SiteAdminSettings.load()
-    return render(request, "errors/500.html", {
+
+    ret_data = {
         "generic_title": admin_settings.err_500_title,
         "generic_content": admin_settings.err_500_content
-    }, status=500)
+    }
+    if not settings.DEBUG and admin_settings.err_500_sentry:
+        ret_data['sentry_event_id'] = last_event_id()
+        ret_data['sentry_dsn'] = os.environ.get("SENTRY_DSN")
+
+    return render(request, "errors/500.html", ret_data, status=500)
 
 
 def get_asset(request):

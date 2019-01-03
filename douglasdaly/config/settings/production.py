@@ -6,11 +6,15 @@ Production Django Settings
 #
 from .base import *
 from .aws.conf import *
+from .sentry_setup import initialize_sentry
 
 
 #
 #   Additional Settings
 #
+
+initialize_sentry(os.environ.get("SENTRY_ENV", "production"))
+
 DEBUG = False
 
 ALLOWED_HOSTS = ['.douglasdaly.com']
