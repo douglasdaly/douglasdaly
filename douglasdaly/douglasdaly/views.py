@@ -74,7 +74,7 @@ def custom_404_view(request, exception):
         "generic_title": admin_settings.err_404_title,
         "generic_content": admin_settings.err_404_content
     }
-    if admin_settings.sentry_dsn and admin_settings.err_404_sentry:
+    if admin_settings.err_404_sentry:
         capture_message("Page not found", level="warning")
 
     return render(request, "generic.html", ret_data, status=404)
@@ -87,7 +87,7 @@ def custom_500_view(request):
         "generic_title": admin_settings.err_500_title,
         "generic_content": admin_settings.err_500_content
     }
-    if admin_settings.sentry_dsn and admin_settings.err_500_sentry:
+    if admin_settings.err_500_sentry:
         ret_data['sentry_event_id'] = last_event_id()
         ret_data['sentry_dsn'] = admin_settings.sentry_dsn
 
