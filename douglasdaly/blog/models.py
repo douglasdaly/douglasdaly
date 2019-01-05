@@ -13,7 +13,7 @@ blog/models.py
 from django.db import models
 from django.urls import reverse
 from django.core.exceptions import ValidationError
-from django.db.utils import OperationalError
+from django.db.utils import OperationalError, ProgrammingError
 
 from sorl.thumbnail import ImageField
 
@@ -63,7 +63,9 @@ class BlogSettings(models.Model):
             obj = cls.objects.get(pk=1)
         except cls.DoesNotExist:
             obj = None
-        except OperationalError as oerr:
+        except OperationalError:
+            obj = None
+        except ProgrammingError:
             obj = None
         return obj
 
