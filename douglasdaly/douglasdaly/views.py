@@ -89,6 +89,6 @@ def custom_500_view(request):
     }
     if admin_settings.err_500_sentry:
         ret_data['sentry_event_id'] = last_event_id()
-        ret_data['sentry_dsn'] = admin_settings.sentry_dsn
+        ret_data['sentry_dsn'] = os.environ.get('SENTRY_DSN')
 
     return render(request, "errors/500.html", ret_data, status=500)
