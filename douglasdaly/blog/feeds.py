@@ -31,9 +31,9 @@ class LatestFeed(Feed):
         super().__init__()
         blog_settings = BlogSettings.load()
         if blog_settings:
-            self._max_posts = blog_settings.latest_feed_most_recent
-            self._title = blog_settings.title
-            self._link = blog_settings.site_link
+            self._max_posts = getattr(blog_settings, 'latest_feed_most_recent', 5)
+            self._title = getattr(blog_settings, 'title', "Blog")
+            self._link = getattr(blog_settings, 'site_link', 'blog')
         else:
             self._max_posts = 5
             self._title = "Blog"
@@ -65,8 +65,8 @@ class ListingFeed(Feed):
         super().__init__()
         blog_settings = BlogSettings.load()
         if blog_settings:
-            self._title = blog_settings.title
-            self._link = blog_settings.site_link
+            self._title = getattr(blog_settings, 'title', 'Listing')
+            self._link = getattr(blog_settings, 'site_link', 'blog')
         else:
             self._title = "Blog"
             self._link = "blog"

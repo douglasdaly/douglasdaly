@@ -7,8 +7,7 @@
 #
 
 PYTHON=python
-PIP=pip
-PUR=pur
+PKG_MGR=pipenv
 
 PROJECT_DIR=douglasdaly
 
@@ -17,10 +16,27 @@ FIXTURES = initial_sitesettings.json initial_blogsettings.json initial_assetsett
 
 
 #
+#	Setup
+#
+
+ifeq ($(PKG_MGR), pipenv)
+	RUN_PRE = pipenv run
+	INSTALL_REQUIREMENTS = pipenv install
+	GEN_REQUIREMENTS = pipenv lock -r > requirements.txt
+else
+	RUN_PRE = 
+	INSTALL_REQUIREMENTS = pip install -r requirements.txt
+	GEN_REQUIREMENTS = pip freeze --local > requirements.txt
+endif
+
+PYTHON := $(RUN_PRE) $(PYTHON)
+
+
+#
 #	Recipes
 #
 
-.PHONY: help requirements update_requirements configure \
+.PHONY: help requirements generate_requirements configure \
 		createsuperuser setup start \
 		debug_setup debug debug_createsuperuser \
 		debug_start local_start
@@ -38,12 +54,11 @@ all: requirements start ## Installs requirements and starts server
 
 # - Install Related
 
-update_requirements: ## Updates requirements.txt file from environment
-	$(PUR) -r requirements.txt
-	$(MAKE) requirements
+generate_requirements: ## Generates requirements.txt file from environment
+	$(GEN_REQUIREMENTS)
 
 requirements: ## Installs project's requirements.txt to environment
-	$(PIP) install -r requirements.txt
+	$(INSTALL_REQUIREMENTS)
 
 configure: ## Initial configuration for the application
 	touch .env
@@ -71,7 +86,7 @@ setup: ## Initial setup for the app (migrations, load data, collect static)
 	$(PYTHON) manage.py collectstatic --no-input --settings=config.settings.production
 
 start: ## Starts the server process
-	./scripts/start.sh
+	$(RUN_PRE) ./scripts/start.sh
 
 # - Debug Related
 
@@ -96,13 +111,13 @@ debug: ## Run the debug django server
 	cd $(PROJECT_DIR) && $(PYTHON) manage.py runserver
 
 debug_start: ## Starts the gunicorn server with debug settings
-	./scripts/debug_start.sh
+	$(RUN_PRE) ./scripts/debug_start.sh
 
 local: ## Starts the django server with local settings
 	cd $(PROJECT_DIR) && $(PYTHON) manage.py runserver --settings=config.settings.local
 
 local_start: ## Starts the gunicorn server with local settings
-	./scripts/local_start.sh
+	$(RUN_PRE) ./scripts/local_start.sh
 
 # - Misc
 

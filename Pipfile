@@ -1,0 +1,28 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+click = "*"
+django-admin-sortable = "*"
+django-debug-toolbar = "*"
+django-htmlmin = "*"
+django-robots = "*"
+django-storages = "*"
+gunicorn = "*"
+mistune = "*"
+mistune-contrib = "*"
+psycopg2 = "*"
+python-dotenv = "*"
+sorl-thumbnail = "*"
+Django = "*"
+Pillow = "*"
+Pygments = "*"
+sentry-sdk = "*"
+boto3 = "*"
+
+[requires]
+python_version = "3.6"
