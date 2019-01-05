@@ -2,14 +2,9 @@
 #	MAKEFILE
 #
 
-.PHONY: help requirements update_requirements configure \
-		createsuperuser setup start \
-		debug_setup debug debug_createsuperuser \
-		debug_start local_start
-
-.DEFAULT_GOAL := help
-
-# Variables
+#
+#	Configuration
+#
 
 PYTHON=python
 PIP=pip
@@ -17,9 +12,20 @@ PUR=pur
 
 PROJECT_DIR=douglasdaly
 
-DJANGO_APPS=douglasdaly blog
+DJANGO_APPS=douglasdaly blog assets
+FIXTURES = initial_sitesettings.json initial_blogsettings.json initial_assetsettings.json
 
-# Recipes
+
+#
+#	Recipes
+#
+
+.PHONY: help requirements update_requirements configure \
+		createsuperuser setup start \
+		debug_setup debug debug_createsuperuser \
+		debug_start local_start
+
+.DEFAULT_GOAL := help
 
 help: ## Prints help for this Makefile
 	@printf 'Usage: make \033[36m[target]\033[0m\n'
@@ -61,7 +67,7 @@ setup: ## Initial setup for the app (migrations, load data, collect static)
 	cd $(PROJECT_DIR) && \
 	$(PYTHON) manage.py makemigrations $(DJANGO_APPS) --settings=config.settings.production && \
 	$(PYTHON) manage.py migrate --settings=config.settings.production && \
-	$(PYTHON) manage.py loaddata --settings=config.settings.production initial_sitesettings.json initial_blogsettings.json && \
+	$(PYTHON) manage.py loaddata --settings=config.settings.production $(FIXTURES) && \
 	$(PYTHON) manage.py collectstatic --no-input --settings=config.settings.production
 
 start: ## Starts the server process
@@ -83,7 +89,7 @@ debug_setup: ## Initial setup of the app for debugging
 	cd $(PROJECT_DIR) && \
 	$(PYTHON) manage.py makemigrations $(DJANGO_APPS) --settings=config.settings.local && \
 	$(PYTHON) manage.py migrate --settings=config.settings.local && \
-	$(PYTHON) manage.py loaddata --settings=config.settings.local initial_sitesettings.json initial_blogsettings.json && \
+	$(PYTHON) manage.py loaddata --settings=config.settings.local $(FIXTURES) && \
 	$(PYTHON) manage.py collectstatic --no-input --settings=config.settings.local
 
 debug: ## Run the debug django server

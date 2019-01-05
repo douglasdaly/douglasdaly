@@ -44,9 +44,11 @@ INSTALLED_APPS = [
     # Additional apps
     'robots',
     'adminsortable',
-    'douglasdaly.apps.BaseConfig',
-    'blog.apps.BlogConfig',
-    'sorl.thumbnail'
+    'sorl.thumbnail',
+    # Project apps
+    'douglasdaly',
+    'blog',
+    'assets',
 ]
 
 MIDDLEWARE = [

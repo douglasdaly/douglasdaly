@@ -6,10 +6,14 @@ Local Debug Django Settings
 #
 from .base import *
 
+from .sentry_setup import initialize_sentry
+
 
 #
 #   Additional Settings
 #
+
+initialize_sentry("debug")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

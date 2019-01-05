@@ -12,10 +12,13 @@ config/settings/local.py
 #
 from .base import *
 
+from .sentry_setup import initialize_sentry
 
 #
 #   Additional Settings
 #
+
+initialize_sentry("local")
 
 # Hosts
 ALLOWED_HOSTS = ['*']

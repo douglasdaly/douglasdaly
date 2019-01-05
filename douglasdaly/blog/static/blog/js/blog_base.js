@@ -26,8 +26,8 @@ function blog_search_enter() {
 
 document.getElementById("search-input")
     .addEventListener("keyup", function(event) {
-	event.preventDefault();
-	if(event.keyCode == 13) {
-	    blog_search_enter();
-	}
+        event.preventDefault();
+        if(event.keyCode == 13) {
+            blog_search_enter();
+        }
     });

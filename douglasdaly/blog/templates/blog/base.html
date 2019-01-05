@@ -14,14 +14,14 @@
 {% block additional_header %}
   {{ block.super }}
   <link rel="alternate" type="application/rss+xml" href="/blog/rss/latest_posts.xml" />
-  <link rel="alternate" type="application/rss+xml" href="/blog/rss/categories.xml" />
-  <link rel="alternate" type="application/rss+xml" href="/blog/rss/tags.xml" />
   {% if rss_categories %}
+    <link rel="alternate" type="application/rss+xml" href="/blog/rss/categories.xml" />
     {% for rss_category in rss_categories %}
     <link rel="alternate" type="application/rss+xml" href="/blog/rss/category/{{ rss_category.slug }}.xml" />
     {% endfor %}
   {% endif %}
   {% if rss_tags %}
+    <link rel="alternate" type="application/rss+xml" href="/blog/rss/tags.xml" />
     {% for rss_tag in rss_tags %}
     <link rel="alternate" type="application/rss+xml" href="/blog/rss/tag/{{ rss_tag.slug }}.xml" />
     {% endfor %}
@@ -106,6 +106,7 @@
 {% endblock %}
 
 {% block additional_tail_js %}
-<script src="{% static 'js/csrf.js' %}"></script>
-<script src="{% static 'blog/js/blog_base.js' %}"></script>
+  {{ block.super }}
+  <script type="text/javascript" src="{% static 'blog/js/csrf.js' %}"></script>
+  <script type="text/javascript" src="{% static 'blog/js/blog_base.js' %}"></script>
 {% endblock %}

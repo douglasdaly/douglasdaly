@@ -57,6 +57,7 @@ urlpatterns = [
     path('robots.txt', include('robots.urls')),
     path('admin/', admin.site.urls, name='admin'),
     path('blog/', include('blog.urls'), name='blog'),
+    path('ajax/', include('assets.urls'), name='assets'),
     path('', include('douglasdaly.urls'), name='douglasdaly')
 ]
 
