@@ -16,12 +16,13 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator
 
 from adminsortable.models import SortableMixin
-from sorl.thumbnail import ImageField
 
 
 #
 #   Model Definitions
 #
+
+# - Settings
 
 class SiteSettings(models.Model):
     title = models.CharField(max_length=20, unique=True)
@@ -71,18 +72,21 @@ class SiteSettings(models.Model):
 
 
 class SiteAdminSettings(models.Model):
-    err_404_title = models.CharField(max_length=60, null=False,
+    site_is_active = models.BooleanField(default=True, null=False)
+    inactive_page_title = models.CharField(max_length=80, null=True,
+                                           default="Undergoing Maintenance")
+    inactive_page_content = models.TextField(null=True, blank=True,
+                                             default=None)
+
+    err_404_title = models.CharField(max_length=80, null=False,
                                      default="Page not Found (404)")
     err_404_content = models.TextField(null=True, blank=True, default=None)
+    err_404_sentry = models.BooleanField(default=False)
 
-    err_500_title = models.CharField(max_length=60, null=False,
+    err_500_title = models.CharField(max_length=80, null=False,
                                      default="Server Error (500)")
     err_500_content = models.TextField(null=True, blank=True, default=None)
-
-    default_video_width = models.SmallIntegerField(default=480)
-    default_video_height = models.SmallIntegerField(default=360)
-    default_video_autoplay = models.BooleanField(default=False)
-    default_video_controls = models.BooleanField(default=True)
+    err_500_sentry = models.BooleanField(default=True)
 
     class Meta:
         verbose_name_plural = "Site Admin Settings"
@@ -113,6 +117,8 @@ class SiteAdminSettings(models.Model):
         return obj
 
 
+# - Content
+
 class Page(SortableMixin):
     title = models.CharField(max_length=80, unique=True)
     slug = models.SlugField(max_length=80, unique=True)
@@ -127,6 +133,8 @@ class Page(SortableMixin):
     custom_javascript = models.FileField(upload_to="scripts/", default=None,
                                          null=True, blank=True)
     content = models.TextField(default=None, null=True, blank=True)
+
+    published = models.BooleanField(default=True, null=False)
 
     class Meta:
         ordering = ['the_order']
@@ -145,49 +153,3 @@ class Page(SortableMixin):
             return reverse('view_page', kwargs={'slug': self.slug})
         else:
             return self.passthrough_link
-
-
-class Asset(models.Model):
-    title = models.CharField(max_length=100, unique=True)
-    slug = models.SlugField(max_length=120, unique=True)
-    description = models.TextField(blank=True, null=True, default=None)
-    type = models.CharField(max_length=30, unique=False, null=False,
-                            editable=False)
-
-    class Meta:
-        ordering = ['title']
-
-    def __str__(self):
-        return self.title
-
-    def __unicode__(self):
-        return "%s" % self.title
-
-
-class ImageAsset(Asset):
-    asset = ImageField(upload_to="assets/image/")
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.type = "image"
-
-
-class FileAsset(Asset):
-    asset = models.FileField(upload_to="assets/file/")
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.type = "file"
-
-
-class VideoAsset(Asset):
-    asset = models.FileField(upload_to="assets/video/")
-    video_width = models.SmallIntegerField(null=True, default=None)
-    video_height = models.SmallIntegerField(null=True, default=None)
-    autoplay = models.BooleanField(default=False)
-    controls = models.BooleanField(default=True)
-    loop = models.BooleanField(default=False)
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.type = "video"

@@ -20,13 +20,13 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
-from django.conf.urls import url, handler404, handler500
+from django.conf.urls import url
 from django.contrib.sitemaps.views import sitemap
 
 from blog.sitemap import BlogPostsSitemap
 from douglasdaly.sitemap import PagesSitemap
-
 from douglasdaly.views import custom_404_view, custom_500_view
+
 
 #
 #   Sitemaps Setup
@@ -57,6 +57,7 @@ urlpatterns = [
     path('robots.txt', include('robots.urls')),
     path('admin/', admin.site.urls, name='admin'),
     path('blog/', include('blog.urls'), name='blog'),
+    path('ajax/', include('assets.urls'), name='assets'),
     path('', include('douglasdaly.urls'), name='douglasdaly')
 ]
 

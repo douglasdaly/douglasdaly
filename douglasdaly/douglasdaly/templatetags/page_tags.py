@@ -24,7 +24,7 @@ register = template.Library()
 
 @register.inclusion_tag("tags/page_links.html")
 def page_links():
-    all_pages = Page.objects.all()
+    all_pages = Page.objects.filter(published=True).all()
     ret = list()
     for page in all_pages:
         ret.append({'link_name': page.link_name,

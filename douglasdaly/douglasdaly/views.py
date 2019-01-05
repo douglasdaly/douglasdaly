@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-views.py
+douglasdaly/views.py
 
     Views for the main site pages
 
@@ -10,13 +10,15 @@ views.py
 #
 #   Imports
 #
+import os
+
 from django.shortcuts import render, get_object_or_404
-from django.http import JsonResponse, Http404
+from django.http import Http404
+from django.conf import settings
 
-from sorl.thumbnail import get_thumbnail
+from sentry_sdk import last_event_id, capture_message
 
-from .models import (Page, SiteSettings, SiteAdminSettings, FileAsset,
-                     ImageAsset)
+from .models import Page, SiteSettings, SiteAdminSettings
 from blog.models import Post
 
 
@@ -25,27 +27,30 @@ from blog.models import Post
 #
 
 def index(request):
-    settings = SiteSettings.load()
+    site_settings = SiteSettings.load()
     recent_posts = Post.objects.all() \
-                       .filter(published=True)[:settings.number_recent_posts]
+                   .filter(published=True)[:site_settings.number_recent_posts]
 
-    if settings.number_recent_posts > 0 and len(recent_posts) > 0:
+    if site_settings.number_recent_posts > 0 and len(recent_posts) > 0:
         post_col_width = int(12 / len(recent_posts))
     else:
         post_col_width = 0
 
     return render(request, "index.html", {
-        'settings': settings,
+        'settings': site_settings,
         'recent_posts': recent_posts,
         'post_col_width': post_col_width,
     })
 
 
 def view_page(request, slug):
-    settings = SiteSettings.load()
     page = get_object_or_404(Page, slug=slug)
+    if not page.published:
+        raise Http404
+
+    site_settings = SiteSettings.load()
     return render(request, "view_page.html", {
-        'settings': settings,
+        'settings': site_settings,
         'page': page,
         'custom_css_file': page.custom_css,
     })
@@ -54,7 +59,7 @@ def view_page(request, slug):
 def inactive_view(request):
     admin_settings = SiteAdminSettings.load()
     if admin_settings.site_is_active:
-        return Http404()
+        raise Http404
 
     return render(request, "generic.html", {
         "generic_title": admin_settings.inactive_page_title,
@@ -64,52 +69,26 @@ def inactive_view(request):
 
 def custom_404_view(request, exception):
     admin_settings = SiteAdminSettings.load()
-    return render(request, "generic.html", {
+
+    ret_data = {
         "generic_title": admin_settings.err_404_title,
         "generic_content": admin_settings.err_404_content
-    }, status=404)
+    }
+    if admin_settings.sentry_dsn and admin_settings.err_404_sentry:
+        capture_message("Page not found", level="warning")
+
+    return render(request, "generic.html", ret_data, status=404)
 
 
 def custom_500_view(request):
     admin_settings = SiteAdminSettings.load()
-    return render(request, "errors/500.html", {
+
+    ret_data = {
         "generic_title": admin_settings.err_500_title,
         "generic_content": admin_settings.err_500_content
-    }, status=500)
+    }
+    if admin_settings.sentry_dsn and admin_settings.err_500_sentry:
+        ret_data['sentry_event_id'] = last_event_id()
+        ret_data['sentry_dsn'] = admin_settings.sentry_dsn
 
-
-def get_asset(request):
-    slug = request.GET.get("slug", None)
-    asset_type = request.GET.get("type", None)
-
-    if asset_type == "file":
-        asset = get_object_or_404(FileAsset, slug=slug)
-
-        data = {
-            'title': asset.title,
-            'description': asset.description,
-            'url': asset.asset.url
-        }
-
-    elif asset_type == "image":
-        asset = get_object_or_404(ImageAsset, slug=slug)
-
-        size = request.GET.get("size", None)
-        crop = request.GET.get("crop", None)
-        quality = request.GET.get("quality", None)
-
-        if size is not None:
-            new_im = get_thumbnail(asset.asset, size, crop=crop, quality=quality)
-        else:
-            new_im = asset.asset
-
-        data = {
-            'title': asset.title,
-            'description': asset.description,
-            'url': new_im.url
-        }
-
-    else:
-        return Http404("Invalid asset type")
-
-    return JsonResponse(data)
+    return render(request, "errors/500.html", ret_data, status=500)

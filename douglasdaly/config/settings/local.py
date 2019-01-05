@@ -1,16 +1,26 @@
+# -*- coding: utf-8 -*-
 """
-Local Non-Debug Django Settings
+config/settings/local.py
+
+    Local Non-Debug Django Settings
+
+@author: Douglas Daly
+@date: 1/2/2019
 """
 #
 #   Imports
 #
 from .base import *
 
+from .sentry_setup import initialize_sentry
 
 #
 #   Additional Settings
 #
 
+initialize_sentry("local")
+
+# Hosts
 ALLOWED_HOSTS = ['*']
 
 # Debug Toolbar

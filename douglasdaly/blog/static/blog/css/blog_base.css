@@ -1,36 +1,48 @@
 .sidemenu {
-    position: absolute;
-    overflow-y: hidden;
+  position: absolute;
+  overflow-y: hidden;
 }
 
 .blog-content {
-    overflow-y: hidden;
+  overflow-y: hidden;
 }
 
 .sidebar-pills {
-    width: 100%;
+  width: 100%;
 }
 
 .sidebar-pills>li {
-    margin: auto;
+  margin: auto;
 }
 
 .sidebar-pills>li>a {
-    padding: 4px;
-    font-size: 14px;
+  padding: 4px;
+  font-size: 14px;
 }
 
 .blog-content>h2 {
-    font-size: 24px;
-    font-weight: bold;
+  font-size: 24px;
+  font-weight: bold;
 }
 
 .blog-content>h3 {
-    font-size: 18px;
-    font-weight: bold;
+  font-size: 18px;
+  font-weight: bold;
 }
 
 .blog-content>h4 {
-    font-size: 16px;
-    font-weight: bold;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.rss-fa-link:visited {
+  color: #f26522;
+}
+
+.rss-fa-link:hover {
+  color: #f26522;
+}
+
+.rss-fa-link:active {
+  color: #444;
 }

@@ -13,6 +13,7 @@ blog/models.py
 from django.db import models
 from django.urls import reverse
 from django.core.exceptions import ValidationError
+from django.db.utils import OperationalError
 
 from sorl.thumbnail import ImageField
 
@@ -23,14 +24,18 @@ from sorl.thumbnail import ImageField
 
 class BlogSettings(models.Model):
     title = models.CharField(max_length=100, db_index=True)
+    site_link = models.CharField(max_length=40, null=False, default='blog')
 
     posts_per_page = models.PositiveIntegerField(blank=False, default=10)
-
-    code_style_sheet = models.CharField(max_length=40, blank=False, default='code_default',
+    code_style_sheet = models.CharField(max_length=40, blank=False,
+                                        default='code_default',
                                         choices=[
                                             ('code_default', 'Default'),
                                             ('code_monokai', 'Monokai')
                                         ])
+
+    latest_feed_most_recent = models.PositiveSmallIntegerField(null=False,
+                                                               default=5)
 
     class Meta:
         verbose_name_plural = "Blog Settings"
@@ -58,12 +63,15 @@ class BlogSettings(models.Model):
             obj = cls.objects.get(pk=1)
         except cls.DoesNotExist:
             obj = None
+        except OperationalError as oerr:
+            obj = None
         return obj
 
 
 class Category(models.Model):
     name = models.CharField(max_length=100, db_index=True)
     slug = models.SlugField(max_length=100, db_index=True)
+    description = models.CharField(max_length=250, null=True, default=None)
 
     class Meta:
         ordering = ('name',)
@@ -82,6 +90,7 @@ class Category(models.Model):
 class Tag(models.Model):
     name = models.CharField(max_length=50, db_index=True)
     slug = models.SlugField(max_length=50, db_index=True)
+    description = models.CharField(max_length=200, null=True, default=None)
 
     class Meta:
         ordering = ('name',)

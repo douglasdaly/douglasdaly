@@ -18,4 +18,4 @@ class PagesSitemap(Sitemap):
     priority = 0.5
 
     def items(self):
-        return Page.objects.all()
+        return Page.objects.filter(published=True).all()

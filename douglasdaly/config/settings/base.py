@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 import os
 
 
+#
+#   Common Settings
+#
+
 # Sites Setup
 SITE_ID = 1
 
@@ -28,6 +32,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 # Application definition
 
 INSTALLED_APPS = [
+    # Standard apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,9 +44,11 @@ INSTALLED_APPS = [
     # Additional apps
     'robots',
     'adminsortable',
-    'douglasdaly.apps.BaseConfig',
-    'blog.apps.BlogConfig',
-    'sorl.thumbnail'
+    'sorl.thumbnail',
+    # Project apps
+    'douglasdaly',
+    'blog',
+    'assets',
 ]
 
 MIDDLEWARE = [

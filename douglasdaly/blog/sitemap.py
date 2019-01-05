@@ -18,4 +18,4 @@ class BlogPostsSitemap(Sitemap):
     priority = 0.75
 
     def items(self):
-        return Post.objects.filter(published=True)
+        return Post.objects.filter(published=True).all()

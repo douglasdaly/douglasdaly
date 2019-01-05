@@ -1,0 +1,1 @@
+var assetBaseUrl = 'ajax';

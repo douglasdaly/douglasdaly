@@ -3,11 +3,24 @@
 {% load page_tags %}
 {% load markdownify %}
 
+{% if sentry_event_id %}
+  {% block additional_scripts %}
+    {{ block.super }}
+    <script src="https://browser.sentry-cdn.com/4.4.2/bundle.min.js" crossorigin="anonymous"></script>
+    <script>
+      Sentry.init({ dsn: '{{ sentry_dsn }}' });
+    </script>
+  {% endblock %}
+{% endif %}
+
 {% block meta_extra %}{% meta_head generic_title %}{% endblock %}
 
 {% block content %}
 <div class="container">
   <h1>{{ generic_title }}</h1>
   {% if generic_content %}{{ generic_content|markdown|safe }}{% endif %}
+  {% if sentry_event_id %}
+    <button type="button" class="btn btn-warning" onclick="Sentry.showReportDialog({ eventId: '{{ sentry_event_id }}' })">Send Feedback</button>
+  {% endif %}
 </div>
 {% endblock %}

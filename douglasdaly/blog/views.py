@@ -174,8 +174,13 @@ def __get_post_page(post_list, page=1, blog_settings=None):
 def __append_common_vars(request, curr_dict, include_settings=True):
     sort_tab = request.session.get('sort_tab', 'date')
 
+    rss_categories = Category.objects.all()
+    rss_tags = Tag.objects.all()
+
     common_dict = {
-        'sort_tab': sort_tab
+        'sort_tab': sort_tab,
+        'rss_categories': rss_categories,
+        'rss_tags': rss_tags,
     }
 
     if include_settings:
