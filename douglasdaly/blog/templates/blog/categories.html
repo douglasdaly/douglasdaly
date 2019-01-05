@@ -7,7 +7,17 @@
 
 {% block blog_content %}
 
-<h3>Categories</h3>
+<div class="row">
+  <div class="col-11">
+    <h3 class="pb-2">Categories</h3>
+  </div>
+  <div class="col-1 text-right">
+    <a href="/blog/rss/categories.xml" target="_blank" title="All Categories RSS" class="rss-fa-link">
+      <i class="fas fa-rss-square" style="font-size:1.8em;"></i>
+    </a>
+  </div>
+</div>
+
 {% if categories %}
 <ul>
   {% for category in categories %}
@@ -15,7 +25,7 @@
   {% endfor %}
 </ul>
 {% else %}
-<p>There are no categories.</p>
+  <p>There are no categories.</p>
 {% endif %}
 
 {% endblock %}

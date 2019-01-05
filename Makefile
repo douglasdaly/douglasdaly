@@ -17,7 +17,7 @@ PUR=pur
 
 PROJECT_DIR=douglasdaly
 
-DJANGO_APPS=douglasdaly blog jet dashboard
+DJANGO_APPS=douglasdaly blog
 
 # Recipes
 

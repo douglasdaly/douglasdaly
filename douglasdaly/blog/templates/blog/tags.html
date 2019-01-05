@@ -7,7 +7,17 @@
 
 {% block blog_content %}
 
-<h3 class="pb-2">Tags</h3>
+<div class="row">
+  <div class="col-11">
+    <h3 class="pb-2">Tags</h3>
+  </div>
+  <div class="col-1 text-right">
+    <a href="/blog/rss/tags.xml" target="_blank" title="All Tags RSS" class="rss-fa-link">
+      <i class="fas fa-rss-square" style="font-size:1.8em;"></i>
+    </a>
+  </div>
+</div>
+
 {% if tags %}
 <ul>
   {% for tag in tags %}

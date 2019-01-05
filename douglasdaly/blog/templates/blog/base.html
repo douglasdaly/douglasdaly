@@ -3,17 +3,34 @@
 {% load static %}
 {% load sidebar_tags %}
 
+{% block additional_styles %}
+  {{ block.super }}
+  {% with code_style='blog/css/'|add:blog_settings.code_style_sheet|add:'.css' %}
+    <link rel="stylesheet" type="text/css" href="{% static code_style %}" />
+  {% endwith %}
+  <link rel="stylesheet" type="text/css" href="{% static 'blog/css/blog_base.css' %}" />
+{% endblock %}
+
 {% block additional_header %}
-{% with code_style='blog/css/'|add:blog_settings.code_style_sheet|add:'.css' %}
-  <link rel="stylesheet" type="text/css" href="{% static code_style %}" />
-{% endwith %}
-<link rel="stylesheet" type="text/css" href="{% static 'blog/css/blog_base.css' %}" />
+  {{ block.super }}
+  <link rel="alternate" type="application/rss+xml" href="/blog/rss/latest_posts.xml" />
+  <link rel="alternate" type="application/rss+xml" href="/blog/rss/categories.xml" />
+  <link rel="alternate" type="application/rss+xml" href="/blog/rss/tags.xml" />
+  {% if rss_categories %}
+    {% for rss_category in rss_categories %}
+    <link rel="alternate" type="application/rss+xml" href="/blog/rss/category/{{ rss_category.slug }}.xml" />
+    {% endfor %}
+  {% endif %}
+  {% if rss_tags %}
+    {% for rss_tag in rss_tags %}
+    <link rel="alternate" type="application/rss+xml" href="/blog/rss/tag/{{ rss_tag.slug }}.xml" />
+    {% endfor %}
+  {% endif %}
 {% endblock %}
 
 {% csrf_token %}
 
 {% block content %}
-
 <div class="container">
   <div class="row">
 
@@ -24,59 +41,56 @@
       <div class="d-none d-md-block">
 	
         <!-- Search Bar -->
-	<div class="input-group">
-          <input type="search" class="form-control ds-input mb-2" id="search-input" placeholder="Search..." autocomplete="off" spellcheck="false" style="position: relative; vertical-align: top;" aria-describedby="basic-addon2">
-	  <div class="input-group-append">
-	    <a href="#" id="blog-search-submit"><button class="btn btn-outline-secondary" type="button" onclick="blog_search();"><i class="fa fa-search fa-fw"></i></button></a>
-	  </div>
-	</div>
+        <div class="input-group">
+            <input type="search" class="form-control ds-input mb-2" id="search-input" placeholder="Search..." autocomplete="off" spellcheck="false" style="position: relative; vertical-align: top;" aria-describedby="basic-addon2">
+          <div class="input-group-append">
+          <a href="#" id="blog-search-submit"><button class="btn btn-outline-secondary" type="button" onclick="blog_search();"><i class="fa fa-search fa-fw"></i></button></a>
+          </div>
+        </div>
 	
         <!-- Sort Nav By -->
         <ul class="nav nav-pills nav-fill justify-content-center sidebar-pills mb-2" id="pills-tab" role="tab-list">
-	  <li class="nav-item">
-	    <a href="#sort-date" onclick="update_sort_tab('date')" class="nav-link{% if sort_tab == 'date' %} active{% endif %}" id="blog-sort-date" data-toggle="pill" role="tab" aria-controls="sort-date" aria-selected="{% if not sort_tab %}true{% else %}{% if sort_tab == 'date' %}true{% else %}false{% endif %}{% endif %}">Date</a>
-	  </li>
-	  <li class="nav-item">
-	    <a href="#sort-categories" onclick="update_sort_tab('categories')" class="nav-link{% if sort_tab == 'categories' %} active{% endif %}" id="blog-sort-categories" data-toggle="pill" role="tab" aria-controls="sort-categories" aria-selected="{% if sort_tab == 'categories' %}true{% else %}false{% endif %}">Category</a>
-	  </li>
-	  <li class="nav-item">
-	    <a href="#sort-tags" onclick="update_sort_tab('tags')" class="nav-link{% if sort_tab == 'tags' %} active{% endif %}" id="blog-sort-tags" data-toggle="pill" role="tab" aria-controls="sort-tags" aria-selected="{% if sort_tab == 'tags' %}true{% else %}false{% endif %}">Tag</a>
-	  </li>
+          <li class="nav-item">
+            <a href="#sort-date" onclick="update_sort_tab('date')" class="nav-link{% if sort_tab == 'date' %} active{% endif %}" id="blog-sort-date" data-toggle="pill" role="tab" aria-controls="sort-date" aria-selected="{% if not sort_tab %}true{% else %}{% if sort_tab == 'date' %}true{% else %}false{% endif %}{% endif %}">Date</a>
+          </li>
+          <li class="nav-item">
+            <a href="#sort-categories" onclick="update_sort_tab('categories')" class="nav-link{% if sort_tab == 'categories' %} active{% endif %}" id="blog-sort-categories" data-toggle="pill" role="tab" aria-controls="sort-categories" aria-selected="{% if sort_tab == 'categories' %}true{% else %}false{% endif %}">Category</a>
+          </li>
+          <li class="nav-item">
+            <a href="#sort-tags" onclick="update_sort_tab('tags')" class="nav-link{% if sort_tab == 'tags' %} active{% endif %}" id="blog-sort-tags" data-toggle="pill" role="tab" aria-controls="sort-tags" aria-selected="{% if sort_tab == 'tags' %}true{% else %}false{% endif %}">Tag</a>
+          </li>
         </ul>
 
         <!-- Nav Menu -->
         <div class="tab-content mb-2" id="pills-tabContent">
-	  <div class="tab-pane fade{% if sort_tab == 'date' %} show active{% endif %}" id="sort-date" role="tabpanel" aria-labelledby="sort-date">
-	    {% sidebar_menu 'date' %}
-	  </div>
+          <div class="tab-pane fade{% if sort_tab == 'date' %} show active{% endif %}" id="sort-date" role="tabpanel" aria-labelledby="sort-date">
+            {% sidebar_menu 'date' %}
+          </div>
 
-	  <div class="tab-pane fade{% if sort_tab == 'categories' %} show active{% endif %}" id="sort-categories" role="tabpanel" aria-labelledby="sort-categories">
-	    {% sidebar_menu 'categories' %}
-	  </div>
+          <div class="tab-pane fade{% if sort_tab == 'categories' %} show active{% endif %}" id="sort-categories" role="tabpanel" aria-labelledby="sort-categories">
+            {% sidebar_menu 'categories' %}
+          </div>
 
-	  <div class="tab-pane fade{% if sort_tab == 'tags' %} show active{% endif %}" id="sort-tags" role="tabpanel" aria-labelledby="sort-tags">
-	    {% sidebar_menu 'tags' %}
-	  </div>
-
-	</div>
+          <div class="tab-pane fade{% if sort_tab == 'tags' %} show active{% endif %}" id="sort-tags" role="tabpanel" aria-labelledby="sort-tags">
+            {% sidebar_menu 'tags' %}
+          </div>
+	      </div>
 	
       </div>
 
       <!-- Small Screen Nav Content -->
       <div class="d-block d-md-none">
-	
         <ul class="nav nav-pills nav-fill mb-2">
-	  <li class="nav-item m-1">
-	    <a class="nav-link btn btn-primary" href="/blog/">Blog Home</a>
-	  </li>
-	  <li class="nav-item m-1">
-	    <a class="nav-link btn btn-primary" href="/blog/categories.html">Categories</a>
-	  </li>
-	  <li class="nav-item m-1">
-	    <a class="nav-link btn btn-primary" href="/blog/tags.html">Tags</a>
-	  </li>
+          <li class="nav-item m-1">
+            <a class="nav-link btn btn-primary" href="/blog/">Blog Home</a>
+          </li>
+          <li class="nav-item m-1">
+            <a class="nav-link btn btn-primary" href="/blog/categories.html">Categories</a>
+          </li>
+          <li class="nav-item m-1">
+            <a class="nav-link btn btn-primary" href="/blog/tags.html">Tags</a>
+          </li>
         </ul>
-
       </div>
       
     </div>
@@ -87,8 +101,8 @@
     </div>
     
   </div>
-</div>
 
+</div>
 {% endblock %}
 
 {% block additional_tail_js %}

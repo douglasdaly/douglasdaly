@@ -3,8 +3,11 @@
 #   Imports
 #
 from django.conf.urls import url
+from django.urls import path
 
 from . import views
+from .feeds import (PostsLatestFeed, CategoryLatestFeed, TagLatestFeed,
+                    CategoryListingFeed, TagListingFeed)
 
 
 #
@@ -12,6 +15,7 @@ from . import views
 #
 
 urlpatterns = [
+    # - Views
     url(r'^$', views.index),
     url(
             r'^view/(?P<slug>[^\.]+).html',
@@ -48,4 +52,10 @@ urlpatterns = [
             views.search,
             name="search"
     ),
+    # - Feeds
+    path('rss/latest_posts.xml', PostsLatestFeed()),
+    path('rss/categories.xml', CategoryListingFeed()),
+    path('rss/tags.xml', TagListingFeed()),
+    path('rss/category/<str:slug>.xml', CategoryLatestFeed()),
+    path('rss/tag/<str:slug>.xml', TagLatestFeed()),
 ]

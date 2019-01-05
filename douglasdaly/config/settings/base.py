@@ -32,9 +32,6 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 # Application definition
 
 INSTALLED_APPS = [
-    # Admin Jet Panel
-    'jet.dashboard',
-    'jet',
     # Standard apps
     'django.contrib.admin',
     'django.contrib.auth',
@@ -124,8 +121,3 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
-
-
-# Admin Site Settings
-
-from ..admin.settings import *
