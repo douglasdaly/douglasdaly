@@ -10,6 +10,8 @@ blog/models.py
 #
 #   Imports
 #
+import string
+
 from django.db import models
 from django.urls import reverse
 from django.core.exceptions import ValidationError
@@ -94,6 +96,8 @@ class Tag(models.Model):
     slug = models.SlugField(max_length=50, db_index=True)
     description = models.CharField(max_length=200, null=True, default=None)
 
+    _category = models.CharField(max_length=1, null=False)
+
     class Meta:
         ordering = ('name',)
 
@@ -103,8 +107,18 @@ class Tag(models.Model):
     def __unicode__(self):
         return '%s' % self.name
 
+    def save(self, *args, **kwargs):
+        self._category = self.__get_category_from_name()
+        super().save(*args, **kwargs)
+
     def get_absolute_url(self):
         return reverse('view_blog_tag', kwargs={'slug': self.slug})
+
+    def __get_category_from_name(self):
+        ret = self.name[0].upper()
+        if ret not in string.ascii_uppercase:
+            return "#"
+        return ret
 
 
 class CustomJS(models.Model):
