@@ -88,7 +88,7 @@ def __sidebar_menu_helper_date():
 
     date_years = Post.objects.filter(published=True).dates('posted', 'year') \
                              .distinct()
-    for year in date_years:
+    for year in reversed(date_years):
         posts = Post.objects.filter(published=True, posted__year=year.year) \
                             .order_by("-posted")
         if len(posts) <= 0:
