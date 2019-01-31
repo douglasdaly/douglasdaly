@@ -23,8 +23,9 @@ register = template.Library()
 
 @register.inclusion_tag("blog/tags/sidebar_menu.html")
 def sidebar_menu(sort_by="date"):
-    """ Tag for side menu links
-    """
+    """Tag for side menu links"""
+    heading_objects = True
+
     if sort_by == "date":
         ret = __sidebar_menu_helper_date()
 
@@ -43,25 +44,31 @@ def sidebar_menu(sort_by="date"):
             ret.append((category, temp))
 
     elif sort_by == "tags":
-        tags = Tag.objects.all().order_by('name')
-        ret = list()
-        for tag in tags:
-            posts = Post.objects.filter(published=True, tags=tag) \
-                        .order_by('title')
-            if len(posts) <= 0:
-                continue
+        heading_objects = False
 
+        ret = list()
+        all_tags = Tag.objects.all().order_by()
+        letters = all_tags.values_list("_category", flat=True).distinct()
+        for letter in letters:
+            tags = all_tags.filter(_category=letter)
             temp = list()
-            for post in posts:
-                temp.append((post.title, post.get_absolute_url()))
-            ret.append((tag, temp))
+            for tag in tags:
+                has_posts = Post.objects.filter(published=True, tags=tag) \
+                                .exists()
+                if not has_posts:
+                    continue
+                temp.append((tag.name, tag.get_absolute_url()))
+
+            if temp:
+                ret.append((letter, temp))
 
     else:
         ret = None
 
     return {
         "sidemenu_sort": sort_by,
-        "sidemenu_dict": ret
+        "sidemenu_dict": ret,
+        "sidemenu_heading_objects": heading_objects,
     }
 
 
@@ -81,7 +88,7 @@ def __sidebar_menu_helper_date():
 
     date_years = Post.objects.filter(published=True).dates('posted', 'year') \
                              .distinct()
-    for year in date_years:
+    for year in reversed(date_years):
         posts = Post.objects.filter(published=True, posted__year=year.year) \
                             .order_by("-posted")
         if len(posts) <= 0:

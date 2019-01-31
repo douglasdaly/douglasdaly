@@ -39,7 +39,8 @@ PYTHON := $(RUN_PRE) $(PYTHON)
 .PHONY: help requirements generate_requirements configure \
 		createsuperuser setup start \
 		debug_setup debug debug_createsuperuser \
-		debug_start local_start
+		debug_start local_start \
+		clean check_deploy
 
 .DEFAULT_GOAL := help
 
@@ -125,3 +126,6 @@ clean: ## Cleans the debug project (database, static)
 	rm $(PROJECT_DIR)/db.sqlite3 || true
 	rm -rf $(PROJECT_DIR)/static/* || true
 	touch $(PROJECT_DIR)/static/.gitkeep
+
+check_deploy: ## Checks the project prior to deploying
+	cd $(PROJECT_DIR) && $(PYTHON) manage.py check --deploy --settings=config.settings.production

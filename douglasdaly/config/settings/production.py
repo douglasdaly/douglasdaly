@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Production Django Settings
 """
@@ -17,8 +18,10 @@ initialize_sentry(os.environ.get("SENTRY_ENV", "production"))
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['.douglasdaly.com']
+ALLOWED_HOSTS = ['www.douglasdaly.com']
 
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases

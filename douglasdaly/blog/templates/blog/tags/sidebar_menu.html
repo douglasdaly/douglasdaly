@@ -1,15 +1,26 @@
 <div id="accordion" role="tablist">
   {% for heading, posts in sidemenu_dict %}
   <div class="card border-primary mb-1">
+    {% if sidemenu_heading_objects %}
     <div class="card-header" role="tab" id="header-{{ sidemenu_sort }}-{{ heading.slug }}">
-      <div class="mb-0" style="font-size: 14px;">
+      <div class="mb-0" style="font-size: 14px;{% if heading.name|length <= 3 %} text-align: center;{% endif %}">
         <a data-toggle="collapse" href="#{{ sidemenu_sort }}-{{ heading.slug }}" role="button" aria-expanded="false" aria-controls="{{ sidemenu_sort }}-{{ heading.slug }}">
           {{ heading.name }}
         </a>
       </div>
     </div>
-
     <div id="{{ sidemenu_sort }}-{{ heading.slug }}" class="collapse" role="tabpanel" aria-labelledby="header-{{ sidemenu_sort }}-{{ heading.slug }}" data-parent="#accordion">
+    {% else %}
+    <div class="card-header" role="tab" id="header-{{ sidemenu_sort }}-{{ heading.slug }}">
+      <div class="mb-0" style="font-size: 14px;{% if heading|length <= 3 %} text-align: center;{% endif %}">
+        <a data-toggle="collapse" href="#{{ sidemenu_sort }}-{{ heading }}" role="button" aria-expanded="false" aria-controls="{{ sidemenu_sort }}-{{ heading }}">
+          {{ heading }}
+        </a>
+      </div>
+    </div>
+
+    <div id="{{ sidemenu_sort }}-{{ heading }}" class="collapse" role="tabpanel" aria-labelledby="header-{{ sidemenu_sort }}-{{ heading }}" data-parent="#accordion">
+    {% endif %}
       <div class="card-body">
 	      <ul class="nav flex-column sidebar-submenu-links">
         {% for post_title, post_link in posts %}

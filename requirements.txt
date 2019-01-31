@@ -1,26 +1,32 @@
 -i https://pypi.org/simple
-beautifulsoup4==4.7.0
+beautifulsoup4==4.7.1
+boto3==1.9.86
+botocore==1.12.86
 certifi==2018.11.29
 click==7.0
-django-admin-sortable==2.1.9
+django-admin-sortable==2.1.11
 django-debug-toolbar==1.11
 django-htmlmin==0.10.0
 django-robots==3.1.0
 django-storages==1.7.1
 django==2.1.5
+docutils==0.14
 gunicorn==19.9.0
 html5lib==1.0.1
+jmespath==0.9.3
 mistune-contrib==0.1
 mistune==0.8.4
-pillow==5.4.0
-psycopg2==2.7.6.1
+pillow==5.4.1
+psycopg2==2.7.7
 pygments==2.3.1
+python-dateutil==2.7.5 ; python_version >= '2.7'
 python-dotenv==0.10.1
-pytz==2018.7
-sentry-sdk==0.6.6
+pytz==2018.9
+s3transfer==0.1.13
+sentry-sdk==0.6.9
 six==1.12.0
 sorl-thumbnail==12.5.0
-soupsieve==1.6.2
+soupsieve==1.7.3
 sqlparse==0.2.4
-urllib3==1.24.1
+urllib3==1.24.1 ; python_version >= '3.4'
 webencodings==0.5.1
