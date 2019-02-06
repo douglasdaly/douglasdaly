@@ -193,15 +193,13 @@ def __append_common_vars(request, curr_dict, include_settings=True):
 def __normalize_query(query_string,
                       findterms=re.compile(r'"([^"]+)"|(\S+)').findall,
                       normspace=re.compile(r'\s{2,}').sub):
-    """ Normalized query string into individual words for searching
-    """
+    """Normalized query string into individual words for searching"""
     return [normspace(' ', (t[0] or t[1]).strip()) for t
             in findterms(query_string)]
 
 
 def __get_query(query_string, search_fields):
-    """ Gets a Query for searching models with
-    """
+    """Gets a Query for searching models with"""
     query = None
 
     terms = __normalize_query(query_string)
