@@ -8,27 +8,32 @@ body {
     padding-bottom: 80px;
 }
 
+img {
+  height: auto;
+  max-width: 100%;
+}
+
 .bd-footer {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    padding-top: 20px;
-    background-color: #f5f5f5;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding-top: 20px;
+  background-color: #f5f5f5;
 }
 
 .bd-footer.container-fluid {
-    padding: 0px;
+  padding: 0px;
 }
 
 .container p img {
-    display: block;
-    margin: auto auto;
+  display: block;
+  margin: auto auto;
 }
 
 .container p video {
-    display: block;
-    margin: auto;
+  display: block;
+  margin: auto;
 }
 
 .container blockquote {
