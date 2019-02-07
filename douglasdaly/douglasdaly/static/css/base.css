@@ -8,11 +8,6 @@ body {
     padding-bottom: 80px;
 }
 
-img {
-  height: auto;
-  max-width: 100%;
-}
-
 .bd-footer {
   position: absolute;
   bottom: 0;
@@ -34,6 +29,11 @@ img {
 .container p video {
   display: block;
   margin: auto;
+}
+
+.container img {
+  height: auto;
+  max-width: 100%;
 }
 
 .container blockquote {
@@ -122,11 +122,6 @@ img {
 	background: #166dba;
 	background: -webkit-gradient(linear, left top, left bottom, from(#166dba), to(#0e5ea5));
 	background: -moz-linear-gradient(top, #166dba, #0e5ea5);
-}
-
-.container table th:first-child {
-	text-align: left;
-	padding-left: 10px;
 }
 
 .container table tr:first-child th:first-child {
