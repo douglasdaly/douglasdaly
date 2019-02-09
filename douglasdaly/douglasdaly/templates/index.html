@@ -13,73 +13,88 @@
 {% block content %}
 <div class="home-template">
 
-  <div class="row">
-    <div class="col">
+  {% if home_show_card %}
+  <div class="row pt-1">
+    <div class="col mt-1">
       <!-- Main Jumbotron Content -->
-      <div class="jumbotron jumbotron-fluid">
-        <div class="container">
-          <div class="row justify-content-center">
+      <div class="jumbotron jumbotron-fluid rounded mt-1 p-0">
+        <div class="row my-1 mx-2">
+          <div class="col">
             <h1 class="display-4">Douglas Daly</h1>
+            <hr class="my-2">
           </div>
-
+        </div>
+        <div class="row mx-2">
           {% if home_image %}
-          <div class="row justify-content-center">
-            <img class="img-fluid" src="{{ home_image.url }}" height="{{ home_image.height }}" width="{{ home_image.width }}" alt="Douglas Daly">
-          </div>
+            <div class="col-sm-4">
+              <img class="img-fluid rounded border mb-3" src="{{ home_image.url }}" height="{{ home_image.height }}" width="{{ home_image.width }}" alt="Douglas Daly">
+            </div>
+            <div class="col-sm-8">
+          {% else %}
+            <div class="col">
           {% endif %}
-
-          <div class="row justify-content-md-center ml-1 mr-1">
-            <p class="lead">Financial professional, programmer and data-enthusiast based out of New York City.</p>
-          </div>
-          <div class="row justify-content-center">
-            <p class="lead">
-              <a class="btn btn-primary btn-lg" href="/about.html" role="button">Learn more</a>
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Recent blog post cards -->
-  {% if recent_posts and recent_posts.count > 0 %}
-  <div class="row">
-    <div class="col">
-      <div class="container">
-        <div class="row mb-3">
-          <div class="col-12 text-left">
-            <h3>Recent Blog Posts:</h3>
-          </div>
-        </div>
-        <div class="row">
-          {% for post in recent_posts %}
-          <div class="col-lg-{{ post_col_width }} mb-2 justify-content-center">
-            <div class="card mx-auto" style="width: 300px">
-              {% if post.icon_image %}
-                {% thumbnail post.icon_image "300x300" crop='center' as im %}
-                  <a href="{{ post.get_absolute_url }}" alt="">
-                    <img class="card-img-top" src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}" alt="{{ post.title }}">
-                  </a>
-                {% endthumbnail %}
-              {% endif %}
-              <div class="card-body text-left">
-                <h5 class="card-title"><b>{{ post.title }}</b></h5>
-                <p class="card-text"><i>{{ post.description }}</i></p>
-                <div class="text-center">
-                  <a href="{{ post.get_absolute_url }}" class="btn btn-sm btn-info">View Post</a>
+              <div class="container h-100">
+                {% if home_tagline %}
+                  <div class="row">
+                    <div class="col">
+                      <p class="lead">
+                        {{ home_tagline }}
+                      </p>
+                    </div>
+                  </div>
+                {% endif %}
+                <div class="row p-0 mb-3 mx-auto">
+                  <div class="col text-align-middle">
+                    <a class="btn btn-primary btn-lg" href="/about.html" role="button">
+                      Learn more
+                    </a>
+                  </div>
                 </div>
-              </div>
-              <div class="card-footer text-muted" style="font-size: 11px">
-                Posted {{ post.posted|get_days_ago }} ago
               </div>
             </div>
           </div>
-          {% endfor %}
         </div>
       </div>
     </div>
   </div>
   {% endif %}
-  
+
+  <!-- Recent blog post cards -->
+  {% if recent_posts and recent_posts.count > 0 %}
+  <div class="row">
+    <div class="col">
+      <div class="row mb-3">
+        <div class="col text-left">
+          <h3>Recent Blog Posts:</h3>
+        </div>
+      </div>
+      <div class="row">
+        {% for post in recent_posts %}
+        <div class="col-lg-{{ post_col_width }} mb-2 justify-content-center">
+          <div class="card mx-auto" style="width: 300px">
+            {% if post.icon_image %}
+              {% thumbnail post.icon_image "300x300" crop='center' as im %}
+                <a href="{{ post.get_absolute_url }}" alt="">
+                  <img class="card-img-top" src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}" alt="{{ post.title }}">
+                </a>
+              {% endthumbnail %}
+            {% endif %}
+            <div class="card-body text-left">
+              <h5 class="card-title"><b>{{ post.title }}</b></h5>
+              <p class="card-text"><i>{{ post.description }}</i></p>
+              <div class="text-center">
+                <a href="{{ post.get_absolute_url }}" class="btn btn-primary btn-sm">View Post</a>
+              </div>
+            </div>
+            <div class="card-footer bg-light">
+              <p class="text-muted text-center mx-auto my-0" style="font-size: 0.7em;">Posted {{ post.posted|get_days_ago }} ago</p>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  {% endif %}
 </div>
 {% endblock %}

@@ -40,6 +40,8 @@ def index(request):
         'settings': site_settings,
         'recent_posts': recent_posts,
         'post_col_width': post_col_width,
+        'home_show_card': site_settings.home_show_card,
+        'home_tagline': site_settings.home_tagline,
         'home_image': site_settings.home_image,
     })
 
