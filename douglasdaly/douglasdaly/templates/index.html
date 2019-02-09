@@ -13,53 +13,70 @@
 {% block content %}
 <div class="home-template">
 
-  <!-- Main Jumbotron Content -->
-  <div class="jumbotron jumbotron-fluid">
-    <div class="container">
-      <div class="row justify-content-center">
-        <h1 class="display-4">Douglas Daly</h1>
-      </div>
-      <div class="row justify-content-md-center">
-        <p class="lead">Financial professional, programmer and data-enthusiast based out of New York City.</p>
-      </div>
-      <div class="row justify-content-center">
-        <p class="lead">
-          <a class="btn btn-primary btn-lg" href="/about.html" role="button">Learn more</a>
-        </p>
+  <div class="row">
+    <div class="col">
+      <!-- Main Jumbotron Content -->
+      <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+          <div class="row justify-content-center">
+            <h1 class="display-4">Douglas Daly</h1>
+          </div>
+
+          {% if home_image %}
+          <div class="row justify-content-center">
+            <img class="img-fluid" src="{{ home_image.url }}" height="{{ home_image.height }}" width="{{ home_image.width }}" alt="Douglas Daly">
+          </div>
+          {% endif %}
+
+          <div class="row justify-content-md-center ml-1 mr-1">
+            <p class="lead">Financial professional, programmer and data-enthusiast based out of New York City.</p>
+          </div>
+          <div class="row justify-content-center">
+            <p class="lead">
+              <a class="btn btn-primary btn-lg" href="/about.html" role="button">Learn more</a>
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- Recent blog post cards -->
   {% if recent_posts and recent_posts.count > 0 %}
-  <div class="container">
-    <div class="row mb-3">
-      <div class="col-12 text-left">
-        <h3>Recent Blog Posts:</h3>
+  <div class="row">
+    <div class="col">
+      <div class="container">
+        <div class="row mb-3">
+          <div class="col-12 text-left">
+            <h3>Recent Blog Posts:</h3>
+          </div>
+        </div>
+        <div class="row">
+          {% for post in recent_posts %}
+          <div class="col-lg-{{ post_col_width }} mb-2 justify-content-center">
+            <div class="card mx-auto" style="width: 300px">
+              {% if post.icon_image %}
+                {% thumbnail post.icon_image "300x300" crop='center' as im %}
+                  <a href="{{ post.get_absolute_url }}" alt="">
+                    <img class="card-img-top" src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}" alt="{{ post.title }}">
+                  </a>
+                {% endthumbnail %}
+              {% endif %}
+              <div class="card-body text-left">
+                <h5 class="card-title"><b>{{ post.title }}</b></h5>
+                <p class="card-text"><i>{{ post.description }}</i></p>
+                <div class="text-center">
+                  <a href="{{ post.get_absolute_url }}" class="btn btn-sm btn-info">View Post</a>
+                </div>
+              </div>
+              <div class="card-footer text-muted" style="font-size: 11px">
+                Posted {{ post.posted|get_days_ago }} ago
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
       </div>
-    </div>
-    <div class="row">
-      {% for post in recent_posts %}
-      <div class="col-lg-{{ post_col_width }} mb-2 justify-content-center">
-        <div class="card mx-auto" style="width: 300px">
-        {% if post.icon_image %}
-        {% thumbnail post.icon_image "300x300" crop='center' as im %}
-          <a href="{{ post.get_absolute_url }}" alt=""><img class="card-img-top" src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}" alt="{{ post.title }}"></a>
-          {% endthumbnail %}
-          {% endif %}
-          <div class="card-body text-left">
-            <h5 class="card-title"><b>{{ post.title }}</b></h5>
-            <p class="card-text"><i>{{ post.description }}</i></p>
-	    <div class="text-center">
-              <a href="{{ post.get_absolute_url }}" class="btn btn-sm btn-info">View Post</a>
-	    </div>
-	  </div>
-	  <div class="card-footer text-muted" style="font-size: 11px">
-	    Posted {{ post.posted|get_days_ago }} ago
-	  </div>
-	</div>
-      </div>
-      {% endfor %}
     </div>
   </div>
   {% endif %}

@@ -1,36 +1,6 @@
-{% extends 'blog/base.html' %}
+{% extends 'blog/base_listing.html' %}
 
 {% load page_tags %}
 {% load post_tags %}
 
 {% block meta_extra %}{% meta_head 'Blog' %}{% endblock %}
-
-{% block blog_content %}
-
-<div class="row">
-  <div class="col-11">
-    <h3>Posts</h3>
-  </div>
-  <div class="col-1 text-right">
-    <a href="rss/latest_posts.xml" target="_blank" title="Latest Posts RSS" class="rss-fa-link">
-      <i class="fas fa-rss-square" style="font-size:1.8em;"></i>
-    </a>
-  </div>
-</div>
-
-{% if posts %}
-  <ul>
-    {% for post in posts %}
-      {% post_display post %}
-    {% endfor %}
-  </ul>
-
-  {% post_pagination posts %}
-
-{% else %}
-
-  <p>There are no posts.</p>
-
-{% endif %}
-
-{% endblock %}

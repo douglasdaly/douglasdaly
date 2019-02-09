@@ -32,6 +32,8 @@ def index(request):
         'blog_settings': blog_settings,
         'posts': __get_post_page(post_list, page=page,
                                  blog_settings=blog_settings),
+        'view_rss': 'rss/latest.xml',
+        'current_nav': 'home',
     }
     ret_dict = __append_common_vars(request, ret_dict, include_settings=False)
 
@@ -61,7 +63,8 @@ def search(request):
     ret_dict = {
         'query_string': query_string,
         'posts': posts,
-        'blog_settings': blog_settings
+        'blog_settings': blog_settings,
+        'current_nav': 'search',
     }
     ret_dict = __append_common_vars(request, ret_dict, include_settings=False)
 
@@ -87,6 +90,8 @@ def view_categories(request):
 
     ret_dict = {
         'categories': categories,
+        'view_rss': 'rss/categories.xml',
+        'current_nav': 'categories',
     }
     ret_dict = __append_common_vars(request, ret_dict)
 
@@ -103,7 +108,8 @@ def view_category(request, slug):
         'category': category,
         'posts': __get_post_page(Post.objects.filter(category=category), page,
                                  blog_settings),
-        'blog_settings': blog_settings
+        'blog_settings': blog_settings,
+        'view_rss': 'rss/categories/{}.xml'.format(category.slug),
     }
     ret_dict = __append_common_vars(request, ret_dict, include_settings=False)
 
@@ -115,6 +121,8 @@ def view_tags(request):
 
     ret_dict = {
         'tags': tags,
+        'view_rss': 'rss/tags.xml',
+        'current_nav': 'tags',
     }
     ret_dict = __append_common_vars(request, ret_dict)
 
@@ -131,7 +139,8 @@ def view_tag(request, slug):
         'tag': tag,
         'posts': __get_post_page(Post.objects.filter(tags=tag), page,
                                  blog_settings),
-        'blog_settings': blog_settings
+        'blog_settings': blog_settings,
+        'view_rss': 'rss/tag/{}.xml'.format(tag.slug),
     }
     ret_dict = __append_common_vars(request, ret_dict, include_settings=False)
 

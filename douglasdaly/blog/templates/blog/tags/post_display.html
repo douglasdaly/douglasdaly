@@ -2,15 +2,17 @@
 
 <div class="media mb-3">
   {% if post.icon_image %}
-  {% thumbnail post.icon_image "100x100" crop="center" as im %}
-  <div class="media-left mr-3 text-center" style="width: 102px; height: 102px; border: 1px solid #666; box-shadow: 1px 1px 2px #999;">
-    <a href="{{ post.get_absolute_url }}" alt="{{ post.title }}"><img class="mx-auto" height="{{ im.height }}" width="{{ im.width }}" src="{{ im.url }}" alt="{{ post.title }}"></a>
-  </div>
-  {% endthumbnail %}
+    {% thumbnail post.icon_image "100x100" crop="center" as im %}
+    <div class="mr-3 text-center" style="width: 102px; height: 102px; border: 1px solid #666; box-shadow: 1px 1px 2px #999;">
+      <a href="{{ post.get_absolute_url }}" alt="{{ post.title }}">
+        <img height="{{ im.height }}" width="{{ im.width }}" src="{{ im.url }}" alt="{{ post.title }}">
+      </a>
+    </div>
+    {% endthumbnail %}
   {% endif %}
   <div class="media-body">
     <h5 class="media-heading"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h5>
-    <p class="mt-0 mb-0">
+    <p class="mt-0 mb-0 align-top">
       <i>{{ post.description }}</i>
     </p>
     <p class="mb-0 align-bottom">

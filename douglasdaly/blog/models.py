@@ -11,20 +11,25 @@ blog/models.py
 #   Imports
 #
 import string
+from datetime import datetime
 
 from django.db import models
 from django.urls import reverse
 from django.core.exceptions import ValidationError
 from django.db.utils import OperationalError, ProgrammingError
+from django.contrib.auth.models import User
 
 from sorl.thumbnail import ImageField
 
+from .fields import ListField
+
 
 #
-#   Model Definitions
+#   Model definitions
 #
 
 class BlogSettings(models.Model):
+    """Singleton model for blog settings"""
     title = models.CharField(max_length=100, db_index=True)
     site_link = models.CharField(max_length=40, null=False, default='blog')
 
@@ -73,9 +78,16 @@ class BlogSettings(models.Model):
 
 
 class Category(models.Model):
+    """Model for post categories"""
     name = models.CharField(max_length=100, db_index=True)
     slug = models.SlugField(max_length=100, db_index=True)
-    description = models.CharField(max_length=250, null=True, default=None)
+    description = models.CharField(max_length=250, null=True, blank=True,
+                                   default=None)
+
+    icon_image = models.ImageField(upload_to="blog/categories/icons/",
+                                   blank=True, null=True, default=None)
+
+    search_terms = ListField(null=True, blank=True, default=None)
 
     class Meta:
         ordering = ('name',)
@@ -92,9 +104,16 @@ class Category(models.Model):
 
 
 class Tag(models.Model):
+    """Model for post tags"""
     name = models.CharField(max_length=50, db_index=True)
     slug = models.SlugField(max_length=50, db_index=True)
-    description = models.CharField(max_length=200, null=True, default=None)
+    description = models.CharField(max_length=200, null=True, default=None,
+                                   blank=True)
+
+    image = models.ImageField(upload_to="blog/tags/icons/", null=True,
+                              blank=True, default=None)
+
+    search_terms = ListField(null=True, blank=True, default=None)
 
     _category = models.CharField(max_length=1, null=False)
 
@@ -122,8 +141,10 @@ class Tag(models.Model):
 
 
 class CustomJS(models.Model):
+    """Model for custom javascript files"""
     name = models.CharField(max_length=100, unique=True)
     file = models.FileField(upload_to="blog/posts/custom_js/")
+    tag = models.CharField(max_length=80, blank=True, null=True, default=None)
 
     def __str__(self):
         return self.name
@@ -132,13 +153,15 @@ class CustomJS(models.Model):
         return '%s' % self.name
 
     class Meta:
-        ordering = ('name',)
+        ordering = ('tag', 'name',)
         verbose_name_plural = "Custom JS Files"
 
 
 class CustomCSS(models.Model):
+    """Model for custom CSS files"""
     name = models.CharField(max_length=100, unique=True)
     file = models.FileField(upload_to="blog/posts/custom_css/")
+    tag = models.CharField(max_length=80, blank=True, null=True, default=None)
 
     def __str__(self):
         return self.name
@@ -147,13 +170,39 @@ class CustomCSS(models.Model):
         return '%s' % self.name
 
     class Meta:
-        ordering = ('name',)
+        ordering = ('tag', 'name',)
         verbose_name_plural = "Custom CSS Files"
 
 
+class Author(models.Model):
+    """Model for blog post authors"""
+    pen_name_full = models.CharField(max_length=120, blank=False, null=False)
+    pen_name_short = models.CharField(max_length=80, blank=True, null=True,
+                                      default=None)
+    author_image = models.ImageField(upload_to="blog/authors/images/",
+                                     null=True, default=None, blank=True)
+
+    contact_email = models.EmailField(null=True, blank=True, default=None)
+    public_contact_email = models.EmailField(null=True, blank=True,
+                                             default=True)
+    display_public_email = models.BooleanField(default=False)
+
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, default=None,
+                             blank=True, null=True)
+
+    # - Methods
+
+    def get_all_posts(self):
+        """Gets all posts associated with this author"""
+        return Post.objects.get(author=self).all()
+
+
 class Post(models.Model):
+    """Model for blog posts"""
     title = models.CharField(max_length=100, unique=True)
-    slug = models.SlugField(max_length=100, unique=True)
+    slug = models.SlugField(max_length=120, unique=True)
+    author = models.ForeignKey(Author, on_delete=models.SET_NULL, null=True,
+                               blank=True, default=None)
 
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     tags = models.ManyToManyField(Tag)
@@ -163,12 +212,17 @@ class Post(models.Model):
 
     description = models.TextField(default="", null=True)
     body = models.TextField()
+
+    search_terms = ListField(null=True, blank=True, default=None)
+
     custom_javascript = models.FileField(upload_to="blog/posts/scripts/",
                                          blank=True, default=None, null=True)
     css_includes = models.ManyToManyField(CustomCSS, blank=True)
     javascript_includes = models.ManyToManyField(CustomJS, blank=True)
 
-    posted = models.DateTimeField(db_index=True, auto_now_add=True)
+    created = models.DateTimeField(db_index=True, auto_now_add=True)
+    posted = models.DateTimeField(db_index=True, null=True, blank=True,
+                                  default=None)
     published = models.BooleanField(default=False)
 
     class Meta:
@@ -182,3 +236,14 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return reverse('view_blog_post', kwargs={'slug': self.slug})
+
+    def save(self, *args, **kwargs):
+        if self.pk is not None:
+            curr = Post.objects.get(pk=self.pk)
+            if not curr.published and self.published:
+                self.posted = datetime.now()
+        else:
+            if self.published:
+                self.posted = datetime.now()
+
+        super().save(*args, **kwargs)

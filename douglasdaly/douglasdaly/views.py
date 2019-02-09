@@ -14,7 +14,6 @@ import os
 
 from django.shortcuts import render, get_object_or_404
 from django.http import Http404
-from django.conf import settings
 
 from sentry_sdk import last_event_id, capture_message
 
@@ -27,6 +26,7 @@ from blog.models import Post
 #
 
 def index(request):
+    """Home page view"""
     site_settings = SiteSettings.load()
     recent_posts = Post.objects.all() \
                    .filter(published=True)[:site_settings.number_recent_posts]
@@ -40,10 +40,12 @@ def index(request):
         'settings': site_settings,
         'recent_posts': recent_posts,
         'post_col_width': post_col_width,
+        'home_image': site_settings.home_image,
     })
 
 
 def view_page(request, slug):
+    """Generic page view"""
     page = get_object_or_404(Page, slug=slug)
     if not page.published:
         raise Http404
@@ -57,6 +59,7 @@ def view_page(request, slug):
 
 
 def inactive_view(request):
+    """Site inactive view"""
     admin_settings = SiteAdminSettings.load()
     if admin_settings.site_is_active:
         raise Http404

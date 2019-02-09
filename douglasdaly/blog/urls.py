@@ -53,7 +53,7 @@ urlpatterns = [
             name="search"
     ),
     # - Feeds
-    path('rss/latest_posts.xml', PostsLatestFeed()),
+    path('rss/latest.xml', PostsLatestFeed()),
     path('rss/categories.xml', CategoryListingFeed()),
     path('rss/tags.xml', TagListingFeed()),
     path('rss/category/<str:slug>.xml', CategoryLatestFeed()),

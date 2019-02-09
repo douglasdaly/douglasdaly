@@ -20,7 +20,7 @@ from .models import ImageAsset, FileAsset, VideoAsset, AssetSettings
 #
 
 class AssetAdmin(admin.ModelAdmin):
-    prepopulated_fields = {'slug': ('title',)}
+    prepopulated_fields = {'slug': ('tag', 'title',)}
 
 
 # Register your models here.

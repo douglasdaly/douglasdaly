@@ -41,23 +41,27 @@
       <div class="d-none d-md-block">
 	
         <!-- Search Bar -->
-        <div class="input-group">
-            <input type="search" class="form-control ds-input mb-2" id="search-input" placeholder="Search..." autocomplete="off" spellcheck="false" style="position: relative; vertical-align: top;" aria-describedby="basic-addon2">
-          <div class="input-group-append">
-          <a href="#" id="blog-search-submit"><button class="btn btn-outline-secondary" type="button" onclick="blog_search();"><i class="fa fa-search fa-fw"></i></button></a>
+        <div class="row m-1">
+          <div class="input-group">
+            <input type="search" class="form-control ds-input" id="search-input" placeholder="Search..." autocomplete="off" spellcheck="false" style="position: relative; vertical-align: top;" aria-describedby="basic-addon2">
+            <div class="input-group-append">
+              <a href="#" id="blog-search-submit">
+                <button class="btn btn-outline-secondary" type="button" onclick="blog_search();"><i class="fa fa-search fa-fw"></i></button>
+              </a>
+            </div>
           </div>
         </div>
 	
         <!-- Sort Nav By -->
         <ul class="nav nav-pills nav-fill justify-content-center sidebar-pills mb-2" id="pills-tab" role="tab-list">
-          <li class="nav-item">
-            <a href="#sort-date" onclick="update_sort_tab('date')" class="nav-link{% if sort_tab == 'date' %} active{% endif %}" id="blog-sort-date" data-toggle="pill" role="tab" aria-controls="sort-date" aria-selected="{% if not sort_tab %}true{% else %}{% if sort_tab == 'date' %}true{% else %}false{% endif %}{% endif %}">Date</a>
+          <li class="nav-item m-1">
+            <a href="#sort-date" onclick="update_sort_tab('date')" class="nav-link {% if sort_tab == 'date' %}active{% endif %}" id="blog-sort-date" data-toggle="pill" role="tab" aria-controls="sort-date" aria-selected="{% if not sort_tab %}true{% else %}{% if sort_tab == 'date' %}true{% else %}false{% endif %}{% endif %}">Date</a>
           </li>
-          <li class="nav-item">
-            <a href="#sort-categories" onclick="update_sort_tab('categories')" class="nav-link{% if sort_tab == 'categories' %} active{% endif %}" id="blog-sort-categories" data-toggle="pill" role="tab" aria-controls="sort-categories" aria-selected="{% if sort_tab == 'categories' %}true{% else %}false{% endif %}">Category</a>
+          <li class="nav-item m-1">
+            <a href="#sort-categories" onclick="update_sort_tab('categories')" class="nav-link {% if sort_tab == 'categories' %}active{% endif %}" id="blog-sort-categories" data-toggle="pill" role="tab" aria-controls="sort-categories" aria-selected="{% if sort_tab == 'categories' %}true{% else %}false{% endif %}">Category</a>
           </li>
-          <li class="nav-item">
-            <a href="#sort-tags" onclick="update_sort_tab('tags')" class="nav-link{% if sort_tab == 'tags' %} active{% endif %}" id="blog-sort-tags" data-toggle="pill" role="tab" aria-controls="sort-tags" aria-selected="{% if sort_tab == 'tags' %}true{% else %}false{% endif %}">Tag</a>
+          <li class="nav-item m-1">
+            <a href="#sort-tags" onclick="update_sort_tab('tags')" class="nav-link {% if sort_tab == 'tags' %}active{% endif %}" id="blog-sort-tags" data-toggle="pill" role="tab" aria-controls="sort-tags" aria-selected="{% if sort_tab == 'tags' %}true{% else %}false{% endif %}">Tag</a>
           </li>
         </ul>
 
@@ -79,25 +83,27 @@
       </div>
 
       <!-- Small Screen Nav Content -->
-      <div class="d-block d-md-none">
-        <ul class="nav nav-pills nav-fill mb-2">
-          <li class="nav-item m-1">
-            <a class="nav-link btn btn-primary" href="/blog/">Blog Home</a>
-          </li>
-          <li class="nav-item m-1">
-            <a class="nav-link btn btn-primary" href="/blog/categories.html">Categories</a>
-          </li>
-          <li class="nav-item m-1">
-            <a class="nav-link btn btn-primary" href="/blog/tags.html">Tags</a>
-          </li>
-        </ul>
+      <div class="d-md-none mb-1">
+        <nav class="nav nav-pills nav-fill">
+          {% if current_nav %}
+          <a class="nav-item nav-link btn {{ 'home'|smallnavbtn:current_nav }} m-1" href="/blog/" onclick="update_sort_tab('date')">Home</a>
+          <a class="nav-item nav-link btn {{ 'categories'|smallnavbtn:current_nav }} m-1" href="/blog/categories.html" onclick="update_sort_tab('categories')">Categories</a>
+          <a class="nav-item nav-link btn {{ 'tags'|smallnavbtn:current_nav }} m-1" href="/blog/tags.html" onclick="update_sort_tab('tags')">Tags</a>
+          {% else %}
+          <a class="nav-item nav-link btn {{ 'home'|smallnavbtn:None }} m-1" href="/blog/" onclick="update_sort_tab('date')">Home</a>
+          <a class="nav-item nav-link btn {{ 'categories'|smallnavbtn:None }} m-1" href="/blog/categories.html" onclick="update_sort_tab('categories')">Categories</a>
+          <a class="nav-item nav-link btn {{ 'tags'|smallnavbtn:None }} m-1" href="/blog/tags.html" onclick="update_sort_tab('tags')">Tags</a>
+          {% endif %}
+        </nav>
       </div>
       
     </div>
     
     <!-- Content -->
-    <div class="col-sm-9">
-      {% block blog_content %}{% endblock %}
+    <div class="col-md-9">
+      <div class="m-1">
+        {% block blog_content %}{% endblock %}
+      </div>
     </div>
     
   </div>

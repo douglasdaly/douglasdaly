@@ -1,4 +1,12 @@
+# -*- coding: utf-8 -*-
+"""
+blog/admin.py
 
+    Admin classes for blog application.
+
+@author: Douglas Daly
+@date: 2/8/2019
+"""
 #
 #   Imports
 #
@@ -13,6 +21,7 @@ from .models import Post, Category, Tag, BlogSettings, CustomJS, CustomCSS
 #
 
 class PostAdminForm(forms.ModelForm):
+    """Admin form for blog posts"""
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -21,20 +30,23 @@ class PostAdminForm(forms.ModelForm):
 
 
 class PostAdmin(admin.ModelAdmin):
+    """Admin for blog posts"""
     form = PostAdminForm
 
-    exclude = ['posted']
+    exclude = ('created', 'posted')
     prepopulated_fields = {'slug': ('title',)}
     list_display = ('title', 'category', 'posted', 'published')
     list_filter = ('published', 'category')
 
 
 class CategoryAdmin(admin.ModelAdmin):
+    """Admin for blog categories"""
     prepopulated_fields = {'slug': ('name',)}
 
 
 class TagAdmin(admin.ModelAdmin):
-    exclude = ['_category']
+    """Admin for blog tags"""
+    exclude = ('_category',)
     prepopulated_fields = {'slug': ('name',)}
 
 

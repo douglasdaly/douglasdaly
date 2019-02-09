@@ -30,6 +30,9 @@ class SiteSettings(models.Model):
     meta_author = models.CharField(max_length=100, null=True)
     meta_keywords = models.CharField(max_length=120, null=True)
 
+    home_image = models.ImageField(upload_to="images/", null=True,
+                                   default=None, blank=True)
+
     number_recent_posts = models.PositiveSmallIntegerField(default=3,
                             blank=True, null=True,
                             verbose_name="Number of recent posts to show",

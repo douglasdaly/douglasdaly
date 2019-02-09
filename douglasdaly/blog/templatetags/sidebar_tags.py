@@ -10,6 +10,7 @@ sidebar_tags.py
 #   Imports
 #
 from django import template
+from django.template.defaultfilters import stringfilter
 
 from ..models import Post, Category, Tag
 
@@ -70,6 +71,14 @@ def sidebar_menu(sort_by="date"):
         "sidemenu_dict": ret,
         "sidemenu_heading_objects": heading_objects,
     }
+
+
+@register.filter(is_safe=True)
+def smallnavbtn(target_nav, current_nav):
+    """Tag for small nav items"""
+    if current_nav is not None and target_nav == current_nav:
+            return "btn-primary"
+    return "btn-secondary"
 
 
 #

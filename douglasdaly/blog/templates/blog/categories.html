@@ -1,31 +1,23 @@
-{% extends 'blog/base.html' %}
+{% extends 'blog/base_listing.html' %}
 
 {% load page_tags %}
 {% load post_tags %}
 
 {% block meta_extra %}{% meta_head 'Blog Categories' %}{% endblock %}
+{% block listing_title %}Categories{% endblock %}
 
-{% block blog_content %}
+{% block blog_content_body %}
 
-<div class="row">
-  <div class="col-11">
-    <h3 class="pb-2">Categories</h3>
-  </div>
-  <div class="col-1 text-right">
-    <a href="/blog/rss/categories.xml" target="_blank" title="All Categories RSS" class="rss-fa-link">
-      <i class="fas fa-rss-square" style="font-size:1.8em;"></i>
-    </a>
-  </div>
-</div>
-
-{% if categories %}
-<ul>
-  {% for category in categories %}
-  <li><a href="{{ category.get_absolute_url }}">{{ category.name }}</a></li>
-  {% endfor %}
-</ul>
-{% else %}
-  <p>There are no categories.</p>
-{% endif %}
+  {% if categories %}
+    <ul>
+      {% for category in categories %}
+      <li>
+        <a href="{{ category.get_absolute_url }}">{{ category.name }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>{% block blog_content_none %}There are no categories.{% endblock %}</p>
+  {% endif %}
 
 {% endblock %}
