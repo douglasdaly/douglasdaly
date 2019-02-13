@@ -20,15 +20,17 @@
       <div class="jumbotron jumbotron-fluid rounded mt-1 p-0">
         <div class="row my-1 mx-2">
           <div class="col">
-            <h1 class="display-4">Douglas Daly</h1>
+            <h1 class="display-4 mt-1">Douglas Daly</h1>
             <hr class="my-2">
           </div>
         </div>
         <div class="row mx-2">
           {% if home_image %}
+            {% with home_image.asset as im %}
             <div class="col-sm-4">
-              <img class="img-fluid rounded border mb-3" src="{{ home_image.url }}" height="{{ home_image.height }}" width="{{ home_image.width }}" alt="Douglas Daly">
+              <img class="img-fluid rounded border mb-3" src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}" alt="{{ home_image.title }}">
             </div>
+            {% endwith %}
             <div class="col-sm-8">
           {% else %}
             <div class="col">
@@ -64,24 +66,29 @@
   <div class="row">
     <div class="col">
       <div class="row mb-3">
-        <div class="col text-left">
-          <h3>Recent Blog Posts:</h3>
+        <div class="col-auto text-left">
+          <h3>Recent Blog Posts</h3>
         </div>
       </div>
-      <div class="row">
+      <div class="row justify-content-center px-4 px-sm-0">
         {% for post in recent_posts %}
-        <div class="col-lg-{{ post_col_width }} mb-2 justify-content-center">
-          <div class="card mx-auto" style="width: 300px">
+        <div class="col-sm-{{ post_col_width }} mb-2 justify-content-center py-1 py-sm-0">
+          <div class="card mx-auto">
             {% if post.icon_image %}
               {% thumbnail post.icon_image "300x300" crop='center' as im %}
-                <a href="{{ post.get_absolute_url }}" alt="">
-                  <img class="card-img-top" src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}" alt="{{ post.title }}">
+                <a href="{{ post.get_absolute_url }}" alt="{{ post.title }}">
+                  <img class="card-img-top" src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}" alt="">
                 </a>
               {% endthumbnail %}
             {% endif %}
             <div class="card-body text-left">
-              <h5 class="card-title"><b>{{ post.title }}</b></h5>
-              <p class="card-text"><i>{{ post.description }}</i></p>
+              <h5 class="card-title">
+                <b>{{ post.title }}</b>
+                <hr class="p-0 mt-1">
+              </h5>
+              <p class="card-text mt-0 mb-3">
+                <i>{{ post.description }}</i>
+              </p>
               <div class="text-center">
                 <a href="{{ post.get_absolute_url }}" class="btn btn-primary btn-sm">View Post</a>
               </div>

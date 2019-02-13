@@ -17,6 +17,8 @@ from django.core.validators import MaxValueValidator
 
 from adminsortable.models import SortableMixin
 
+from assets.models import ImageAsset
+
 
 #
 #   Model Definitions
@@ -32,8 +34,8 @@ class SiteSettings(models.Model):
 
     home_show_card = models.BooleanField(default=True, null=False)
     home_tagline = models.TextField(null=True, default=None, blank=True)
-    home_image = models.ImageField(upload_to="images/", null=True,
-                                   default=None, blank=True)
+    home_image = models.ForeignKey(ImageAsset, default=None, blank=True,
+                                   null=True, on_delete=models.SET_NULL)
 
     number_recent_posts = models.PositiveSmallIntegerField(
         default=3, blank=True, null=True,

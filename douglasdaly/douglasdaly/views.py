@@ -32,7 +32,7 @@ def index(request):
                    .filter(published=True)[:site_settings.number_recent_posts]
 
     if site_settings.number_recent_posts > 0 and len(recent_posts) > 0:
-        post_col_width = int(12 / len(recent_posts))
+        post_col_width = int(10 / len(recent_posts))
     else:
         post_col_width = 0
 

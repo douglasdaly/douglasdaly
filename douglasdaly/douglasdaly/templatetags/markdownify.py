@@ -103,7 +103,6 @@ class CustomBlockGrammar(mistune.BlockGrammar):
     """
     Block grammar for customized tables
     """
-
     table = re.compile(
         r'^ *\|(.+)\n *\|( *[#-:]+[-| :]*)\n((?: *\|.*(?:\n|$))*)\n*'
     )
@@ -208,24 +207,39 @@ class CustomBlockLexer(math.MathBlockMixin, mistune.BlockLexer):
         return ret, ret_props
 
 
+class CustomInlineGrammar(mistune.InlineGrammar):
+    """
+    Inline grammar
+    """
+    emphasis = re.compile(
+        r'^\*((?:\*\*|[^\*])+?)\*(?!\*)'  # *word*
+    )
+
+    double_emphasis = re.compile(
+        r'^\*{2}([\s\S]+?)\*{2}(?!\*)'  # **word**
+    )
+
+    link = re.compile(
+        r'^!?\[('
+        r'(?:\[[^^\]]*\]|[^\[\]]|\](?=[^\[]*\]))*'
+        r')\]\('
+        r'''\s*(<)?([\s\S]*?)(?(2)>)(?:\s+['"]([\s\S]*?)['"])?\s*'''
+        r'\)'
+        r'(?:\s*(?:\{:\s*)(.*)(?:\s*\}))?'
+    )
+
+
 class CustomInlineLexer(math.MathInlineMixin, mistune.InlineLexer):
     """
     Inline Lexer for MathJax support and disabled underscores
     """
+    grammar_class = CustomInlineGrammar
 
     def __init__(self, *args, **kwargs):
         super(CustomInlineLexer, self).__init__(*args, **kwargs)
+
         self.enable_math()
-
-        # - Customize rules
         self.rules.math = re.compile(r'^\\\((.+?)\\\)')
-
-        self.rules.emphasis = re.compile(
-            r'^\*((?:\*\*|[^\*])+?)\*(?!\*)'  # *word*
-        )
-        self.rules.double_emphasis = re.compile(
-            r'^\*{2}([\s\S]+?)\*{2}(?!\*)'  # **word**
-        )
 
     def output_emphasis(self, m):
         """Override emphasis rules for MathJax integration"""
@@ -238,6 +252,20 @@ class CustomInlineLexer(math.MathInlineMixin, mistune.InlineLexer):
         text = m.group(1)
         text = self.output(text)
         return self.renderer.double_emphasis(text)
+
+    def _process_link(self, m, link, title=None):
+        """Override for attributes"""
+        line = m.group(0)
+        text = m.group(1)
+        attrib = m.group(5) or None
+
+        if line[0] == '!':
+            return self.renderer.image(link, title, text, attribute=attrib)
+
+        self._in_link = True
+        text = self.output(text)
+        self._in_link = False
+        return self.renderer.link(link, title, text)
 
 
 class CustomMarkdown(mistune.Markdown):
