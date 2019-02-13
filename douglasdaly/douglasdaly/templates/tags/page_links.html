@@ -1,3 +1,7 @@
-{% for page in pages %}
-  <li class="nav-item align-middle"><a href="{{ page.link }}" class="nav-link">{{ page.link_name }}</a></li>
-{% endfor %}
+{% if pages %}
+  {% for page in pages %}
+    <li class="nav-item">
+      <a href="{{ page.link }}" class="nav-link">{{ page.link_name }}</a>
+    </li>
+  {% endfor %}
+{% endif %}

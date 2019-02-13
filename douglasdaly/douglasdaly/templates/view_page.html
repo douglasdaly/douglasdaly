@@ -8,31 +8,33 @@
 {% block keywords %}{% meta_keywords page.keywords %}{% endblock %}
 
 {% block additional_styles %}
-{{ block.super }}
-<link rel="stylesheet" type="text/css" href="{% static 'css/page.css' %}">
-{% if custom_css_file %}
-<link rel="stylesheet" type="text/css" href="{{ custom_css_file.url }}">
-{% endif %}
+  {{ block.super }}
+  <link rel="stylesheet" type="text/css" href="{% static 'css/page.css' %}">
+  {% if custom_css_file %}
+    <link rel="stylesheet" type="text/css" href="{{ custom_css_file.url }}">
+  {% endif %}
 {% endblock %}
 
 {% block content %}
-<div class="page-template">
-  <div class="container">
-    <div class="row">
-      <div class="col-auto p-0">
-        <h1>{{ page.title }}</h1>
+  <div class="page-template">
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <h1>{{ page.title }}</h1>
+        </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        {% if page.content %}{{ page.content|markdown|safe }}{% endif %}
+      <div class="row">
+        <div class="col">
+          {% if page.content %}{{ page.content|markdown|safe }}{% endif %}
+        </div>
       </div>
     </div>
   </div>
-</div>
 {% endblock %}
 
 {% block additional_tail_js %}
-{{ block.super }}
-{% if page.custom_javascript %}<script type="text/javascript" src="{{ page.custom_javascript.url }}"></script>{% endif %}
+  {{ block.super }}
+  {% if page.custom_javascript %}
+    <script type="text/javascript" src="{{ page.custom_javascript.url }}"></script>
+  {% endif %}
 {% endblock %}
