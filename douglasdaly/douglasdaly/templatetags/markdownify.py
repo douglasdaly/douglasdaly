@@ -50,10 +50,11 @@ class CustomRenderer(math.MathRendererMixin, AssetRenderer):
     def table(self, header, body):
         """Render table utilizing bootstrap tables"""
         ret = (
+            '<div class="table-container">\n'
             '<table class="table table-sm table-hover table-bordered '
             'table-striped">\n'
             '<thead class="thead-dark bg-primary">%s</thead>\n'
-            '<tbody>\n%s</tbody>\n</table>\n'
+            '<tbody>\n%s</tbody>\n</table>\n</div>\n'
         ) % (header, body)
         return '<div class="table-responsive">%s</div>' % ret
 
@@ -93,7 +94,7 @@ class CustomRenderer(math.MathRendererMixin, AssetRenderer):
         if scope:
             ret += ' scope="%s"' % scope
         if align:
-            ret += ' style="text-align:%s"' % align
+            ret += ' style="text-align: %s"' % align
         ret += '>%s</%s>' % (content, tag)
 
         return ret
@@ -183,7 +184,7 @@ class CustomBlockLexer(math.MathBlockMixin, mistune.BlockLexer):
                 cell_flags[i].append(t_cflags)
 
                 # de-escape any pipe inside the cell here
-                cells[i][c] = re.sub('\\\\\|', '|', cell)
+                cells[i][c] = re.sub(r'\\\\\|', '|', cell)
 
         return cells, cell_flags
 
@@ -191,18 +192,22 @@ class CustomBlockLexer(math.MathBlockMixin, mistune.BlockLexer):
     def __preprocess_cell_props(cell):
         """Helper function to pre-process cell information for properties"""
         prop_res = [
-            ('class', (re.compile(r'^ *@class="(.+)" *'), [1], ' ')),
+            (
+                'class', (
+                    re.compile(r'^(.*)(?:\s+\{:\s*([^\}.]+)\s+\})\s*$'), 2, 1
+                )
+            ),
         ]
 
         ret = cell
         ret_props = None
-        for (k, (p, grps, repl)) in prop_res:
+        for (k, (p, get_idx, repl_idx)) in prop_res:
             t_match = p.match(cell)
             if t_match:
                 if ret_props is None:
                     ret_props = dict()
-                ret_props[k] = t_match.group(*grps)
-                ret = re.sub(p, repl, ret)
+                ret_props[k] = t_match.group(get_idx)
+                ret = t_match.group(repl_idx)
 
         return ret, ret_props
 

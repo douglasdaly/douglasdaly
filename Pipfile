@@ -23,6 +23,7 @@ Pygments = "*"
 sentry-sdk = "*"
 boto3 = "*"
 psycopg2-binary = "*"
+django-colorful = "*"
 
 [requires]
 python_version = "3.6"

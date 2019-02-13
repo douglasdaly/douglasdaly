@@ -54,3 +54,10 @@
 .sidebar-submenu-links > li:first-child {
   border-top: none;
 }
+
+.highlight  {
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-bottom: 12px;
+  overflow-x: scroll;
+}

@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'robots',
     'adminsortable',
     'sorl.thumbnail',
+    'colorful',
     # Project apps
     'douglasdaly',
     'blog',

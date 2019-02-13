@@ -25,25 +25,40 @@
 {% endblock %}
 
 {% block blog_content %}
-<div class="blog-content">  
-  <h1><b>{{ post.title }}</b></h1>
+<div class="blog-content">
+  <h1 class="border-bottom border-light pb-1"><b>{{ post.title }}</b></h1>
+
+  <p class="mb-2">
+    <a class="badge badge-primary align-left" href="{{ post.category.get_absolute_url }}" style="font-size: 1.0em;" title="View Category">
+      {{ post.category.name }}
+    </a>
+    <i class="ml-2" style="font-size: 1.0em;">{{ post.posted|date:"l, F d, Y" }}</i>
+  </p>
   <p>
-    <i class="text-muted">{{ post.posted|date:"l, F d, Y" }}</i><br/>
     <i>{{ post.description }}</i>
   </p>
-  <p>
-    <b>Category: </b><a href="{{ post.category.get_absolute_url }}">{{ post.category.name }}</a>
-  </p>
 
-  {{ post.body | markdown | safe }}
+  <div class="blog-content-body">
+    {{ post.body | markdown | safe }}
+  </div>
 
   {% if post.tags %}
-  <b>Tags: </b>
-  <ul class="list-inline">
-    {% for tag in post.tags.all %}
-    <li class="list-inline-item"><i><a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a></i></li>
-    {% endfor %}
-  </ul>
+    <b>Tags: </b>
+    <ul class="list-inline">
+      {% for tag in post.tags.all %}
+        <li class="list-inline-item">
+          {% if tag.color %}
+            {% if tag.font_class %}
+              <a class="badge badge-pill {{ tag.font_class }}" href="{{ tag.get_absolute_url }}" style="background-color: {{ tag.color }}; font-size: 0.8em;">{{ tag.name }}</a>
+            {% else %}
+              <a class="badge badge-pill" href="{{ tag.get_absolute_url }}" style="background-color: {{ tag.color }}; font-size: 0.8em;">{{ tag.name }}</a>
+            {% endif %}
+          {% else %}
+            <a class="badge badge-pill badge-primary" href="{{ tag.get_absolute_url }}" style="font-size: 0.8em;">{{ tag.name }}</a>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
   {% endif %}
 </div>
 {% endblock %}

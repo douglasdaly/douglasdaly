@@ -20,6 +20,7 @@ from django.db.utils import OperationalError, ProgrammingError
 from django.contrib.auth.models import User
 
 from sorl.thumbnail import ImageField
+from colorful.fields import RGBColorField
 
 from .fields import ListField
 
@@ -112,8 +113,12 @@ class Tag(models.Model):
 
     image = models.ImageField(upload_to="blog/tags/icons/", null=True,
                               blank=True, default=None)
+    color = RGBColorField(null=True, default=None, blank=True)
+    font_class = models.CharField(max_length=80, default=None, blank=True,
+                                  null=True, verbose_name="Font Class")
 
-    search_terms = ListField(null=True, blank=True, default=None)
+    search_terms = ListField(null=True, blank=True, default=None,
+                             verbose_name="Search Terms")
 
     _category = models.CharField(max_length=1, null=False)
 
@@ -142,9 +147,10 @@ class Tag(models.Model):
 
 class CustomJS(models.Model):
     """Model for custom javascript files"""
-    name = models.CharField(max_length=100, unique=True)
-    file = models.FileField(upload_to="blog/posts/custom_js/")
+    name = models.CharField(max_length=100)
     tag = models.CharField(max_length=80, blank=True, null=True, default=None)
+    slug = models.SlugField(max_length=180, db_index=True)
+    file = models.FileField(upload_to="blog/posts/custom_js/")
 
     def __str__(self):
         return self.name
@@ -159,9 +165,10 @@ class CustomJS(models.Model):
 
 class CustomCSS(models.Model):
     """Model for custom CSS files"""
-    name = models.CharField(max_length=100, unique=True)
-    file = models.FileField(upload_to="blog/posts/custom_css/")
+    name = models.CharField(max_length=100)
     tag = models.CharField(max_length=80, blank=True, null=True, default=None)
+    slug = models.SlugField(max_length=180, db_index=True)
+    file = models.FileField(upload_to="blog/posts/custom_css/")
 
     def __str__(self):
         return self.name
@@ -176,16 +183,25 @@ class CustomCSS(models.Model):
 
 class Author(models.Model):
     """Model for blog post authors"""
-    pen_name_full = models.CharField(max_length=120, blank=False, null=False)
-    pen_name_short = models.CharField(max_length=80, blank=True, null=True,
-                                      default=None)
+    pen_name_full = models.CharField(max_length=120, blank=False, null=False,
+                                     verbose_name="Pen Name (full)")
+    pen_name_short = models.CharField(
+        max_length=80, blank=True, null=True, default=None,
+        verbose_name="Pen Name (short)"
+    )
     author_image = models.ImageField(upload_to="blog/authors/images/",
-                                     null=True, default=None, blank=True)
+                                     null=True, default=None, blank=True,
+                                     verbose_name="Author's Image")
 
-    contact_email = models.EmailField(null=True, blank=True, default=None)
-    public_contact_email = models.EmailField(null=True, blank=True,
-                                             default=True)
-    display_public_email = models.BooleanField(default=False)
+    contact_email = models.EmailField(null=True, blank=True, default=None,
+                                      verbose_name="Contact Email")
+    public_contact_email = models.EmailField(
+        null=True, blank=True, default=True,
+        verbose_name="Display Email (public)"
+    )
+    display_public_email = models.BooleanField(
+        default=False, verbose_name="Display public email?"
+    )
 
     user = models.ForeignKey(User, on_delete=models.SET_NULL, default=None,
                              blank=True, null=True)
@@ -208,17 +224,24 @@ class Post(models.Model):
     tags = models.ManyToManyField(Tag)
 
     icon_image = ImageField(upload_to="blog/posts/icons/", default=None,
-                            blank=True, null=True)
+                            blank=True, null=True, verbose_name="Icon Image")
 
     description = models.TextField(default="", null=True)
     body = models.TextField()
 
-    search_terms = ListField(null=True, blank=True, default=None)
+    search_terms = ListField(null=True, blank=True, default=None,
+                             verbose_name="Search Terms")
 
-    custom_javascript = models.FileField(upload_to="blog/posts/scripts/",
-                                         blank=True, default=None, null=True)
-    css_includes = models.ManyToManyField(CustomCSS, blank=True)
-    javascript_includes = models.ManyToManyField(CustomJS, blank=True)
+    custom_javascript = models.FileField(
+        upload_to="blog/posts/scripts/", blank=True, default=None, null=True,
+        verbose_name="Custom Javascript"
+    )
+    css_includes = models.ManyToManyField(
+        CustomCSS, blank=True, verbose_name="CSS Includes"
+    )
+    javascript_includes = models.ManyToManyField(
+        CustomJS, blank=True, verbose_name="Javascript Includes"
+    )
 
     created = models.DateTimeField(db_index=True, auto_now_add=True)
     posted = models.DateTimeField(db_index=True, null=True, blank=True,

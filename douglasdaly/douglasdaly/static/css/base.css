@@ -85,3 +85,8 @@ body {
   font-weight: bold;
   margin-top: 1em;
 }
+
+.table-container {
+  padding-left: 10px;
+  padding-right: 10px;
+}

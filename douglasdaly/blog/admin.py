@@ -25,8 +25,9 @@ class PostAdminForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['description'].widget.attrs['rows'] = 2
-        self.fields['body'].widget.attrs['rows'] = 25
+        self.fields['description'].widget.attrs['rows'] = 3
+        self.fields['body'].widget.attrs['rows'] = 30
+        self.fields['search_terms'].widget.attrs['rows'] = 1
 
 
 class PostAdmin(admin.ModelAdmin):
