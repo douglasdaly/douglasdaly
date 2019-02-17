@@ -36,7 +36,7 @@ PYTHON := $(RUN_PRE) $(PYTHON)
 #	Recipes
 #
 
-.PHONY: help requirements generate_requirements configure \
+.PHONY: help init requirements generate_requirements configure \
 		createsuperuser setup start \
 		debug_setup debug debug_createsuperuser \
 		debug_start local_start \
@@ -52,6 +52,11 @@ help: ## Prints help for this Makefile
 	@echo ''
 
 all: requirements start ## Installs requirements and starts server
+
+# - Setup repository
+
+init: ## Sets up this git repository after initial clone
+	cp .githooks/* .git/hooks/
 
 # - Install Related
 
