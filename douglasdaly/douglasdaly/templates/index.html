@@ -80,11 +80,16 @@
               {% endthumbnail %}
             {% endif %}
             <div class="card-body text-left">
-              <h5 class="card-title">
+              <h5 class="card-title mb-0">
                 <b>{{ post.title }}</b>
-                <hr class="p-0 mt-1">
               </h5>
-              <p class="card-text mt-0 mb-3">
+              {% if show_authors and post.author %}
+              <p class="m-0 mb-1 p-0">
+                <small><a href="{{ post.author.get_absolute_url }}" title="View Author Page">{{ post.author.get_display_name }}</a></small>
+              </p>
+              {% endif %}
+              <hr class="p-0 m-0">
+              <p class="card-text mt-1 mb-3">
                 <i>{{ post.description }}</i>
               </p>
               <div class="text-center">
@@ -92,7 +97,9 @@
               </div>
             </div>
             <div class="card-footer bg-light">
-              <p class="text-muted text-center mx-auto my-0" style="font-size: 0.7em;">Posted {{ post.posted|get_days_ago }} ago</p>
+              <p class="text-muted text-center mx-auto my-0" style="font-size: 0.7em;">
+                Published {{ post.display_date|get_days_ago }} ago
+              </p>
             </div>
           </div>
         </div>

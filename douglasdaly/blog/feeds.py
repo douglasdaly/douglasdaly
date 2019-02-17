@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-douglasdaly/blog/feeds.py
+Classes for blog syndication feeds.
 
-    Classes for blog syndication feeds.
-
-@author: Douglas Daly
-@date: 1/4/2019
+:author: Douglas Daly
+:date: 1/4/2019
 """
 #
 #   Imports
@@ -13,7 +11,7 @@ douglasdaly/blog/feeds.py
 from abc import abstractmethod
 from django.contrib.syndication.views import Feed
 
-from .models import BlogSettings, Post, Category, Tag
+from .models import BlogSettings, Post, Category, Tag, Author
 
 
 #
@@ -21,29 +19,24 @@ from .models import BlogSettings, Post, Category, Tag
 #
 
 class LatestFeed(Feed):
-    """Base Syndication feed for latest posts"""
-
-    author_name = "Douglas Daly"
-    author_link = "https://www.douglasdaly.com/"
-    item_author_name = "Douglas Daly"
+    """
+    Base Syndication feed for latest posts
+    """
 
     def __init__(self):
         super().__init__()
         blog_settings = BlogSettings.load()
         if blog_settings:
-            self._max_posts = getattr(blog_settings, 'latest_feed_most_recent', 5)
+            self._max_posts = getattr(blog_settings, 'latest_feed_most_recent',
+                                      5)
             self._title = getattr(blog_settings, 'title', "Blog")
             self._link = getattr(blog_settings, 'site_link', 'blog')
+            self._show_authors = getattr(blog_settings, 'show_authors', False)
         else:
             self._max_posts = 5
             self._title = "Blog"
             self._link = "blog"
-
-    def item_title(self, item):
-        return item.title
-
-    def item_description(self, item):
-        return item.description
+            self._show_authors = False
 
     def title(self, obj):
         return self._title
@@ -54,10 +47,45 @@ class LatestFeed(Feed):
     def description(self, obj):
         return "Latest posts from {}".format(self._title)
 
+    def author_name(self, obj):
+        return "Douglas Daly"
+
+    def author_link(self, obj):
+        return "https://www.douglasdaly.com/"
+
+    def items(self, obj):
+        return Post.get_displayable()
+
+    def item_title(self, item):
+        return item.title
+
+    def item_description(self, item):
+        return item.description
+
+    def item_author_name(self, item):
+        if self._show_authors and item.author:
+            return item.author.get_display_name()
+        return None
+
+    def item_author_email(self, item):
+        if (self._show_authors and item.author and
+                item.author.display_public_email):
+            return item.author.public_contact_email
+        return None
+
+    def item_author_link(self, item):
+        if self._show_authors and item.author:
+            return item.author.get_absolute_url()
+        return None
+
+    def item_pubdate(self, item):
+        return item.display_date
+
 
 class ListingFeed(Feed):
-    """Base Syndication feed for listing objects"""
-
+    """
+    Base Syndication feed for listing objects
+    """
     author_name = "Douglas Daly"
     author_link = "https://www.douglasdaly.com/"
 
@@ -65,25 +93,19 @@ class ListingFeed(Feed):
         super().__init__()
         blog_settings = BlogSettings.load()
         if blog_settings:
-            self._title = getattr(blog_settings, 'title', 'Listing')
+            self._title = getattr(blog_settings, 'title', 'Blog')
             self._link = getattr(blog_settings, 'site_link', 'blog')
+            self._show_authors = getattr(blog_settings, 'show_authors', False)
         else:
             self._title = "Blog"
             self._link = "blog"
+            self._show_authors = False
         self._model = model
 
-    def items(self):
-        return self._model.objects.all().order_by('name')
-
-    def item_title(self, item):
-        return item.name
-
-    def item_description(self, item):
-        return item.description
-
     def title(self):
-        return "{}'s {}".format(self._title,
-                                self._model._meta.verbose_name_plural.title())
+        return "%s's %s" % (
+            self._title, self._model._meta.verbose_name_plural.title()
+        )
 
     @abstractmethod
     def link(self):
@@ -93,13 +115,27 @@ class ListingFeed(Feed):
     def description(self):
         pass
 
+    def items(self):
+        return self._model.objects.all()
+
+    def item_title(self, item):
+        return item.name
+
+    def item_description(self, item):
+        return item.description
+
+    def item_link(self, item):
+        return item.get_absolute_url()
+
 
 #
 #   Implementation Classes
 #
 
 class CategoryListingFeed(ListingFeed):
-    """Syndication feed for listing all blog categories"""
+    """
+    Syndication feed for listing all blog categories
+    """
 
     def __init__(self):
         super().__init__(Category)
@@ -112,7 +148,9 @@ class CategoryListingFeed(ListingFeed):
 
 
 class TagListingFeed(ListingFeed):
-    """Syndication feed for listing all blog tags"""
+    """
+    Syndication feed for listing all blog tags
+    """
 
     def __init__(self):
         super().__init__(Tag)
@@ -124,16 +162,45 @@ class TagListingFeed(ListingFeed):
         return "Listing of all tags on the blog."
 
 
-class PostsLatestFeed(LatestFeed):
-    """Syndication feed for most recent posts"""
+class AuthorListingFeed(ListingFeed):
+    """
+    Syndication feed for listing all blog authors
+    """
+
+    def __init__(self):
+        super().__init__(Author)
 
     def items(self):
-        return Post.objects.filter(published=True) \
-                   .order_by('-posted')[:self._max_posts]
+        if self._show_authors:
+            return self._model.get_displayable()
+        return None
+
+    def link(self):
+        return "/blog/authors.html"
+
+    def description(self):
+        return "Listing of all authors on the blog."
+
+    def item_title(self, item):
+        return item.get_display_name()
+
+    def item_description(self, item):
+        return item.author_bio
+
+
+class PostsLatestFeed(LatestFeed):
+    """
+    Syndication feed for most recent posts
+    """
+
+    def items(self, obj):
+        return super().items(obj)[:self._max_posts]
 
 
 class CategoryLatestFeed(LatestFeed):
-    """Syndication feed for most recent posts for particular category"""
+    """
+    Syndication feed for most recent posts for particular category
+    """
 
     def get_object(self, request, slug):
         return Category.objects.get(slug=slug)
@@ -148,12 +215,13 @@ class CategoryLatestFeed(LatestFeed):
         return "Latest posts in the {} category.".format(obj.name)
 
     def items(self, obj):
-        return Post.objects.filter(category=obj, published=True) \
-                   .order_by('-posted')[:self._max_posts]
+        return super().items().filter(category=obj)[:self._max_posts]
 
 
 class TagLatestFeed(LatestFeed):
-    """Syndication feed for most recent posts for particular tag"""
+    """
+    Syndication feed for most recent posts for particular tag
+    """
 
     def get_object(self, request, slug):
         return Tag.objects.get(slug=slug)
@@ -168,5 +236,39 @@ class TagLatestFeed(LatestFeed):
         return "Latest posts with the {} tag.".format(obj.name)
 
     def items(self, obj):
-        return Post.objects.filter(tags=obj, published=True) \
-                   .order_by('-posted')[:self._max_posts]
+        return super().items().filter(tags=obj)[:self._max_posts]
+
+
+class AuthorLatestFeed(LatestFeed):
+    """
+    Syndication feed for most recent posts for particular author
+    """
+
+    def get_object(self, request, slug):
+        return Author.get_displayable().get(slug=slug)
+
+    def title(self, obj):
+        return "{}, Posts from: {}".format(self._title, obj.get_display_name())
+
+    def link(self, obj):
+        if self._show_authors:
+            return obj.get_absolute_url()
+        return super().link(obj)
+
+    def author_name(self, obj):
+        if self._show_authors:
+            return obj.get_display_name()
+        return None
+
+    def author_link(self, obj):
+        if self._show_authors and obj.author_website:
+            return obj.author_website
+        return super().author_link(obj)
+
+    def description(self, obj):
+        if self._show_authors:
+            return "Latest posts from {}.".format(obj.get_display_name())
+        return "Latest posts"
+
+    def items(self, obj):
+        return obj.get_all_posts()[:self._max_posts]

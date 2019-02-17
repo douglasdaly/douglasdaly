@@ -5,5 +5,4 @@
 
 {% block meta_extra %}{% meta_head category.name %}{% endblock %}
 
-{% block view_title %}{{ block.super }}{{ category.name }}{% endblock %}
-{% block view_rss %}/blog/rss/category/{{ category.slug }}.xml{% endblock %}
+{% block listing_title %}Category: {{ category.name }}{% endblock %}

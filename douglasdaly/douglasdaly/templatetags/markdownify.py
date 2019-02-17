@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-markdownify.py
+Code for markdown/pygments
 
-    Code for markdown/pygments - based on code from www.IgnoredByDinosaurs.com
+    Code-styling based on code from www.IgnoredByDinosaurs.com
 
 """
 #

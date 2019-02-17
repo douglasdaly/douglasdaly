@@ -16,7 +16,7 @@
     </div>
     {% if view_rss %}
     <div class="col-auto">
-      <a href="{{ view_rss }}" target="_blank" title="Latest Posts RSS" class="rss-fa-link">
+      <a href="/blog/{{ view_rss }}" target="_blank" title="Latest Posts RSS" class="rss-fa-link">
         <h2><i class="fas fa-rss-square"></i></h2>
       </a>
     </div>
@@ -32,7 +32,7 @@
       {% if posts %}
         <ul>
           {% for post in posts %}
-            {% post_display post %}
+            {% post_display post blog_settings.show_authors %}
           {% endfor %}
         </ul>
 

@@ -1,18 +1,15 @@
 """
-sidebar_tags.py
+Code for sidebar navigation inclusion tags for blog.
 
-    Code for sidebar navigation inclusion tags for blog.
-
-@author: Douglas Daly
-@date: 1/4/2018
+:author: Douglas Daly
+:date: 1/4/2018
 """
 #
 #   Imports
 #
 from django import template
-from django.template.defaultfilters import stringfilter
 
-from ..models import Post, Category, Tag
+from ..models import Post, Category, Tag, Author
 
 
 #
@@ -31,11 +28,12 @@ def sidebar_menu(sort_by="date"):
         ret = __sidebar_menu_helper_date()
 
     elif sort_by == "categories":
-        categories = Category.objects.all().order_by('name')
+        categories = Category.objects.all()
+        all_posts = Post.get_displayable()
+
         ret = list()
         for category in categories:
-            posts = Post.objects.filter(published=True, category=category) \
-                        .order_by('title')
+            posts = all_posts.filter(category=category).order_by('title')
             if len(posts) <= 0:
                 continue
             
@@ -47,21 +45,37 @@ def sidebar_menu(sort_by="date"):
     elif sort_by == "tags":
         heading_objects = False
 
+        all_tags = Tag.objects.all()
+        all_posts = Post.get_displayable()
+
         ret = list()
-        all_tags = Tag.objects.all().order_by()
         letters = all_tags.values_list("_category", flat=True).distinct()
         for letter in letters:
             tags = all_tags.filter(_category=letter)
             temp = list()
             for tag in tags:
-                has_posts = Post.objects.filter(published=True, tags=tag) \
-                                .exists()
+                has_posts = all_posts.filter(tags=tag).exists()
                 if not has_posts:
                     continue
                 temp.append((tag.name, tag.get_absolute_url()))
 
             if temp:
                 ret.append((letter, temp))
+
+    elif sort_by == "authors":
+        heading_objects = False
+
+        ret = list()
+        all_authors = Author.get_displayable()
+        for author in all_authors:
+            posts = author.get_all_posts()
+            if len(posts) <= 0:
+                continue
+
+            temp = list()
+            for post in posts:
+                temp.append((post.title, post.get_absolute_url()))
+            ret.append((author.get_display_name(), temp))
 
     else:
         ret = None
@@ -77,7 +91,7 @@ def sidebar_menu(sort_by="date"):
 def smallnavbtn(target_nav, current_nav):
     """Tag for small nav items"""
     if current_nav is not None and target_nav == current_nav:
-            return "btn-primary"
+        return "btn-primary"
     return "btn-secondary"
 
 
@@ -86,20 +100,23 @@ def smallnavbtn(target_nav, current_nav):
 #
 
 class YearHelper(object):
+    """
+    Small helper object for displaying posts by year
+    """
 
     def __init__(self, year):
         self.name = str(year)
         self.slug = "Y" + str(year)
 
 
-def __sidebar_menu_helper_date():
+def __sidebar_menu_helper_date(previews=False):
+    """Helper to get all posts by year"""
     ret = list()
 
-    date_years = Post.objects.filter(published=True).dates('posted', 'year') \
-                             .distinct()
+    all_posts = Post.get_displayable(previews=previews)
+    date_years = all_posts.dates('display_date', 'year').distinct()
     for year in reversed(date_years):
-        posts = Post.objects.filter(published=True, posted__year=year.year) \
-                            .order_by("-posted")
+        posts = all_posts.filter(published=True, posted__year=year.year)
         if len(posts) <= 0:
             continue
 

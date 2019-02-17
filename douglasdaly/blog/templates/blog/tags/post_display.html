@@ -15,8 +15,17 @@
     <p class="mt-0 mb-0 align-top">
       <i>{{ post.description }}</i>
     </p>
+    {% if show_authors and post.author %}
     <p class="mb-0 align-bottom">
-      <small class="text-muted">{{ post.posted|date:'F j, Y' }}</small>
+      <small class="text-muted">
+        <a href="{{ post.author.get_absolute_url }}" title="View Author Page">{{ post.author.get_display_name }}</a>,
+        {{ post.display_date|date:'F j, Y' }}
+      </small>
     </p>
+    {% else %}
+    <p class="mb-0 align-bottom">
+      <small class="text-muted">{{ post.display_date|date:'F j, Y' }}</small>
+    </p>
+    {% endif %}
   </div>
 </div>

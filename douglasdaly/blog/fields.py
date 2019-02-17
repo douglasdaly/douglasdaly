@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-blog/fields.py
+Custom fields for use with the blog application.
 
-    Custom fields for use with the blog application.
-
-@author: Douglas Daly
-@date: 2/8/2019
+:author: Douglas Daly
+:date: 2/8/2019
 """
 #
 #   Imports

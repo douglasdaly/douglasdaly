@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-blog/views.py
+Views for the blog application
 
-    Views setup for the blog application
-
+:author: Douglas Daly
+:date: 2/16/2019
 """
 #
 #   Imports
@@ -15,7 +15,7 @@ from django.http import HttpResponse, HttpResponseNotAllowed, Http404
 from django.core.paginator import Paginator
 from django.db.models import Q
 
-from .models import Post, Category, Tag, BlogSettings
+from .models import Post, Category, Tag, BlogSettings, Author
 
 
 #
@@ -23,9 +23,10 @@ from .models import Post, Category, Tag, BlogSettings
 #
 
 def index(request):
+    """Blog home page view"""
     blog_settings = BlogSettings.load()
 
-    post_list = Post.objects.all()
+    post_list = Post.get_displayable().all()
     page = request.GET.get("page")
 
     ret_dict = {
@@ -41,6 +42,7 @@ def index(request):
 
 
 def search(request):
+    """Search page view"""
     blog_settings = BlogSettings.load()
     page = request.GET.get("page")
 
@@ -52,7 +54,7 @@ def search(request):
         entry_query = __get_query(query_string, ['title', 'description',
                                                  'category__name',
                                                  'tags__name', ])
-        found_entries = Post.objects.filter(entry_query).distinct()
+        found_entries = Post.get_displayable().filter(entry_query).distinct()
 
     if found_entries is not None:
         posts = __get_post_page(found_entries, page=page,
@@ -72,6 +74,7 @@ def search(request):
 
 
 def view_post(request, slug):
+    """View post view"""
     post = get_object_or_404(Post, slug=slug)
 
     if not post.published:
@@ -86,6 +89,7 @@ def view_post(request, slug):
 
 
 def view_categories(request):
+    """View category posts view"""
     categories = Category.objects.all()
 
     ret_dict = {
@@ -99,6 +103,7 @@ def view_categories(request):
 
 
 def view_category(request, slug):
+    """View all categories view"""
     category = get_object_or_404(Category, slug=slug)
 
     blog_settings = BlogSettings.load()
@@ -106,8 +111,9 @@ def view_category(request, slug):
 
     ret_dict = {
         'category': category,
-        'posts': __get_post_page(Post.objects.filter(category=category), page,
-                                 blog_settings),
+        'posts': __get_post_page(Post.get_displayable()
+                                     .filter(category=category),
+                                 page=page, blog_settings=blog_settings),
         'blog_settings': blog_settings,
         'view_rss': 'rss/categories/{}.xml'.format(category.slug),
     }
@@ -116,7 +122,50 @@ def view_category(request, slug):
     return render(request, 'blog/view_category.html', ret_dict)
 
 
+def view_authors(request):
+    """View all authors view"""
+    blog_settings = BlogSettings.load()
+    if not blog_settings.show_authors:
+        raise Http404
+
+    authors = Author.get_displayable()
+
+    ret_dict = {
+        'authors': authors,
+        'view_rss': 'rss/authors.xml',
+        'current_nav': 'authors',
+    }
+    ret_dict = __append_common_vars(request, ret_dict)
+
+    return render(request, 'blog/authors.html', ret_dict)
+
+
+def view_author(request, slug):
+    """View individual author's posts"""
+    blog_settings = BlogSettings.load()
+    if not blog_settings.show_authors:
+        raise Http404
+
+    author = get_object_or_404(Author, slug=slug)
+    if not author.is_active:
+        raise Http404
+
+    page = request.GET.get("page")
+
+    ret_dict = {
+        'author': author,
+        'posts': __get_post_page(Post.get_displayable().filter(author=author),
+                                 page=page, blog_settings=blog_settings),
+        'blog_settings': blog_settings,
+        'view_rss': 'rss/author/{}.xml'.format(author.slug),
+    }
+    ret_dict = __append_common_vars(request, ret_dict, include_settings=False)
+
+    return render(request, 'blog/view_author.html', ret_dict)
+
+
 def view_tags(request):
+    """View all tags view"""
     tags = Tag.objects.all()
 
     ret_dict = {
@@ -130,6 +179,7 @@ def view_tags(request):
 
 
 def view_tag(request, slug):
+    """View all posts for the specified tag"""
     tag = get_object_or_404(Tag, slug=slug)
 
     blog_settings = BlogSettings.load()
@@ -137,8 +187,8 @@ def view_tag(request, slug):
 
     ret_dict = {
         'tag': tag,
-        'posts': __get_post_page(Post.objects.filter(tags=tag), page,
-                                 blog_settings),
+        'posts': __get_post_page(Post.get_displayable().filter(tags=tag),
+                                 page=page, blog_settings=blog_settings),
         'blog_settings': blog_settings,
         'view_rss': 'rss/tag/{}.xml'.format(tag.slug),
     }
@@ -152,8 +202,7 @@ def view_tag(request, slug):
 #
 
 def update_side_menu_sort(request, sort_tab):
-    """ Helper Function to update the Sort on the side menu for persistence
-    """
+    """Helper Function to update the Sort on the side menu for persistence"""
     if not request.is_ajax() or not request.method == 'POST':
         return HttpResponseNotAllowed(['POST', ])
 
@@ -166,7 +215,7 @@ def update_side_menu_sort(request, sort_tab):
 #
 
 def __get_post_page(post_list, page=1, blog_settings=None):
-    post_list = post_list.filter(published=True)
+    """Helper function to get posts for specified page based on settings"""
     if blog_settings is None:
         per_page = 10
     else:
@@ -181,19 +230,27 @@ def __get_post_page(post_list, page=1, blog_settings=None):
 
 
 def __append_common_vars(request, curr_dict, include_settings=True):
+    """Appends common variables needed by app pages to return dictionary"""
     sort_tab = request.session.get('sort_tab', 'date')
+
+    blog_settings = BlogSettings.load()
 
     rss_categories = Category.objects.all()
     rss_tags = Tag.objects.all()
+
+    if blog_settings.show_authors:
+        rss_authors = Author.get_displayable()
+    else:
+        rss_authors = None
 
     common_dict = {
         'sort_tab': sort_tab,
         'rss_categories': rss_categories,
         'rss_tags': rss_tags,
+        'rss_authors': rss_authors,
     }
 
     if include_settings:
-        blog_settings = BlogSettings.load()
         common_dict["blog_settings"] = blog_settings
 
     return {**curr_dict, **common_dict}

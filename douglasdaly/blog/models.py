@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-blog/models.py
+Database Models for the blog app.
 
-    Database Models for the blog app.
-
-@author: Douglas Daly
-@date: 12/4/2017
+:author: Douglas Daly
+:date: 12/4/2017
 """
 #
 #   Imports
@@ -14,7 +12,7 @@ import string
 from datetime import datetime
 
 from django.db import models
-from django.urls import reverse
+from django.urls import reverse, NoReverseMatch
 from django.core.exceptions import ValidationError
 from django.db.utils import OperationalError, ProgrammingError
 from django.contrib.auth.models import User
@@ -29,21 +27,62 @@ from .fields import ListField
 #   Model definitions
 #
 
+class ColorThemeColor(models.Model):
+    """
+    Model for single colors in color themes
+    """
+    color = RGBColorField(null=False)
+
+    class Meta:
+        verbose_name = "Color Theme Color"
+
+    def __str__(self):
+        return self.color
+
+    def __unicode__(self):
+        return str(self)
+
+
+class ColorTheme(models.Model):
+    """
+    Model for Color Themes with pre-set colors to use on the blog
+    """
+    name = models.CharField(max_length=80, unique=True)
+    slug = models.SlugField(max_length=100, db_index=True)
+    colors = models.ManyToManyField(ColorThemeColor)
+
+    class Meta:
+        verbose_name = "Color Theme"
+
+    def __str__(self):
+        return self.name
+
+    def __unicode__(self):
+        return str(self)
+
+
 class BlogSettings(models.Model):
-    """Singleton model for blog settings"""
-    title = models.CharField(max_length=100, db_index=True)
+    """
+    Singleton model for blog settings
+    """
+    title = models.CharField(max_length=100)
     site_link = models.CharField(max_length=40, null=False, default='blog')
 
+    show_authors = models.BooleanField(default=False,
+                                       verbose_name='Show Authors')
+
     posts_per_page = models.PositiveIntegerField(blank=False, default=10)
+    latest_feed_most_recent = models.PositiveSmallIntegerField(null=False,
+                                                               default=5)
+
+    color_theme = models.ForeignKey(ColorTheme, on_delete=models.SET_NULL,
+                                    null=True, default=None)
     code_style_sheet = models.CharField(max_length=40, blank=False,
                                         default='code_default',
                                         choices=[
                                             ('code_default', 'Default'),
-                                            ('code_monokai', 'Monokai')
+                                            ('code_monokai', 'Dark')
                                         ])
-
-    latest_feed_most_recent = models.PositiveSmallIntegerField(null=False,
-                                                               default=5)
 
     class Meta:
         verbose_name_plural = "Blog Settings"
@@ -55,8 +94,7 @@ class BlogSettings(models.Model):
         return 'Blog Settings'
 
     def save(self, *args, **kwargs):
-        """ Override to ensure only one instance exists
-        """
+        """Override to ensure only one instance exists"""
         if BlogSettings.objects.exists() and not self.pk:
             raise ValidationError('There can only be one instance of the Site '
                                   'Settings')
@@ -79,7 +117,9 @@ class BlogSettings(models.Model):
 
 
 class Category(models.Model):
-    """Model for post categories"""
+    """
+    Model for post categories
+    """
     name = models.CharField(max_length=100, db_index=True)
     slug = models.SlugField(max_length=100, db_index=True)
     description = models.CharField(max_length=250, null=True, blank=True,
@@ -87,6 +127,9 @@ class Category(models.Model):
 
     icon_image = models.ImageField(upload_to="blog/categories/icons/",
                                    blank=True, null=True, default=None)
+    color = RGBColorField(null=True, blank=True, default=None)
+    font_class = models.CharField(max_length=80, default=None, blank=True,
+                                  null=True, verbose_name="Font Class")
 
     search_terms = ListField(null=True, blank=True, default=None)
 
@@ -105,14 +148,16 @@ class Category(models.Model):
 
 
 class Tag(models.Model):
-    """Model for post tags"""
+    """
+    Model for post tags
+    """
     name = models.CharField(max_length=50, db_index=True)
     slug = models.SlugField(max_length=50, db_index=True)
     description = models.CharField(max_length=200, null=True, default=None,
                                    blank=True)
 
-    image = models.ImageField(upload_to="blog/tags/icons/", null=True,
-                              blank=True, default=None)
+    icon_image = models.ImageField(upload_to="blog/tags/icons/", null=True,
+                                   blank=True, default=None)
     color = RGBColorField(null=True, default=None, blank=True)
     font_class = models.CharField(max_length=80, default=None, blank=True,
                                   null=True, verbose_name="Font Class")
@@ -146,7 +191,9 @@ class Tag(models.Model):
 
 
 class CustomJS(models.Model):
-    """Model for custom javascript files"""
+    """
+    Model for custom javascript files
+    """
     name = models.CharField(max_length=100)
     tag = models.CharField(max_length=80, blank=True, null=True, default=None)
     slug = models.SlugField(max_length=180, db_index=True)
@@ -164,7 +211,9 @@ class CustomJS(models.Model):
 
 
 class CustomCSS(models.Model):
-    """Model for custom CSS files"""
+    """
+    Model for custom CSS files
+    """
     name = models.CharField(max_length=100)
     tag = models.CharField(max_length=80, blank=True, null=True, default=None)
     slug = models.SlugField(max_length=180, db_index=True)
@@ -182,41 +231,110 @@ class CustomCSS(models.Model):
 
 
 class Author(models.Model):
-    """Model for blog post authors"""
-    pen_name_full = models.CharField(max_length=120, blank=False, null=False,
-                                     verbose_name="Pen Name (full)")
-    pen_name_short = models.CharField(
+    """
+    Model for blog post authors
+    """
+    slug = models.SlugField(max_length=140, blank=False, null=False)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, default=None,
+                             blank=True, null=True)
+
+    first_name = models.CharField(max_length=60, blank=False, null=False,
+                                  verbose_name='First Name')
+    last_name = models.CharField(max_length=60, blank=True, null=True,
+                                 default=None, verbose_name='Last Name')
+    display_name = models.CharField(
         max_length=80, blank=True, null=True, default=None,
-        verbose_name="Pen Name (short)"
+        verbose_name="Pen Name (display)"
     )
+
     author_image = models.ImageField(upload_to="blog/authors/images/",
                                      null=True, default=None, blank=True,
                                      verbose_name="Author's Image")
+    author_bio = models.TextField(null=True, default=None, blank=True,
+                                  verbose_name="Author Biography")
+    author_website = models.URLField(null=True, blank=True, default=None,
+                                     verbose_name="Author's Website")
 
     contact_email = models.EmailField(null=True, blank=True, default=None,
                                       verbose_name="Contact Email")
     public_contact_email = models.EmailField(
-        null=True, blank=True, default=True,
+        null=True, blank=True, default=None,
         verbose_name="Display Email (public)"
     )
     display_public_email = models.BooleanField(
         default=False, verbose_name="Display public email?"
     )
 
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, default=None,
-                             blank=True, null=True)
+    is_active = models.BooleanField(default=True, verbose_name="Active")
+    show_posts = models.BooleanField(default=True, verbose_name="Show Posts")
+
+    # - Meta and dunder methods
+
+    class Meta:
+        ordering = ('display_name', 'last_name', 'first_name')
+
+    def __str__(self):
+        return self.get_display_name()
+
+    def __unicode__(self):
+        return str(self)
 
     # - Methods
 
-    def get_all_posts(self):
+    def get_full_name(self):
+        """Gets the authors full name"""
+        ret = self.first_name
+        if self.last_name:
+            ret = "%s %s" % (ret, self.last_name)
+        return ret
+
+    def get_display_name(self):
+        """Get the display name to use for the author"""
+        if self.display_name:
+            return self.display_name
+        return self.get_full_name()
+
+    def get_all_posts(self, displayed=True, previews=False):
         """Gets all posts associated with this author"""
-        return Post.objects.get(author=self).all()
+        if displayed and self.is_active and self.show_posts:
+            return Post.get_displayable(previews=previews)\
+                .filter(author=self, published=True)
+        return Post.objects.filter(author=self)
+
+    # - Class methods
+
+    @classmethod
+    def get_displayable(cls):
+        """Gets all authors which are displayable"""
+        return cls.objects.filter(is_active=True)
+
+    # - Utility methods
+
+    def get_absolute_url(self):
+        if self.is_active:
+            return reverse('view_blog_author', kwargs={'slug': self.slug})
+        raise NoReverseMatch()
+
+    def save(self, *args, **kwargs):
+        """Override save to change author's posts on certain events"""
+        if self.pk is not None:
+            curr = Author.get(pk=self.pk)
+            if not self.is_active or (not self.show_posts and
+                                      curr.show_posts != self.show_posts):
+                auth_posts = self.get_all_posts(displayed=False)
+                for post in auth_posts:
+                    post.published = False
+                    post.save()
+        super().save(*args, **kwargs)
 
 
 class Post(models.Model):
-    """Model for blog posts"""
+    """
+    Model for blog posts
+    """
     title = models.CharField(max_length=100, unique=True)
-    slug = models.SlugField(max_length=120, unique=True)
+    slug = models.SlugField(max_length=120, unique=True,
+                            verbose_name='Link Slug')
     author = models.ForeignKey(Author, on_delete=models.SET_NULL, null=True,
                                blank=True, default=None)
 
@@ -243,13 +361,24 @@ class Post(models.Model):
         CustomJS, blank=True, verbose_name="Javascript Includes"
     )
 
-    created = models.DateTimeField(db_index=True, auto_now_add=True)
+    created = models.DateTimeField(db_index=True, auto_now_add=True,
+                                   editable=False)
+    last_updated = models.DateTimeField(verbose_name='Last Updated',
+                                        auto_now=True, editable=False)
     posted = models.DateTimeField(db_index=True, null=True, blank=True,
-                                  default=None)
-    published = models.BooleanField(default=False)
+                                  default=datetime.now(), editable=False)
+    publish_date = models.DateTimeField(db_index=True, null=True, blank=True,
+                                        editable=True, default=datetime.now())
+    display_date = models.DateTimeField(db_index=True, editable=False,
+                                        verbose_name="Display Date")
+
+    previewable = models.BooleanField(default=False, verbose_name='Preview')
+    published = models.BooleanField(default=False, verbose_name='Publish')
+
+    # - Meta and dunder methods
 
     class Meta:
-        ordering = ('-posted',)
+        ordering = ('-display_date',)
 
     def __str__(self):
         return self.title
@@ -257,10 +386,38 @@ class Post(models.Model):
     def __unicode__(self):
         return '%s' % self.title
 
+    # - Class methods
+
+    @classmethod
+    def get_displayable(cls, previews=False):
+        """Gets displayable posts"""
+        qry = models.Q(published=True)
+        if previews:
+            qry |= models.Q(previewable=True)
+        return cls.objects.filter(qry).exclude(author__is_active=False)
+
+    # - Helper methods
+
+    def _get_display_date(self):
+        """datetime: Display date to use"""
+        if self.published:
+            return self.publish_date
+        return self.last_updated
+
+    # - Utility methods
+
     def get_absolute_url(self):
         return reverse('view_blog_post', kwargs={'slug': self.slug})
 
     def save(self, *args, **kwargs):
+        """Custom save method for handling dates"""
+        self.last_updated = datetime.now()
+
+        if self.published:
+            self.previewable = False
+
+        self.display_date = self._get_display_date()
+
         if self.pk is not None:
             curr = Post.objects.get(pk=self.pk)
             if not curr.published and self.published:

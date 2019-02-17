@@ -17,13 +17,19 @@
   {% if rss_categories %}
     <link rel="alternate" type="application/rss+xml" href="/blog/rss/categories.xml" />
     {% for rss_category in rss_categories %}
-    <link rel="alternate" type="application/rss+xml" href="/blog/rss/category/{{ rss_category.slug }}.xml" />
+      <link rel="alternate" type="application/rss+xml" href="/blog/rss/category/{{ rss_category.slug }}.xml" />
     {% endfor %}
   {% endif %}
   {% if rss_tags %}
     <link rel="alternate" type="application/rss+xml" href="/blog/rss/tags.xml" />
     {% for rss_tag in rss_tags %}
-    <link rel="alternate" type="application/rss+xml" href="/blog/rss/tag/{{ rss_tag.slug }}.xml" />
+      <link rel="alternate" type="application/rss+xml" href="/blog/rss/tag/{{ rss_tag.slug }}.xml" />
+    {% endfor %}
+  {% endif %}
+  {% if rss_authors %}
+    <link rel="alternate" type="application/rss+xml" href="/blog/rss/authors.xml" />
+    {% for rss_author in rss_authors %}
+      <link rel="alternate" type="application/rss+xml" href="/blog/rss/author/{{ rss_author.slug }}.xml" />
     {% endfor %}
   {% endif %}
 {% endblock %}
@@ -55,13 +61,18 @@
         <!-- Sort Nav By -->
         <ul class="nav nav-pills nav-fill justify-content-center sidebar-pills mb-2" id="pills-tab" role="tab-list">
           <li class="nav-item m-1">
-            <a href="#sort-date" onclick="update_sort_tab('date')" class="nav-link {% if sort_tab == 'date' %}active{% endif %}" id="blog-sort-date" data-toggle="pill" role="tab" aria-controls="sort-date" aria-selected="{% if not sort_tab %}true{% else %}{% if sort_tab == 'date' %}true{% else %}false{% endif %}{% endif %}">Date</a>
+            <a href="#sort-date" onclick="update_sort_tab('date')" class="nav-link{% if sort_tab == 'date' %} active{% endif %}" id="blog-sort-date" data-toggle="pill" role="tab" aria-controls="sort-date" aria-selected="{% if not sort_tab %}true{% else %}{% if sort_tab == 'date' %}true{% else %}false{% endif %}{% endif %}">Date</a>
           </li>
           <li class="nav-item m-1">
-            <a href="#sort-categories" onclick="update_sort_tab('categories')" class="nav-link {% if sort_tab == 'categories' %}active{% endif %}" id="blog-sort-categories" data-toggle="pill" role="tab" aria-controls="sort-categories" aria-selected="{% if sort_tab == 'categories' %}true{% else %}false{% endif %}">Category</a>
+            <a href="#sort-categories" onclick="update_sort_tab('categories')" class="nav-link{% if sort_tab == 'categories' %} active{% endif %}" id="blog-sort-categories" data-toggle="pill" role="tab" aria-controls="sort-categories" aria-selected="{% if sort_tab == 'categories' %}true{% else %}false{% endif %}">Category</a>
           </li>
+          {% if blog_settings.show_authors %}
           <li class="nav-item m-1">
-            <a href="#sort-tags" onclick="update_sort_tab('tags')" class="nav-link {% if sort_tab == 'tags' %}active{% endif %}" id="blog-sort-tags" data-toggle="pill" role="tab" aria-controls="sort-tags" aria-selected="{% if sort_tab == 'tags' %}true{% else %}false{% endif %}">Tag</a>
+            <a href="#sort-authors" onclick="update_sort_tab('authors')" class="nav-link{% if sort_tab == 'authors' %} active{% endif %}" id="blog-sort-authors" data-toggle="pill" role="tab" aria-controls="sort-authors" aria-selected="{% if sort_tab == 'authors' %}true{% else %}false{% endif %}">Author</a>
+          </li>
+          {% endif %}
+          <li class="nav-item m-1">
+            <a href="#sort-tags" onclick="update_sort_tab('tags')" class="nav-link{% if sort_tab == 'tags' %} active{% endif %}" id="blog-sort-tags" data-toggle="pill" role="tab" aria-controls="sort-tags" aria-selected="{% if sort_tab == 'tags' %}true{% else %}false{% endif %}">Tag</a>
           </li>
         </ul>
 
@@ -75,6 +86,12 @@
             {% sidebar_menu 'categories' %}
           </div>
 
+          {% if blog_settings.show_authors %}
+          <div class="tab-pane fade{% if sort_tab == 'authors' %} show active{% endif %}" id="sort-authors" role="tabpanel" aria-labelledby="sort-authors">
+            {% sidebar_menu 'authors' %}
+          </div>
+          {% endif %}
+
           <div class="tab-pane fade{% if sort_tab == 'tags' %} show active{% endif %}" id="sort-tags" role="tabpanel" aria-labelledby="sort-tags">
             {% sidebar_menu 'tags' %}
           </div>
@@ -86,13 +103,19 @@
       <div class="d-md-none mb-1">
         <nav class="nav nav-pills nav-fill">
           {% if current_nav %}
-          <a class="nav-item nav-link btn {{ 'home'|smallnavbtn:current_nav }} m-1" href="/blog/" onclick="update_sort_tab('date')">Home</a>
-          <a class="nav-item nav-link btn {{ 'categories'|smallnavbtn:current_nav }} m-1" href="/blog/categories.html" onclick="update_sort_tab('categories')">Categories</a>
-          <a class="nav-item nav-link btn {{ 'tags'|smallnavbtn:current_nav }} m-1" href="/blog/tags.html" onclick="update_sort_tab('tags')">Tags</a>
+            <a class="nav-item nav-link btn {{ 'home'|smallnavbtn:current_nav }} m-1" href="/blog/" onclick="update_sort_tab('date')">Home</a>
+            <a class="nav-item nav-link btn {{ 'categories'|smallnavbtn:current_nav }} m-1" href="/blog/categories.html" onclick="update_sort_tab('categories')">Categories</a>
+            {% if blog_settings.show_authors %}
+            <a class="nav-item nav-link btn {{ 'authors'|smallnavbtn:current_nav }} m-1" href="/blog/authors.html" onclick="update_sort_tab('authors')">Authors</a>
+            {% endif %}
+            <a class="nav-item nav-link btn {{ 'tags'|smallnavbtn:current_nav }} m-1" href="/blog/tags.html" onclick="update_sort_tab('tags')">Tags</a>
           {% else %}
-          <a class="nav-item nav-link btn {{ 'home'|smallnavbtn:None }} m-1" href="/blog/" onclick="update_sort_tab('date')">Home</a>
-          <a class="nav-item nav-link btn {{ 'categories'|smallnavbtn:None }} m-1" href="/blog/categories.html" onclick="update_sort_tab('categories')">Categories</a>
-          <a class="nav-item nav-link btn {{ 'tags'|smallnavbtn:None }} m-1" href="/blog/tags.html" onclick="update_sort_tab('tags')">Tags</a>
+            <a class="nav-item nav-link btn {{ 'home'|smallnavbtn:None }} m-1" href="/blog/" onclick="update_sort_tab('date')">Home</a>
+            <a class="nav-item nav-link btn {{ 'categories'|smallnavbtn:None }} m-1" href="/blog/categories.html" onclick="update_sort_tab('categories')">Categories</a>
+            {% if blog_settings.show_authors %}
+            <a class="nav-item nav-link btn {{ 'authors'|smallnavbtn:None }} m-1" href="/blog/authors.html" onclick="update_sort_tab('authors')">Authors</a>
+            {% endif %}
+            <a class="nav-item nav-link btn {{ 'tags'|smallnavbtn:None }} m-1" href="/blog/tags.html" onclick="update_sort_tab('tags')">Tags</a>
           {% endif %}
         </nav>
       </div>

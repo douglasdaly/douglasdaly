@@ -1,0 +1,8 @@
+{% extends 'blog/base_listing.html' %}
+
+{% load page_tags %}
+{% load post_tags %}
+
+{% block meta_extra %}{% meta_head author.get_display_name %}{% endblock %}
+
+{% block listing_title %}{{ author.get_display_name }}'s Posts{% endblock %}
