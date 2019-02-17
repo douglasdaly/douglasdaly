@@ -84,11 +84,11 @@
                 <b>{{ post.title }}</b>
               </h5>
               {% if show_authors and post.author %}
-              <p class="m-0 mb-1 p-0">
+              <p class="m-0 p-0">
                 <small><a href="{{ post.author.get_absolute_url }}" title="View Author Page">{{ post.author.get_display_name }}</a></small>
               </p>
               {% endif %}
-              <hr class="p-0 m-0">
+              <hr class="p-0 m-0 mt-1">
               <p class="card-text mt-1 mb-3">
                 <i>{{ post.description }}</i>
               </p>
