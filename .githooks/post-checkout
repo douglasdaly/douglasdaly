@@ -1,0 +1,9 @@
+#!/bin/bash
+# Copy to .git/hooks/
+
+branch=$(git rev-parse --abbrev-ref HEAD)
+
+cat .gitignores/all > .gitignore
+if [[ -f .gitignores/$branch ]]; then
+    cat .gitignores/$branch >> .gitignore;
+fi

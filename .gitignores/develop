@@ -1,0 +1,6 @@
+#
+#   DEVELOP branch ignores
+#
+
+# Migration files
+migrations
