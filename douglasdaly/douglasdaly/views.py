@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-douglasdaly/views.py
+Views for the main website pages.
 
-    Views for the main site pages
-
-@author: Douglas Daly
-@date: 12/10/2017
+:author: Douglas Daly
+:date: 12/10/2017
 """
 #
 #   Imports
@@ -32,9 +30,18 @@ def index(request):
     recent_posts = Post.get_displayable()[:site_settings.number_recent_posts]
 
     if site_settings.number_recent_posts > 0 and len(recent_posts) > 0:
-        post_col_width = int(10 / len(recent_posts))
+        post_col_width = round(10. / float(site_settings.number_recent_posts))
     else:
         post_col_width = 0
+
+    if post_col_width > 0:
+        max_len_to_use = site_settings.number_recent_posts
+        if len(recent_posts) < site_settings.number_recent_posts:
+            post_col_width = min(round(10. / float(len(recent_posts))), 5)
+            max_len_to_use = len(recent_posts)
+
+        while post_col_width * max_len_to_use > 10:
+            post_col_width -= 1
 
     return render(request, "index.html", {
         'settings': site_settings,

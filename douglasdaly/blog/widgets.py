@@ -13,6 +13,8 @@ from django.forms import widgets
 
 from colorful.widgets import ColorFieldWidget
 
+from .utils import font_color_helper
+
 
 #
 #   Mixin classes
@@ -160,21 +162,13 @@ class ColorListFieldWidget(BaseListFieldWidget):
 
         return ret
 
-    # - Static helpers
-
     @staticmethod
-    def _style_color_helper(color_code):
-        """Helper function for determining appropriate colors to use"""
-        tmp_color = color_code.strip().strip('#')
-        tmp_r = int(tmp_color[:2], 16)
-        tmp_g = int(tmp_color[2:4], 16)
-        tmp_b = int(tmp_color[4:], 16)
-
-        font_color_code = "#000000" if ((tmp_r * 0.299) + (tmp_g * 0.587) +
-                                        (tmp_b * 0.114)) > 186 else '#FFFFFF'
+    def _style_color_helper(color_code, light_color=None, dark_color=None):
+        """Helper function to get style attribute"""
         ret_dict = {
             'background-color': color_code,
-            'color': font_color_code,
+            'color': font_color_helper(color_code, light_color=light_color,
+                                       dark_color=dark_color),
         }
 
         ret = None

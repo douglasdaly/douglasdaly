@@ -118,8 +118,7 @@ class Category(models.Model):
     icon_image = models.ImageField(upload_to="blog/categories/icons/",
                                    blank=True, null=True, default=None)
     color = RGBColorField(null=True, blank=True, default=None)
-    font_class = models.CharField(max_length=80, default=None, blank=True,
-                                  null=True, verbose_name="Font Class")
+    font_color = RGBColorField(null=False, default="#000000")
 
     search_terms = ListField(null=True, blank=True, default=None)
 
@@ -153,8 +152,7 @@ class Tag(models.Model):
     icon_image = models.ImageField(upload_to="blog/tags/icons/", null=True,
                                    blank=True, default=None)
     color = RGBColorField(null=True, default=None, blank=True)
-    font_class = models.CharField(max_length=80, default=None, blank=True,
-                                  null=True, verbose_name="Font Class")
+    font_color = RGBColorField(null=False, default="#000000")
 
     search_terms = ListField(null=True, blank=True, default=None,
                              verbose_name="Search Terms")

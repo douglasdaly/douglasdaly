@@ -19,6 +19,7 @@ from .models import (
     Post, Category, Tag, BlogSettings, CustomJS, CustomCSS, ColorTheme,
     Author
 )
+from .utils import font_color_helper
 
 
 #
@@ -128,18 +129,17 @@ class ThemedColorForm(forms.ModelForm):
                         ColorFieldWidget(colors=theme_colors)
 
 
-class TagAdminForm(ThemedColorForm, HiddenSlugForm):
+class TCAdminForm(ThemedColorForm):
     """
-    Admin form for tags
+    Admin form for tags and categories
     """
     _color_fields = ('color',)
 
-
-class CategoryAdminForm(ThemedColorForm, HiddenSlugForm):
-    """
-    Admin form for categories
-    """
-    _color_fields = ('color',)
+    class Meta:
+        widgets = {
+            'slug': forms.HiddenInput(),
+            'search_terms': TextListFieldWidget(),
+        }
 
 
 #
@@ -373,14 +373,14 @@ class CategoryAdmin(admin.ModelAdmin):
     """
     Admin for blog categories
     """
-    form = CategoryAdminForm
+    form = TCAdminForm
 
     fieldsets = (
         (None, {
             'fields': ('name', 'slug')
         }),
         (_('Display'), {
-            'fields': ('description', 'icon_image', 'color', 'font_class')
+            'fields': ('description', 'icon_image', 'color')
         }),
         (_('Additional'), {
             'fields': ('search_terms',)
@@ -392,20 +392,27 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'description')
     search_fields = ('name', 'description')
 
+    # - Override to set font color
+
+    def save_model(self, request, obj, form, change):
+        """Override to set font color"""
+        obj.font_color = font_color_helper(obj.color)
+        super().save_model(request, obj, form, change)
+
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     """
     Admin for blog tags
     """
-    form = TagAdminForm
+    form = TCAdminForm
 
     fieldsets = (
         (None, {
             'fields': ('name', 'slug')
         }),
         (_('Display'), {
-            'fields': ('description', 'icon_image', 'color', 'font_class')
+            'fields': ('description', 'icon_image', 'color')
         }),
         (_('Additional'), {
             'fields': ('search_terms',)
@@ -418,6 +425,13 @@ class TagAdmin(admin.ModelAdmin):
     list_display = ('name', 'description')
     list_filter = (TagCategoryFilter,)
     search_fields = ('name', 'description')
+
+    # - Override to set font color
+
+    def save_model(self, request, obj, form, change):
+        """Override to set font color"""
+        obj.font_color = font_color_helper(obj.color)
+        super().save_model(request, obj, form, change)
 
 
 @admin.register(ColorTheme)

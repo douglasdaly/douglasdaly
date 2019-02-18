@@ -215,7 +215,7 @@ class CategoryLatestFeed(LatestFeed):
         return "Latest posts in the {} category.".format(obj.name)
 
     def items(self, obj):
-        return super().items().filter(category=obj)[:self._max_posts]
+        return super().items(obj).filter(category=obj)[:self._max_posts]
 
 
 class TagLatestFeed(LatestFeed):
@@ -236,7 +236,7 @@ class TagLatestFeed(LatestFeed):
         return "Latest posts with the {} tag.".format(obj.name)
 
     def items(self, obj):
-        return super().items().filter(tags=obj)[:self._max_posts]
+        return super().items(obj).filter(tags=obj)[:self._max_posts]
 
 
 class AuthorLatestFeed(LatestFeed):
