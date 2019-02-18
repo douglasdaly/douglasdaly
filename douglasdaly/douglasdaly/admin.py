@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-admin.py
+Admin classes for main site pages
 
-    Admin modules for main site pages
-
-@author: Douglas Daly
-@date: 12/10/2017
+:author: Douglas Daly
+:date: 12/10/2017
 """
 #
 #   Imports
@@ -19,7 +17,7 @@ from .models import Page, SiteSettings, SiteAdminSettings
 
 
 #
-#   Admin Classes
+#   Model admin classes
 #
 
 class PageAdminForm(forms.ModelForm):
