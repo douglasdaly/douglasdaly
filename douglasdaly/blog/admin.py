@@ -14,7 +14,7 @@ from django.utils.translation import gettext_lazy as _
 
 from colorful.widgets import ColorFieldWidget
 
-from .widgets import ColorListFieldWidget
+from .widgets import ColorListFieldWidget, TextListFieldWidget
 from .models import (
     Post, Category, Tag, BlogSettings, CustomJS, CustomCSS, ColorTheme,
     Author
@@ -78,11 +78,11 @@ class PostAdminForm(forms.ModelForm):
     Admin form for blog posts
     """
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['description'].widget.attrs['rows'] = 2
-        self.fields['search_terms'].widget.attrs['rows'] = 1
-        self.fields['body'].widget.attrs['style'] = 'width: 100%'
+    class Meta:
+        widgets = {
+            'description': forms.Textarea({'rows': 2}),
+            'search_terms': TextListFieldWidget(),
+        }
 
 
 class ColorThemeAdminForm(forms.ModelForm):
@@ -95,12 +95,7 @@ class ColorThemeAdminForm(forms.ModelForm):
         fields = ('name', 'slug', 'colors')
         widgets = {
             'slug': forms.HiddenInput(),
-            'colors': ColorListFieldWidget(
-                add_field_widget=ColorFieldWidget,
-                list_data={
-                    'style': lambda x: 'background-color: {};'.format(str(x)),
-                },
-            ),
+            'colors': ColorListFieldWidget(),
         }
 
 
@@ -115,6 +110,38 @@ class HiddenSlugForm(forms.ModelForm):
         }
 
 
+class ThemedColorForm(forms.ModelForm):
+    """
+    Admin form for selecting colors from color theme
+    """
+    _color_fields = None
+
+    def __init__(self, *args, **kwargs):
+        super(ThemedColorForm, self).__init__(*args, **kwargs)
+
+        if self._color_fields:
+            blog_settings = BlogSettings.load()
+            if blog_settings and blog_settings.color_theme:
+                theme_colors = blog_settings.color_theme.colors
+                for color_field in self._color_fields:
+                    self.fields[color_field].widget = \
+                        ColorFieldWidget(colors=theme_colors)
+
+
+class TagAdminForm(ThemedColorForm, HiddenSlugForm):
+    """
+    Admin form for tags
+    """
+    _color_fields = ('color',)
+
+
+class CategoryAdminForm(ThemedColorForm, HiddenSlugForm):
+    """
+    Admin form for categories
+    """
+    _color_fields = ('color',)
+
+
 #
 #   Admin classes
 #
@@ -125,14 +152,19 @@ class BlogSettingsAdmin(admin.ModelAdmin):
     Admin class for blog settings
     """
     fieldsets = (
-        (_('Information'), {
+        (None, {
             'fields': ('title', 'site_link'),
         }),
-        (_('Display Settings'), {
+        (_('General'), {
+            'fields': ('show_authors', 'posts_per_page'),
+        }),
+        (_('Display'), {
             'fields': (
-                'posts_per_page', 'latest_feed_most_recent', 'show_authors',
                 'color_theme', 'code_style_sheet'
             ),
+        }),
+        (_('RSS Feeds'), {
+            'fields': ('latest_feed_most_recent',),
         }),
     )
 
@@ -149,7 +181,7 @@ class AuthorAdmin(admin.ModelAdmin):
     Admin for blog authors
     """
     fieldsets = (
-        (_('Information'), {
+        (None, {
             'fields': (
                 'first_name', 'last_name', 'display_name'
             )
@@ -180,6 +212,7 @@ class AuthorAdmin(admin.ModelAdmin):
     # - Display helpers
 
     def display_display_name(self, obj):
+        """Get name to display helper"""
         return obj.get_display_name()
     display_display_name.short_description = 'Display Name'
     display_display_name.admin_order_field = 'first_name'
@@ -228,7 +261,7 @@ class PostAdmin(admin.ModelAdmin):
     form = PostAdminForm
 
     fieldsets = (
-        (_('General'), {'fields': ('title', 'slug', 'author')}),
+        (None, {'fields': ('title', 'slug', 'author')}),
         (_('Classification'), {'fields': ('category', 'tags')}),
         (_('Meta Data'), {
             'fields': (
@@ -271,6 +304,7 @@ class PostAdmin(admin.ModelAdmin):
     # - Display Helpers
 
     def display_author(self, obj):
+        """Display author helper"""
         if obj.author:
             return obj.author.get_display_name()
         return None
@@ -278,16 +312,19 @@ class PostAdmin(admin.ModelAdmin):
     display_author.admin_order_field = 'author'
 
     def display_created(self, obj):
+        """Display created date helper"""
         return obj.created.date()
     display_created.short_description = 'Created'
     display_created.admin_order_field = 'created'
 
     def display_last_updated(self, obj):
+        """Display last_updated date helper"""
         return obj.last_updated.date()
     display_last_updated.short_description = 'Last Updated'
     display_last_updated.admin_order_field = 'last_updated'
 
     def display_display_date(self, obj):
+        """Display display_date helper"""
         if obj.publish_date:
             return obj.display_date.date()
         return None
@@ -336,7 +373,7 @@ class CategoryAdmin(admin.ModelAdmin):
     """
     Admin for blog categories
     """
-    form = HiddenSlugForm
+    form = CategoryAdminForm
 
     fieldsets = (
         (None, {
@@ -361,7 +398,7 @@ class TagAdmin(admin.ModelAdmin):
     """
     Admin for blog tags
     """
-    form = HiddenSlugForm
+    form = TagAdminForm
 
     fieldsets = (
         (None, {
@@ -419,8 +456,6 @@ class CustomAdditionalAdmin(admin.ModelAdmin):
     list_display = ('name', 'tag')
     list_filter = ('tag',)
 
-
-# - Register remaining classes
 
 admin.site.register(CustomJS, CustomAdditionalAdmin)
 admin.site.register(CustomCSS, CustomAdditionalAdmin)

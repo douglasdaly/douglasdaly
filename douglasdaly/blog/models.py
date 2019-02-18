@@ -35,6 +35,8 @@ class ColorTheme(models.Model):
     slug = models.SlugField(max_length=100, db_index=True)
     colors = ListField(null=False, blank=False)
 
+    # - Meta class and dunder methods
+
     class Meta:
         verbose_name = "Color Theme"
 
@@ -56,17 +58,19 @@ class BlogSettings(models.Model):
                                        verbose_name='Show Authors')
 
     posts_per_page = models.PositiveIntegerField(blank=False, default=10)
-    latest_feed_most_recent = models.PositiveSmallIntegerField(null=False,
-                                                               default=5)
+    latest_feed_most_recent = models.PositiveSmallIntegerField(
+        null=False, default=5, verbose_name="Posts in Most Recent"
+    )
 
     color_theme = models.ForeignKey(ColorTheme, on_delete=models.SET_NULL,
-                                    null=True, default=None)
-    code_style_sheet = models.CharField(max_length=40, blank=False,
-                                        default='code_default',
-                                        choices=[
-                                            ('code_default', 'Default'),
-                                            ('code_monokai', 'Dark')
-                                        ])
+                                    null=True, default=None, blank=True)
+    code_style_sheet = models.CharField(
+        max_length=40, blank=False, default='code_default',
+        choices=[('code_default', 'Default'), ('code_monokai', 'Dark')],
+        verbose_name="Code Highlight Style"
+    )
+
+    # - Meta class and dunder methods
 
     class Meta:
         verbose_name_plural = "Blog Settings"
@@ -76,6 +80,8 @@ class BlogSettings(models.Model):
 
     def __unicode__(self):
         return 'Blog Settings'
+
+    # - Utility methods
 
     def save(self, *args, **kwargs):
         """Override to ensure only one instance exists"""
@@ -117,6 +123,8 @@ class Category(models.Model):
 
     search_terms = ListField(null=True, blank=True, default=None)
 
+    # - Meta class and dunder methods
+
     class Meta:
         ordering = ('name',)
         verbose_name_plural = "Categories"
@@ -126,6 +134,8 @@ class Category(models.Model):
 
     def __unicode__(self):
         return '%s' % self.name
+
+    # - Utility methods
 
     def get_absolute_url(self):
         return reverse('view_blog_category', kwargs={'slug': self.slug})
@@ -151,6 +161,8 @@ class Tag(models.Model):
 
     _category = models.CharField(max_length=1, null=False)
 
+    # - Meta classes and dunder methods
+
     class Meta:
         ordering = ('name',)
 
@@ -160,18 +172,24 @@ class Tag(models.Model):
     def __unicode__(self):
         return '%s' % self.name
 
+    # - Methods
+
+    def get_category_from_name(self):
+        """Determine _category tag from objects name"""
+        ret = self.name[0].upper()
+        if ret not in string.ascii_uppercase:
+            return "#"
+        return ret
+
+    # - Utility methods
+
     def save(self, *args, **kwargs):
+        """Override to get _category trait on save"""
         self._category = self.get_category_from_name()
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse('view_blog_tag', kwargs={'slug': self.slug})
-
-    def get_category_from_name(self):
-        ret = self.name[0].upper()
-        if ret not in string.ascii_uppercase:
-            return "#"
-        return ret
 
 
 class CustomJS(models.Model):
@@ -183,16 +201,18 @@ class CustomJS(models.Model):
     slug = models.SlugField(max_length=180, db_index=True)
     file = models.FileField(upload_to="blog/posts/custom_js/")
 
-    def __str__(self):
-        return self.name
-
-    def __unicode__(self):
-        return '%s' % self.name
+    # - Meta class and dunder methods
 
     class Meta:
         ordering = ('tag', 'name')
         verbose_name = 'Custom JS'
         verbose_name_plural = "Custom JS Files"
+
+    def __str__(self):
+        return self.name
+
+    def __unicode__(self):
+        return '%s' % self.name
 
 
 class CustomCSS(models.Model):
@@ -204,16 +224,18 @@ class CustomCSS(models.Model):
     slug = models.SlugField(max_length=180, db_index=True)
     file = models.FileField(upload_to="blog/posts/custom_css/")
 
-    def __str__(self):
-        return self.name
-
-    def __unicode__(self):
-        return '%s' % self.name
+    # - Meta class and dunder methods
 
     class Meta:
         ordering = ('tag', 'name')
         verbose_name = 'Custom CSS'
         verbose_name_plural = "Custom CSS Files"
+
+    def __str__(self):
+        return self.name
+
+    def __unicode__(self):
+        return '%s' % self.name
 
 
 class Author(models.Model):
@@ -254,7 +276,7 @@ class Author(models.Model):
     is_active = models.BooleanField(default=True, verbose_name="Active")
     show_posts = models.BooleanField(default=True, verbose_name="Show Posts")
 
-    # - Meta and dunder methods
+    # - Meta class and dunder methods
 
     class Meta:
         ordering = ('display_name', 'last_name', 'first_name')
@@ -361,7 +383,7 @@ class Post(models.Model):
     previewable = models.BooleanField(default=False, verbose_name='Preview')
     published = models.BooleanField(default=False, verbose_name='Publish')
 
-    # - Meta and dunder methods
+    # - Meta class and dunder methods
 
     class Meta:
         ordering = ('-display_date',)

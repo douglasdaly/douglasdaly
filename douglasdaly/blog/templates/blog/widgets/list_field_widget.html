@@ -9,12 +9,13 @@
   </span>
   {% if can_add %}
     <span style="margin-left: 10px;">
-      <a href="#" onclick="{% if add_function %}{{ add_function }}{% else %}arsAddValue{% endif %}('{{ widget.name }}', {% if add_tags %}{{ add_tags }}{% else %}{}{% endif %})">Add</a>
+      <a href="javascript:void(0);" onclick="{% if add_function %}{{ add_function }}{% else %}lfwAddValue{% endif %}('{{ widget.name }}', {% if add_tags %}{{ add_tags }}{% else %}{}{% endif %});">Add</a>
     </span>
   {% endif %}
   {% if can_remove and not is_hidden %}
     <span style="margin-left: 10px;">
-      <a href="#" onclick="{% if remove_function %}{{ remove_function }}{% else %}arsRemoveValue{% endif %}('{{ widget.name }}', {% if add_tags %}{{ add_tags }}{% else %}{}{% endif %})">Remove</a>
+      <a href="javascript:void(0);" onclick="{% if remove_function %}{{ remove_function }}{% else %}lfwRemoveValue{% endif %}('{{ widget.name }}', {% if add_tags %}{{ add_tags }}{% else %}{}{% endif %});">Remove</a>
     </span>
   {% endif %}
+
 </div>

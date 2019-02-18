@@ -9,6 +9,9 @@ Custom widgets for the blog interface
 #   Imports
 #
 from django import forms
+from django.forms import widgets
+
+from colorful.widgets import ColorFieldWidget
 
 
 #
@@ -53,6 +56,8 @@ class DataAttributionOptionSelectMulti(DataAttributeOptionMixin,
     pass
 
 
+# - Widgets for list fields
+
 class ListFieldWidgetSelectMulti(DataAttributionOptionSelectMulti):
     """
     Select widget helper for list field widget
@@ -66,7 +71,7 @@ class ListFieldWidgetSelectMulti(DataAttributionOptionSelectMulti):
         )
 
 
-class ListFieldWidget(forms.Textarea):
+class BaseListFieldWidget(forms.Textarea):
     """
     List field with add and remove abilities
     """
@@ -75,21 +80,21 @@ class ListFieldWidget(forms.Textarea):
     class Media:
         js = ("blog/js/list_field_widget.js",)
 
-    def __init__(self, add_field_widget, attrs=None, can_add=True,
-                 can_remove=True, add_attrs=None, list_data=None, **kwargs):
-        super(ListFieldWidget, self).__init__(attrs=attrs)
+    def __init__(self, add_field_widget, attrs=None, can_add=None,
+                 can_remove=None, add_attrs=None, list_data=None, **kwargs):
+        super(BaseListFieldWidget, self).__init__(attrs=attrs)
 
         self.add_field_widget = add_field_widget
         self.add_field_kwargs = kwargs
         self.add_attrs = add_attrs if add_attrs is not None else {}
         self.list_data = list_data
 
-        self.can_add = can_add
-        self.can_remove = can_remove
+        self.can_add = can_add if can_add is not None else True
+        self.can_remove = can_remove if can_remove is not None else True
 
     def get_context(self, name, value, attrs):
         """Override with rendering data for our add field helper"""
-        ret = super(ListFieldWidget, self).get_context(name, value, attrs)
+        ret = super(BaseListFieldWidget, self).get_context(name, value, attrs)
 
         add_name = '%s_add' % name
         list_name = '%s_list' % name
@@ -117,15 +122,66 @@ class ListFieldWidget(forms.Textarea):
         return ret
 
 
-class ColorListFieldWidget(ListFieldWidget):
+class TextListFieldWidget(BaseListFieldWidget):
+    """
+    Text list field widget
+    """
+
+    def __init__(self, attrs=None, can_add=None, can_remove=None,
+                 add_attrs=None, **kwargs):
+        super(TextListFieldWidget, self).__init__(
+            widgets.TextInput, attrs=attrs, can_add=can_add,
+            can_remove=can_remove, add_attrs=add_attrs, **kwargs
+        )
+
+
+class ColorListFieldWidget(BaseListFieldWidget):
     """
     Color list field widget
     """
+
+    def __init__(self, attrs=None, can_add=None, can_remove=None,
+                 add_attrs=None, **kwargs):
+        list_data = {
+            'style': self._style_color_helper,
+        }
+
+        super(ColorListFieldWidget, self).__init__(
+            ColorFieldWidget, attrs=attrs, can_add=can_add,
+            can_remove=can_remove, add_attrs=add_attrs, list_data=list_data,
+            **kwargs
+        )
 
     def get_context(self, name, value, attrs):
         """Override to include functions"""
         ret = super(ColorListFieldWidget, self).get_context(name, value, attrs)
 
-        ret['add_function'] = "arsAddColorValue"
+        ret['add_function'] = "lfwAddColorValue"
+
+        return ret
+
+    # - Static helpers
+
+    @staticmethod
+    def _style_color_helper(color_code):
+        """Helper function for determining appropriate colors to use"""
+        tmp_color = color_code.strip().strip('#')
+        tmp_r = int(tmp_color[:2], 16)
+        tmp_g = int(tmp_color[2:4], 16)
+        tmp_b = int(tmp_color[4:], 16)
+
+        font_color_code = "#000000" if ((tmp_r * 0.299) + (tmp_g * 0.587) +
+                                        (tmp_b * 0.114)) > 186 else '#FFFFFF'
+        ret_dict = {
+            'background-color': color_code,
+            'color': font_color_code,
+        }
+
+        ret = None
+        for k, v in ret_dict.items():
+            if ret is not None:
+                ret = "%s %s: %s;" % (ret, k, v)
+            else:
+                ret = "%s: %s;" % (k, v)
 
         return ret

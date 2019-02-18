@@ -1,8 +1,8 @@
-function arsTextHelper(fieldName) {
+function lfwTextHelper(fieldName) {
     var listObj = document.getElementById("id_" + fieldName + "_list");
 
     var newText = "";
-    for(i=0; i<listObj.options.length; i++)
+    for(var i=0; i<listObj.options.length; i++)
     {
         if(i > 0) {
             newText += ", ";
@@ -14,14 +14,15 @@ function arsTextHelper(fieldName) {
     textObj.value = newText;
 }
 
-function arsAddValue(fieldName, tags) {
+function lfwAddValue(fieldName, tags) {
     if(tags == undefined) {
         tags = {};
     }
 
     var listObj = document.getElementById("id_" + fieldName + "_list");
+    var addObj = document.getElementById("id_" + fieldName + "_add");
 
-    var value = document.getElementById("id_" + fieldName + "_add").value;
+    var value = addObj.value;
     var newItem = document.createElement("option");
     newItem.text = value;
     for(var key in tags) {
@@ -29,11 +30,12 @@ function arsAddValue(fieldName, tags) {
     }
 
     listObj.add(newItem);
+    addObj.value = "";
 
-    arsTextHelper(fieldName);
+    lfwTextHelper(fieldName);
 }
 
-function pickTextColorBasedOnBgColorSimple(bgColor) {
+function lfwPickTextColorBasedOnBgColorSimple(bgColor) {
     var color = (bgColor.charAt(0) === '#') ? bgColor.substring(1, 7) : bgColor;
     var r = parseInt(color.substring(0, 2), 16); // hexToR
     var g = parseInt(color.substring(2, 4), 16); // hexToG
@@ -41,19 +43,33 @@ function pickTextColorBasedOnBgColorSimple(bgColor) {
     return (((r * 0.299) + (g * 0.587) + (b * 0.114)) > 186) ? "#000000" : "#FFFFFF";
 }
 
-function arsAddColorValue(fieldName, tags) {
+function lfwAddColorValue(fieldName, tags) {
     if(tags == undefined) {
         tags = {};
     }
 
     var value = document.getElementById("id_" + fieldName + "_add").value;
-    tags["style"] = "background-color: " + value + "; color: " + pickTextColorBasedOnBgColorSimple(value) + ";";
-    arsAddValue(fieldName, tags);
+    tags["style"] = "background-color: " + value + "; color: " + lfwPickTextColorBasedOnBgColorSimple(value) + ";";
+
+    lfwAddValue(fieldName, tags);
 }
 
-function arsRemoveValue(fieldName) {
+function lfwRemoveValue(fieldName) {
     var listObj = document.getElementById("id_" + fieldName + "_list");
-    listObj.remove(listObj.selectedIndex);
 
-    arsTextHelper(fieldName);
+    selectedArray = [];
+    for(var i=0; i<listObj.options.length; i++) {
+        selectedArray[i] = listObj.options[i].selected;
+    }
+
+    i = selectedArray.length;
+    while(i--)
+    {
+        if(selectedArray[i])
+        {
+            listObj.remove(i);
+        }
+    }
+
+    lfwTextHelper(fieldName);
 }
