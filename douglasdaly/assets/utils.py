@@ -17,12 +17,21 @@ from .models import Asset, ImageAsset, FileAsset, VideoAsset, AssetSettings
 
 
 #
+#   Variables
+#
+
+_VIDEO_EXTENSIONS = ('.mp4', '.ogg')
+
+
+#
 #   Classes
 #
 
+# - Markdown renderer which handles asset links
+
 class AssetRenderer(mistune.Renderer):
     """
-    Renderer class for Markup
+    Renderer class for Markdown
     """
 
     def __init__(self, *args, **kwargs):
@@ -58,14 +67,15 @@ class AssetRenderer(mistune.Renderer):
                     image_asset = asset.asset
 
                 src = image_asset.url
+                if not src:
+                    src = ''
                 if title is None or len(title) == 0:
                     title = asset.title
                 if text is None or len(text) == 0:
                     text = asset.description
         else:
             # - Check if Video asset
-            video_extensions = ['.mp4', '.ogg']
-            if src.lower().split('.')[-1] in video_extensions:
+            if src.lower().split('.')[-1] in _VIDEO_EXTENSIONS:
                 return self.video(src, title, text, attribute=attribute)
 
         if not attribute:
@@ -124,7 +134,10 @@ class AssetRenderer(mistune.Renderer):
                     loop = loop == 'true'
 
             if asset is not None:
-                src = asset.asset.url
+                if asset.asset.url:
+                    src = asset.asset.url
+                else:
+                    src = ''
 
                 if not title:
                     title = asset.title
@@ -221,3 +234,12 @@ class AssetRenderer(mistune.Renderer):
                             args[tspl[0]] = tspl[1]
 
         return slug, args
+
+
+#
+#   Functions
+#
+
+def process_bulk_upload_file(bulk_file):
+    """Function to process bulk upload files and return Assets"""
+    pass

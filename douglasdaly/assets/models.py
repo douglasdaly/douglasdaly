@@ -24,7 +24,7 @@ class Asset(models.Model):
     """
     title = models.CharField(max_length=120, unique=True)
     tag = models.CharField(max_length=80, null=True, default=None)
-    slug = models.SlugField(max_length=200, unique=True)
+    slug = models.SlugField(max_length=250, unique=True)
     description = models.TextField(blank=True, null=True, default=None)
     type = models.CharField(max_length=30, unique=False, null=False,
                             editable=False)
