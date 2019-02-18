@@ -10,65 +10,15 @@ Admin classes for blog application.
 #
 from django import forms
 from django.contrib import admin
-from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.utils.translation import gettext_lazy as _
 
-from .widgets import DataAttributeSelectWidget
+from colorful.widgets import ColorFieldWidget
+
+from .widgets import ColorListFieldWidget
 from .models import (
     Post, Category, Tag, BlogSettings, CustomJS, CustomCSS, ColorTheme,
-    ColorThemeColor, Author
+    Author
 )
-
-
-#
-#   Admin forms
-#
-
-class PostAdminForm(forms.ModelForm):
-    """
-    Admin form for blog posts
-    """
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.fields['description'].widget.attrs['rows'] = 2
-        self.fields['search_terms'].widget.attrs['rows'] = 1
-        self.fields['body'].widget.attrs['style'] = 'width: 100%'
-
-        self.fields['tags'].widget = FilteredSelectMultiple(
-            'Tags', False,
-            choices=[(tag.id, str(tag)) for tag in Tag.objects.all()]
-        )
-        self.fields['css_includes'].widget = FilteredSelectMultiple(
-            'CSS Includes', False,
-            choices=[(css.id, str(css)) for css in CustomCSS.objects.all()]
-        )
-        self.fields['javascript_includes'].widget = FilteredSelectMultiple(
-            'Javscript Includes', False,
-            choices=[(js.id, str(js)) for js in CustomJS.objects.all()]
-        )
-
-
-class ColorThemeAdminForm(forms.ModelForm):
-    """
-    Admin form for Color Themes
-    """
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        data = {
-            'style': {'': ''}
-        }
-        for c in ColorThemeColor.objects.all():
-            data['style'][c.id] = "background-color: {}".format(c.color)
-
-        self.fields['colors'].widget = DataAttributeSelectWidget(
-            choices=[(c.id, str(c)) for c in ColorThemeColor.objects.all()],
-            allow_multiple_selected=True,
-            data=data
-        )
 
 
 #
@@ -98,9 +48,78 @@ def _action_message_helper(obj_cls, n_updated, message=None,
 
 
 #
+#   Helper filters
+#
+
+class TagCategoryFilter(admin.SimpleListFilter):
+    """
+    Filter for Tag _category attribute
+    """
+    title = _('first letter')
+    parameter_name = 'tag_letter'
+
+    def lookups(self, request, model_admin):
+        letters = set([t.get_category_from_name()
+                       for t in model_admin.model.objects.all()])
+        return [(l, l) for l in sorted(letters)]
+
+    def queryset(self, request, queryset):
+        if self.value():
+            return queryset.filter(_category=self.value())
+        return queryset
+
+
+#
+#   Admin forms
+#
+
+class PostAdminForm(forms.ModelForm):
+    """
+    Admin form for blog posts
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['description'].widget.attrs['rows'] = 2
+        self.fields['search_terms'].widget.attrs['rows'] = 1
+        self.fields['body'].widget.attrs['style'] = 'width: 100%'
+
+
+class ColorThemeAdminForm(forms.ModelForm):
+    """
+    Admin form for color themes
+    """
+
+    class Meta:
+        model = ColorTheme
+        fields = ('name', 'slug', 'colors')
+        widgets = {
+            'slug': forms.HiddenInput(),
+            'colors': ColorListFieldWidget(
+                add_field_widget=ColorFieldWidget,
+                list_data={
+                    'style': lambda x: 'background-color: {};'.format(str(x)),
+                },
+            ),
+        }
+
+
+class HiddenSlugForm(forms.ModelForm):
+    """
+    Admin form hiding slug fields
+    """
+
+    class Meta:
+        widgets = {
+            'slug': forms.HiddenInput()
+        }
+
+
+#
 #   Admin classes
 #
 
+@admin.register(BlogSettings)
 class BlogSettingsAdmin(admin.ModelAdmin):
     """
     Admin class for blog settings
@@ -117,7 +136,14 @@ class BlogSettingsAdmin(admin.ModelAdmin):
         }),
     )
 
+    def has_add_permission(self, request):
+        """Override for singleton"""
+        if self.model.objects.count() >= 1:
+            return False
+        return super().has_add_permission(request)
 
+
+@admin.register(Author)
 class AuthorAdmin(admin.ModelAdmin):
     """
     Admin for blog authors
@@ -146,7 +172,7 @@ class AuthorAdmin(admin.ModelAdmin):
 
     list_display = ('display_display_name', 'first_name', 'last_name',
                     'contact_email', 'is_active', 'show_posts')
-    list_filter = ('is_active', 'show_posts',)
+    list_filter = ('is_active', 'show_posts')
 
     actions = ['make_active', 'make_inactive', 'make_show_posts',
                'make_unshow_posts']
@@ -194,6 +220,7 @@ class AuthorAdmin(admin.ModelAdmin):
         "Do not show posts from selected authors"
 
 
+@admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     """
     Admin for blog posts
@@ -201,30 +228,38 @@ class PostAdmin(admin.ModelAdmin):
     form = PostAdminForm
 
     fieldsets = (
-        (None, {'fields': ('title', 'slug', 'author')}),
+        (_('General'), {'fields': ('title', 'slug', 'author')}),
         (_('Classification'), {'fields': ('category', 'tags')}),
         (_('Meta Data'), {
             'fields': (
-                'publish_date', 'icon_image', 'description', 'search_terms'
+                'created', 'last_updated', 'publish_date'
+            )
+        }),
+        (_('Description'), {
+            'fields': (
+                'icon_image', 'description', 'search_terms'
             )
         }),
         (_('Content'), {
             'fields': ('body',)
         }),
-        (_('Additional Includes'),
-         {
-             'fields': (
-                 'custom_javascript', 'css_includes', 'javascript_includes'
-             )
+        (_('Additional Includes'), {
+            'classes': ('collapse',),
+            'fields': (
+                'custom_javascript', 'css_includes', 'javascript_includes'
+            ),
          }),
         (_('Actions'), {'fields': ('previewable', 'published',)}),
     )
 
     prepopulated_fields = {'slug': ('title',)}
+    readonly_fields = ('created', 'last_updated')
     filter_horizontal = ('tags', 'css_includes', 'javascript_includes')
 
     search_fields = ('search_terms', 'description', 'title', 'tags', 'body')
 
+    ordering = ('created',)
+    date_hierarchy = 'publish_date'
     list_display = ('title', 'display_author', 'category', 'display_created',
                     'display_last_updated', 'previewable', 'published',
                     'display_display_date')
@@ -296,41 +331,96 @@ class PostAdmin(admin.ModelAdmin):
     make_not_published.short_description = "Un-publish the selected post(s)"
 
 
+@admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     """
     Admin for blog categories
     """
+    form = HiddenSlugForm
+
+    fieldsets = (
+        (None, {
+            'fields': ('name', 'slug')
+        }),
+        (_('Display'), {
+            'fields': ('description', 'icon_image', 'color', 'font_class')
+        }),
+        (_('Additional'), {
+            'fields': ('search_terms',)
+        }),
+    )
+
     prepopulated_fields = {'slug': ('name',)}
 
+    list_display = ('name', 'description')
+    search_fields = ('name', 'description')
 
+
+@admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     """
     Admin for blog tags
     """
+    form = HiddenSlugForm
+
+    fieldsets = (
+        (None, {
+            'fields': ('name', 'slug')
+        }),
+        (_('Display'), {
+            'fields': ('description', 'icon_image', 'color', 'font_class')
+        }),
+        (_('Additional'), {
+            'fields': ('search_terms',)
+        }),
+    )
+
     exclude = ('_category',)
     prepopulated_fields = {'slug': ('name',)}
 
+    list_display = ('name', 'description')
+    list_filter = (TagCategoryFilter,)
+    search_fields = ('name', 'description')
 
+
+@admin.register(ColorTheme)
 class ColorThemeAdmin(admin.ModelAdmin):
     """
     Admin for Color Themes
     """
     form = ColorThemeAdminForm
 
+    fieldsets = (
+        (None, {
+            'fields': ('name', 'slug')
+        }),
+        (_('Colors'), {
+            'fields': ('colors',)
+        }),
+    )
+
     prepopulated_fields = {'slug': ('name',)}
-    filter_horizontal = ('colors',)
 
 
-#
-#   Register Classes
-#
+class CustomAdditionalAdmin(admin.ModelAdmin):
+    """
+    Admin for Custom JS and CSS objects
+    """
+    form = HiddenSlugForm
 
-admin.site.register(Author, AuthorAdmin)
-admin.site.register(ColorThemeColor)
-admin.site.register(ColorTheme, ColorThemeAdmin)
-admin.site.register(BlogSettings, BlogSettingsAdmin)
-admin.site.register(Post, PostAdmin)
-admin.site.register(Category, CategoryAdmin)
-admin.site.register(Tag, TagAdmin)
-admin.site.register(CustomJS)
-admin.site.register(CustomCSS)
+    fieldsets = (
+        (None, {
+            'fields': ('name', 'tag', 'slug', 'file')
+        }),
+    )
+
+    prepopulated_fields = {'slug': ('tag', 'name')}
+
+    list_display = ('name', 'tag')
+    list_filter = ('tag',)
+
+
+# - Register remaining classes
+
+admin.site.register(CustomJS, CustomAdditionalAdmin)
+admin.site.register(CustomCSS, CustomAdditionalAdmin)

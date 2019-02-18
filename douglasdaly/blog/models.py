@@ -27,29 +27,13 @@ from .fields import ListField
 #   Model definitions
 #
 
-class ColorThemeColor(models.Model):
-    """
-    Model for single colors in color themes
-    """
-    color = RGBColorField(null=False)
-
-    class Meta:
-        verbose_name = "Color Theme Color"
-
-    def __str__(self):
-        return self.color
-
-    def __unicode__(self):
-        return str(self)
-
-
 class ColorTheme(models.Model):
     """
     Model for Color Themes with pre-set colors to use on the blog
     """
     name = models.CharField(max_length=80, unique=True)
     slug = models.SlugField(max_length=100, db_index=True)
-    colors = models.ManyToManyField(ColorThemeColor)
+    colors = ListField(null=False, blank=False)
 
     class Meta:
         verbose_name = "Color Theme"
@@ -177,13 +161,13 @@ class Tag(models.Model):
         return '%s' % self.name
 
     def save(self, *args, **kwargs):
-        self._category = self.__get_category_from_name()
+        self._category = self.get_category_from_name()
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse('view_blog_tag', kwargs={'slug': self.slug})
 
-    def __get_category_from_name(self):
+    def get_category_from_name(self):
         ret = self.name[0].upper()
         if ret not in string.ascii_uppercase:
             return "#"
@@ -206,7 +190,8 @@ class CustomJS(models.Model):
         return '%s' % self.name
 
     class Meta:
-        ordering = ('tag', 'name',)
+        ordering = ('tag', 'name')
+        verbose_name = 'Custom JS'
         verbose_name_plural = "Custom JS Files"
 
 
@@ -226,7 +211,8 @@ class CustomCSS(models.Model):
         return '%s' % self.name
 
     class Meta:
-        ordering = ('tag', 'name',)
+        ordering = ('tag', 'name')
+        verbose_name = 'Custom CSS'
         verbose_name_plural = "Custom CSS Files"
 
 
