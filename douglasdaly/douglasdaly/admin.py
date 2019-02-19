@@ -70,6 +70,10 @@ class PageAdmin(SortableAdmin):
         }),
     )
 
+    ordering = ('the_order',)
+    list_display = ('title', 'link_name', 'slug', 'published')
+    search_fields = ('title', 'content')
+
     prepopulated_fields = {'slug': ('title',)}
 
 

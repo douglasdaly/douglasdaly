@@ -389,8 +389,9 @@ class CategoryAdmin(admin.ModelAdmin):
 
     prepopulated_fields = {'slug': ('name',)}
 
+    ordering = ('name',)
     list_display = ('name', 'description')
-    search_fields = ('name', 'description')
+    search_fields = ('name', 'description', 'search_terms')
 
     # - Override to set font color
 
@@ -422,9 +423,10 @@ class TagAdmin(admin.ModelAdmin):
     exclude = ('_category',)
     prepopulated_fields = {'slug': ('name',)}
 
+    ordering = ('name',)
     list_display = ('name', 'description')
     list_filter = (TagCategoryFilter,)
-    search_fields = ('name', 'description')
+    search_fields = ('name', 'description', 'search_terms')
 
     # - Override to set font color
 

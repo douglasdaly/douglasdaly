@@ -50,21 +50,12 @@
     </tr>
     {% endif %}
     <tr valign="middle">
-      {% if post.publish_date %}
       <td class="text-muted">
         <strong>Published:</strong>
       </td>
       <td class="pl-3">
-        <i>{{ post.publish_date|date:"l, F d, Y" }}</i>
+        <i>{{ post.display_date|date:"l, F d, Y" }}</i>
       </td>
-      {% else %}
-      <td class="text-muted">
-        <strong>Last Updated:</strong>
-      </td>
-      <td class="pl-3">
-        <i>{{ post.last_updated|date:"l, F d, Y" }}</i>
-      </td>
-      {% endif %}
     </tr>
     <tr valign="middle">
       <td class="text-muted">
@@ -90,7 +81,7 @@
       <td class="pl-3">
         <ul class="list-inline my-auto">
           {% for tag in post.tags.all %}
-            <li class="list-inline-item">
+            <li class="list-inline-item m-0">
               {% if tag.color %}
                 <a class="badge badge-pill" href="{{ tag.get_absolute_url }}" style="background-color: {{ tag.color }}; color: {{ tag.font_color }}; font-size: 0.75em;">{{ tag.name }}</a>
               {% else %}

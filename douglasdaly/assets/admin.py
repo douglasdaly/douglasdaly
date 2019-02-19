@@ -62,8 +62,9 @@ class BaseAssetAdmin(admin.ModelAdmin):
 
     prepopulated_fields = {'slug': ('tag', 'title',)}
 
-    list_display = ('slug', 'title', 'tag')
+    list_display = ('title', 'tag', 'slug')
     list_filter = ('tag',)
+    ordering = ('tag', 'title')
 
     search_fields = ('title', 'description', 'tag')
 
