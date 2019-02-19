@@ -80,7 +80,10 @@ class BaseListFieldWidget(forms.Textarea):
     template_name = 'blog/widgets/list_field_widget.html'
 
     class Media:
-        js = ("blog/js/list_field_widget.js",)
+        js = (
+
+            "blog/js/list_field_widget.js",
+        )
 
     def __init__(self, add_field_widget, attrs=None, can_add=None,
                  can_remove=None, add_attrs=None, list_data=None, **kwargs):
@@ -103,12 +106,14 @@ class BaseListFieldWidget(forms.Textarea):
 
         add_obj = self.add_field_widget(**self.add_field_kwargs)
         self.add_attrs['id'] = 'id_%s' % add_name
+        self.add_attrs['onsubmit'] = "lfwHandle(event);"
+        self.add_attrs['onkeypress'] = "lfwHandleEnter(event, '%s', {});" % name
         ret['add_field_widget_rendered'] = add_obj.render(
-            add_name, value, attrs=self.add_attrs
+            add_name, None, attrs=self.add_attrs
         )
 
         if value:
-            choices = ((x, x) for x in value)
+            choices = ((x, x) for x in sorted(value))
         else:
             choices = ()
 

@@ -23,8 +23,6 @@ from django.conf import settings
 from django.conf.urls import url
 from django.contrib.sitemaps.views import sitemap
 
-from .admin import *
-
 from blog.sitemap import BlogPostsSitemap
 from douglasdaly.sitemap import PagesSitemap
 from douglasdaly.views import custom_404_view, custom_500_view

@@ -73,3 +73,15 @@ function lfwRemoveValue(fieldName) {
 
     lfwTextHelper(fieldName);
 }
+
+function lfwHandle(e) {
+    e.preventDefault();
+}
+
+function lfwHandleEnter(e, fieldName, tags) {
+    var key = e.keyCode || e.which;
+    if (key ==13) {
+        e.preventDefault();
+        lfwAddValue(fieldName, tags);
+    }
+}
