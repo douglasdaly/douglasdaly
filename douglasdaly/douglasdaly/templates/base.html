@@ -45,11 +45,9 @@
     <!-- Header Navbar
     ----------------------------------------------------------------------- -->
     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-      <a class="navbar-brand" href="/index.html">
-        Douglas Daly
-      </a>
+      <a class="navbar-brand" href="/index.html">Douglas Daly</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsDefault" aria-controls="navbarsDefault" aria-expanded="false" aria-label="Toggle navigation">
-	    <span class="navbar-toggler-icon"></span>
+	      <span class="navbar-toggler-icon"></span>
       </button>
       
       <div class="collapse navbar-collapse" id="navbarsDefault">
@@ -69,39 +67,38 @@
 
     <!-- Footer Navbar
     ----------------------------------------------------------------------- -->
-    <div class="d-sm-none">
-        <div class="row">
-            <div class="col-12"><br/><br/></div>
-        </div>
+    <div class="row m-1 d-block d-sm-none">
+      <div class="col"><br/></div>
     </div>
 
-    <footer class="bd-footer" style="margin: 0px; padding: 0px;">
+    <footer class="bd-footer m-0 p-0">
       <div class="container-fluid">
-	<div class="row">
-	  <div class="col-sm-8">
-	    <ul class="list-inline">
-	      <li class="list-inline-item"><a href="/index.html" class="small text-muted">Home</a></li>
-	      {% footer_page_links %}
-	    </ul>
-	  </div>
-	  <div class="col-sm-4 text-right">
-	    <ul class="list-inline">
-	      {% footer_social_links %}
-	    </ul>
-	  </div>
-	</div>
-        <div class="row">
+        <div class="row mt-1">
+          <div class="col-sm-8">
+            <ul class="list-inline">
+              <li class="list-inline-item"><a href="/index.html" class="small text-muted">Home</a></li>
+              {% footer_page_links %}
+            </ul>
+          </div>
+          <div class="col-sm-4 text-right">
+            <ul class="list-inline">
+              {% footer_social_links %}
+            </ul>
+          </div>
+        </div>
+        <div class="row mb-1">
           <div class="col-sm-8">
             <span class="small text-muted">
                 &copy; 2017-{% now "Y" %} Douglas Daly.  All rights reserved.
             </span>
           </div>
-          <div class="col-sm-4 text-right">
-              <span class="small text-muted">
-                  <a href="https://github.com/douglasdaly/douglasdaly.git" target="_blank">View my source on Github!</a>
-              </span>
+          <div class="d-none d-sm-block col-sm-4 text-right">
+            <span class="small text-muted">
+                <a href="https://github.com/douglasdaly/douglasdaly.git" target="_blank">View my source on Github!</a>
+            </span>
           </div>
         </div>
+      </div>
     </footer>
     
     <!-- Bootstrap core JavaScript code

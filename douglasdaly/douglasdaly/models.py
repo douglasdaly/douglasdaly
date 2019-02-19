@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-models.py
+Models for the main site.
 
-    Models for the main site pages
-
-@author: Douglas Daly
-@date: 12/10/2017
+:author: Douglas Daly
+:date: 12/10/2017
 """
 #
 #   Imports
@@ -17,6 +15,8 @@ from django.core.validators import MaxValueValidator
 
 from adminsortable.models import SortableMixin
 
+from assets.models import ImageAsset
+
 
 #
 #   Model Definitions
@@ -25,15 +25,24 @@ from adminsortable.models import SortableMixin
 # - Settings
 
 class SiteSettings(models.Model):
+    """
+    Site settings singleton model
+    """
     title = models.CharField(max_length=20, unique=True)
     meta_description = models.CharField(max_length=120, null=True)
     meta_author = models.CharField(max_length=100, null=True)
     meta_keywords = models.CharField(max_length=120, null=True)
 
-    number_recent_posts = models.PositiveSmallIntegerField(default=3,
-                            blank=True, null=True,
-                            verbose_name="Number of recent posts to show",
-                            validators=[MaxValueValidator(3),])
+    home_show_card = models.BooleanField(default=True, null=False)
+    home_tagline = models.TextField(null=True, default=None, blank=True)
+    home_image = models.ForeignKey(ImageAsset, default=None, blank=True,
+                                   null=True, on_delete=models.SET_NULL)
+
+    number_recent_posts = models.PositiveSmallIntegerField(
+        default=3, blank=True, null=True,
+        verbose_name="Number of recent posts to show",
+        validators=[MaxValueValidator(3)]
+    )
 
     google_analytics_key = models.CharField(max_length=120, null=True,
                                             blank=True)
@@ -42,8 +51,11 @@ class SiteSettings(models.Model):
     linkedin_link = models.URLField(null=True, blank=True)
     twitter_link = models.URLField(null=True, blank=True)
 
+    # - Meta and dunder methods
+
     class Meta:
-        verbose_name_plural = 'Site Settings'
+        verbose_name = 'Site Settings'
+        verbose_name_plural = verbose_name
 
     def __str__(self):
         return 'Site Settings'
@@ -51,9 +63,10 @@ class SiteSettings(models.Model):
     def __unicode__(self):
         return self.__str__()
 
+    # - Singleton overrides
+
     def save(self, *args, **kwargs):
-        """ Override to ensure only one instance exists
-        """
+        """Override to ensure only one instance exists"""
         if SiteSettings.objects.exists() and not self.pk:
             raise ValidationError('There can only be one instance of the Site '
                                   'Settings')
@@ -62,8 +75,7 @@ class SiteSettings(models.Model):
 
     @classmethod
     def load(cls):
-        """ Loads the Singleton Instance or returns None
-        """
+        """Loads the Singleton Instance or returns None"""
         try:
             obj = cls.objects.get(pk=1)
         except cls.DoesNotExist:
@@ -72,6 +84,9 @@ class SiteSettings(models.Model):
 
 
 class SiteAdminSettings(models.Model):
+    """
+    Site administration singleton settings model
+    """
     site_is_active = models.BooleanField(default=True, null=False)
     inactive_page_title = models.CharField(max_length=80, null=True,
                                            default="Undergoing Maintenance")
@@ -88,8 +103,11 @@ class SiteAdminSettings(models.Model):
     err_500_content = models.TextField(null=True, blank=True, default=None)
     err_500_sentry = models.BooleanField(default=True)
 
+    # - Meta class and dunder methods
+
     class Meta:
-        verbose_name_plural = "Site Admin Settings"
+        verbose_name = "Site Admin Settings"
+        verbose_name_plural = verbose_name
 
     def __str__(self):
         return 'Site Administration Settings'
@@ -97,9 +115,10 @@ class SiteAdminSettings(models.Model):
     def __unicode__(self):
         return self.__str__()
 
+    # - Singleton overrides
+
     def save(self, *args, **kwargs):
-        """ Override to ensure only one instance exists
-        """
+        """Override to ensure only one instance exists"""
         if SiteAdminSettings.objects.exists() and not self.pk:
             raise ValidationError('There can only be one instance of the Site '
                                   'Administration Settings')
@@ -108,8 +127,7 @@ class SiteAdminSettings(models.Model):
 
     @classmethod
     def load(cls):
-        """ Loads the Singleton Instance or returns None
-        """
+        """Loads the Singleton Instance or returns None"""
         try:
             obj = cls.objects.get(pk=1)
         except cls.DoesNotExist:
@@ -120,6 +138,9 @@ class SiteAdminSettings(models.Model):
 # - Content
 
 class Page(SortableMixin):
+    """
+    Main site page model
+    """
     title = models.CharField(max_length=80, unique=True)
     slug = models.SlugField(max_length=80, unique=True)
     link_name = models.CharField(max_length=40, unique=True)
@@ -136,6 +157,8 @@ class Page(SortableMixin):
 
     published = models.BooleanField(default=True, null=False)
 
+    # - Meta class and dunder methods
+
     class Meta:
         ordering = ['the_order']
 
@@ -147,6 +170,8 @@ class Page(SortableMixin):
 
     def __unicode__(self):
         return "%s" % self.title
+
+    # - Utility methods
 
     def get_absolute_url(self):
         if not self.passthrough_page:

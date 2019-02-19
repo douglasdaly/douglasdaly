@@ -1,10 +1,20 @@
 [
+  {
+    "model": "blog.ColorTheme",
+    "pk": 1,
+    "fields":
     {
-        "model": "blog.BlogSettings",
-        "pk": 1,
-        "fields":
-        {
-            "title": "Douglas Daly's Blog"
-        }
+      "name": "Default",
+      "slug": "default",
+      "colors": "#007BFF, #28A745, #8AB0AB, #9C95DC, #0B7189, #E18335, #F56476, #B2ABBF, #D8D174, #362417, #7EA172, #F67E7D, #32213A, #383B53, #E6D3A3"
     }
+  },
+  {
+    "model": "blog.BlogSettings",
+    "pk": 1,
+    "fields":
+    {
+      "title": "Douglas Daly's Blog"
+    }
+  }
 ]

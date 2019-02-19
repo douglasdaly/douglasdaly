@@ -1,31 +1,21 @@
-{% extends 'blog/base.html' %}
+{% extends 'blog/base_listing.html' %}
 
 {% load page_tags %}
 {% load post_tags %}
 
 {% block meta_extra %}{% meta_head 'Blog Tags' %}{% endblock %}
+{% block listing_title %}Tags{% endblock %}
 
-{% block blog_content %}
+{% block blog_content_body %}
 
-<div class="row">
-  <div class="col-11">
-    <h3 class="pb-2">Tags</h3>
-  </div>
-  <div class="col-1 text-right">
-    <a href="/blog/rss/tags.xml" target="_blank" title="All Tags RSS" class="rss-fa-link">
-      <i class="fas fa-rss-square" style="font-size:1.8em;"></i>
-    </a>
-  </div>
-</div>
-
-{% if tags %}
-<ul>
-  {% for tag in tags %}
-  <li><a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a></li>
-  {% endfor %}
-</ul>
-{% else %}
-<p>There are no tags.</p>
-{% endif %}
+  {% if tags %}
+    <ul>
+      {% for tag in tags %}
+        <li><a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a></li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>{% block blog_content_none %}No tags.{% endblock %}</p>
+  {% endif %}
 
 {% endblock %}

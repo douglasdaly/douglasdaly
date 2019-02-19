@@ -1,20 +1,19 @@
 # -*- coding: utf-8 -*-
 """
-assets/views.py
+Views for the Assets application.
 
-    Views for the Assets app
-
-@author: Douglas Daly
-@date: 1/5/2019
+:author: Douglas Daly
+:date: 1/5/2019
 """
 #
 #   Imports
 #
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse, Http404
+
 from sorl.thumbnail import get_thumbnail
 
-from .models import FileAsset, ImageAsset
+from .models import FileAsset, ImageAsset, VideoAsset
 
 
 #
@@ -22,6 +21,7 @@ from .models import FileAsset, ImageAsset
 #
 
 def get_asset(request):
+    """Simple view to get asset from AJAX request"""
     slug = request.GET.get("slug", None)
     asset_type = request.GET.get("type", None)
 
@@ -31,7 +31,7 @@ def get_asset(request):
         data = {
             'title': asset.title,
             'description': asset.description,
-            'url': asset.asset.url
+            'url': asset.asset.url,
         }
 
     elif asset_type == "image":
@@ -49,14 +49,24 @@ def get_asset(request):
             quality = None
 
         if size is not None:
-            new_im = get_thumbnail(asset.asset, size, crop=crop, quality=quality)
+            new_im = get_thumbnail(asset.asset, size, crop=crop,
+                                   quality=quality)
         else:
             new_im = asset.asset
 
         data = {
             'title': asset.title,
             'description': asset.description,
-            'url': new_im.url
+            'url': new_im.url,
+        }
+
+    elif asset_type == 'video':
+        asset = get_object_or_404(VideoAsset, slug=slug)
+
+        data = {
+            'title': asset.title,
+            'description': asset.description,
+            'url': asset.asset.url,
         }
 
     else:

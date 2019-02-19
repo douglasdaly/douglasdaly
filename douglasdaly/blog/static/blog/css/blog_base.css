@@ -11,26 +11,26 @@
   width: 100%;
 }
 
-.sidebar-pills>li {
+.sidebar-pills > li {
   margin: auto;
 }
 
-.sidebar-pills>li>a {
+.sidebar-pills > li > a {
   padding: 4px;
   font-size: 14px;
 }
 
-.blog-content>h2 {
+.blog-content > h2 {
   font-size: 24px;
   font-weight: bold;
 }
 
-.blog-content>h3 {
+.blog-content > h3 {
   font-size: 18px;
   font-weight: bold;
 }
 
-.blog-content>h4 {
+.blog-content > h4 {
   font-size: 16px;
   font-weight: bold;
 }
@@ -45,4 +45,19 @@
 
 .rss-fa-link:active {
   color: #444;
+}
+
+.sidebar-submenu-links > li {
+  border-top: 1px solid #DDDDDD;
+}
+
+.sidebar-submenu-links > li:first-child {
+  border-top: none;
+}
+
+.highlight  {
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-bottom: 12px;
+  overflow-x: scroll;
 }

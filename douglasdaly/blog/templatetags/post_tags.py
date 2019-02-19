@@ -1,10 +1,9 @@
+# -*- coding: utf-8 -*-
 """
-post_tags.py
+Code for Post related inclusion tags for blog.
 
-    Code for Post related inclusion tags for blog.
-
-@author: Douglas Daly
-@date: 1/6/2018
+:author: Douglas Daly
+:date: 1/6/2018
 """
 #
 #   Imports
@@ -23,16 +22,17 @@ register = template.Library()
 
 
 @register.inclusion_tag("blog/tags/post_display.html")
-def post_display(post):
-    """ Tag to display Post Link for main Page
-    """
-    return {"post": post}
+def post_display(post, show_authors):
+    """Tag to display Post Link for main Page"""
+    return {
+        "post": post,
+        "show_authors": show_authors,
+    }
 
 
 @register.inclusion_tag("blog/tags/post_paginator.html")
 def post_pagination(post_paginator):
-    """ Tag to display page links for posts
-    """
+    """Tag to display page links for posts"""
     start_page = max(post_paginator.number-2, 1)
     end_page = min(post_paginator.paginator.num_pages,
                    post_paginator.number + 2) + 1
@@ -46,15 +46,3 @@ def post_pagination(post_paginator):
 
     return {'paginator': post_paginator,
             'page_numbers': page_nos}
-
-
-@register.filter(name="tag_strjoin")
-def tag_strjoin(post):
-    ret = None
-    for tag in post.tags.all():
-        tn = tag.name.lower()
-        if ret is None:
-            ret = tn
-        else:
-            ret += "," + tn
-    return ret

@@ -1,0 +1,50 @@
+{% extends 'blog/base.html' %}
+
+{% load page_tags %}
+{% load post_tags %}
+
+{% block meta_extra %}{{ block.super }}{% meta_head 'Blog' %}{% endblock %}
+
+{% block blog_content %}
+  {{ block.super }}
+
+  {% block blog_content_title %}
+
+  <div class="row justify-content-between mb-2">
+    <div class="col-auto">
+      <h2>{% block listing_title %}Posts{% endblock %}</h2>
+    </div>
+    {% if view_rss %}
+    <div class="col-auto">
+      <a href="/blog/{{ view_rss }}" target="_blank" title="Latest Posts RSS" class="rss-fa-link">
+        <h2><i class="fas fa-rss-square"></i></h2>
+      </a>
+    </div>
+    <div class="w-100 ml-3 mr-3 mb-2 mt-0 p-0 border-bottom"></div>
+    {% endif %}
+  </div>
+
+  {% endblock %}
+
+  {% block blog_content_body %}
+
+    <div class="row">
+      {% if posts %}
+        <ul>
+          {% for post in posts %}
+            {% post_display post blog_settings.show_authors %}
+          {% endfor %}
+        </ul>
+
+        {% post_pagination posts %}
+
+      {% else %}
+
+        <p class="ml-3">{% block blog_content_body_none %}There are no posts.{% endblock %}</p>
+
+      {% endif %}
+    </div>
+
+  {% endblock %}
+
+{% endblock %}

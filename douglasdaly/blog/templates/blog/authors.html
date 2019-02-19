@@ -1,0 +1,23 @@
+{% extends 'blog/base_listing.html' %}
+
+{% load page_tags %}
+{% load post_tags %}
+
+{% block meta_extra %}{% meta_head 'Blog Authors' %}{% endblock %}
+{% block listing_title %}Authors{% endblock %}
+
+{% block blog_content_body %}
+
+  {% if authors %}
+    <ul>
+      {% for author in authors %}
+      <li>
+        <a href="{{ author.get_absolute_url }}">{{ author.get_display_name }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>{% block blog_content_none %}There are no authors.{% endblock %}</p>
+  {% endif %}
+
+{% endblock %}
