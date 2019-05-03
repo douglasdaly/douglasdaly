@@ -24,9 +24,3 @@ env/*
 # Static/Media
 douglasdaly/static/
 douglasdaly/media/
-#
-#   DEVELOP branch ignores
-#
-
-# Migration files
-migrations

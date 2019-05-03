@@ -37,7 +37,7 @@ PYTHON := $(RUN_PRE) $(PYTHON)
 #
 
 .PHONY: help init requirements generate_requirements configure \
-		createsuperuser setup start \
+		createsuperuser changepassword setup start \
 		debug_setup debug debug_createsuperuser \
 		debug_start local_start \
 		clean check_deploy
@@ -77,6 +77,10 @@ configure: ## Initial configuration for the application
 createsuperuser: ## Creates a superuser for production
 	cd $(PROJECT_DIR) && \
 	$(PYTHON) manage.py createsuperuser --settings=config.settings.production
+
+changepassword: ## Change the superuser password in production
+	cd $(PROJECT_DIR) && \
+	$(PYTHON) manage.py changepassword --settings=config.settings.production
 
 update: ## Updates the app (migrations and collect static files)
 	cd $(PROJECT_DIR) && \
