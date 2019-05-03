@@ -116,7 +116,7 @@ def __sidebar_menu_helper_date(previews=False):
     all_posts = Post.get_displayable(previews=previews)
     date_years = all_posts.dates('display_date', 'year').distinct()
     for year in reversed(date_years):
-        posts = all_posts.filter(published=True, posted__year=year.year)
+        posts = all_posts.filter(published=True, display_date__year=year.year)
         if len(posts) <= 0:
             continue
 
