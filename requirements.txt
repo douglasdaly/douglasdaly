@@ -15,7 +15,7 @@ gunicorn==19.9.0
 html5lib==1.0.1
 jmespath==0.9.3
 mistune-contrib==0.1
-mistune==0.8.4
+mistune==2.0.3
 pillow==5.4.1
 psycopg2==2.7.7
 pygments==2.3.1
